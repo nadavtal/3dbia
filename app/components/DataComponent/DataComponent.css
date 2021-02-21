@@ -1,0 +1,21 @@
+.dataComponent .circle {
+  display: inline-block;
+  width: .5rem;
+  height: .5rem;
+  margin-right: 0.5rem;
+  line-height: 1.7rem;
+  color: #fff;
+  text-align: center;
+  background: rgba(0, 0, 0, 0.38);
+  border-radius: 50%;
+  background-color: #4285f4 !important;
+}
+.dataComponent .key {
+  display: inline-block;
+  font-weight: 600;
+  color: rgba(0, 0, 0, 0.87);
+  /* width: 10rem; */
+}
+.dataComponent .value {
+
+}

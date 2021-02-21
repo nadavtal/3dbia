@@ -1,0 +1,25 @@
+.formWrapper{
+  height: 45rem;
+}
+
+.projectImage{
+  height: 10rem;
+  width: 100%;
+}
+
+.projects {
+  max-height: 80vh;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.projectsSearch {
+  margin-top: 0 !important;
+  margin-left: 0.7rem;
+  width: 15rem;
+}
+
+.bridgeDetailedTable {
+  max-height: 35rem;
+
+}

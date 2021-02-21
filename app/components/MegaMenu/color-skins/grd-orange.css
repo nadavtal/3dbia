@@ -1,0 +1,117 @@
+/* Desktop Main Menu Color */
+
+.wsmenu {
+  background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#ff5183), to(#ff754b));
+  background: -webkit-linear-gradient(left, #ff5183, #ff754b);
+  background: -moz-linear-gradient(left, #ff5183, #ff754b);
+  background: -o-linear-gradient(left, #ff5183, #ff754b);
+  background: -ms-linear-gradient(left, #ff5183, #ff754b);
+  background: linear-gradient(left, #ff5183, #ff754b);
+  background-color: #ff5183;
+}
+
+.wsdownmenu-text {
+  color: #fff;
+}
+
+.wsmenu>.wsmenu-list>li>span {
+  color: #fff;
+  border-right: 1px solid rgba(0, 0, 0, 0.10);
+}
+
+.wsmenu>.wsmenu-list>li>span .wsarrow:after {
+  border-top-color: #fff;
+}
+
+.wsmenu>.wsmenu-list>li>span:hover .wsarrow:after {
+  border-top-color: #fff;
+}
+
+.wsmenu>.wsmenu-list>li>span.active .wsarrow:after {
+  border-top-color: #fff;
+}
+
+.wsmenu>.wsmenu-list>li:hover>span .wsarrow:after {
+  border-top-color: #fff;
+}
+
+.wsmenu>.wsmenu-list>li>span>i {
+  color: #fff;
+}
+
+.wsmenu>.wsmenu-list>li>span.active i {
+  color: #fff;
+}
+
+.wsmenu>.wsmenu-list>li:hover>span>i {
+  color: #fff;
+}
+
+.wsmenu>.wsmenu-list>li>span:hover i {
+  color: #fff;
+}
+
+.wsmenu>.wsmenu-list>li>.wsmegamenu .menu_form input[type="submit"] {
+  background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#ff5183), to(#ff754b));
+  background: -webkit-linear-gradient(left, #ff5183, #ff754b);
+  background: -moz-linear-gradient(left, #ff5183, #ff754b);
+  background: -o-linear-gradient(left, #ff5183, #ff754b);
+  background: -ms-linear-gradient(left, #ff5183, #ff754b);
+  background: linear-gradient(left, #ff5183, #ff754b);
+  background-color: #ff5183;
+  color: #fff;
+}
+
+.wsmenu>.wsmenu-list>li>.wsmegamenu .menu_form input[type="button"] {
+  background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#ff5183), to(#ff754b));
+  background: -webkit-linear-gradient(left, #ff5183, #ff754b);
+  background: -moz-linear-gradient(left, #ff5183, #ff754b);
+  background: -o-linear-gradient(left, #ff5183, #ff754b);
+  background: -ms-linear-gradient(left, #ff5183, #ff754b);
+  background: linear-gradient(left, #ff5183, #ff754b);
+  background-color: #ff5183;
+  color: #fff;
+}
+
+.wsmenu>.wsmenu-list>li>span.active {
+  background-color: rgba(0, 0, 0, 0.1);
+  color: #fff;
+}
+
+.wsmenu>.wsmenu-list>li:hover>span {
+  background-color: rgba(0, 0, 0, 0.1);
+  color: #fff;
+}
+
+.wsmenu>.wsmenu-list>li>ul.sub-menu>li:hover>span {
+  background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#ff5183), to(#ff754b));
+  background: -webkit-linear-gradient(left, #ff5183, #ff754b);
+  background: -moz-linear-gradient(left, #ff5183, #ff754b);
+  background: -o-linear-gradient(left, #ff5183, #ff754b);
+  background: -ms-linear-gradient(left, #ff5183, #ff754b);
+  background: linear-gradient(left, #ff5183, #ff754b);
+  background-color: #ff5183;
+  color: #fff;
+}
+
+.wsmenu>.wsmenu-list>li>ul.sub-menu>li>ul.sub-menu>li:hover>span {
+  background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#ff5183), to(#ff754b));
+  background: -webkit-linear-gradient(left, #ff5183, #ff754b);
+  background: -moz-linear-gradient(left, #ff5183, #ff754b);
+  background: -o-linear-gradient(left, #ff5183, #ff754b);
+  background: -ms-linear-gradient(left, #ff5183, #ff754b);
+  background: linear-gradient(left, #ff5183, #ff754b);
+  background-color: #ff5183;
+  color: #fff;
+}
+
+.wsmenu>.wsmenu-list>li>ul.sub-menu>li>ul.sub-menu>li>ul.sub-menu>li:hover span {
+  background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#ff5183), to(#ff754b));
+  background: -webkit-linear-gradient(left, #ff5183, #ff754b);
+  background: -moz-linear-gradient(left, #ff5183, #ff754b);
+  background: -o-linear-gradient(left, #ff5183, #ff754b);
+  background: -ms-linear-gradient(left, #ff5183, #ff754b);
+  background: linear-gradient(left, #ff5183, #ff754b);
+  background-color: #ff5183;
+  color: #fff;
+}

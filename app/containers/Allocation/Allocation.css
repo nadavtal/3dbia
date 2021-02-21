@@ -1,0 +1,26 @@
+.surveyAllocationSection {
+    /* min-height: 15rem;
+    max-height: 30rem; */
+    /* height: 35vh;
+    overflow: auto;
+    z-index: 1000; */
+    /* background-color: rgb(241, 225, 225); */
+}
+
+.surveyAllocationSection .wj-flexgrid .wj-cell input.wj-column-selector {
+    /* display: none; */
+}
+.surveyAllocationSection .wj-column-selector-group {
+    display: block !important;
+}
+.surveyAllocationSection .wj-cells .wj-cell.wj-state-multi-selected {
+    /* background: initial;
+    color:black;  */
+
+}
+
+.surveyAllocationSection .wj-flexgrid {
+    max-height: 35rem !important;
+    font-size: .9rem;
+}
+

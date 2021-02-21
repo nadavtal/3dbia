@@ -1,0 +1,8 @@
+.projectTabs .table.dataTable thead .sorting:before, .projectTabs .table.dataTable thead .sorting:after {
+  right: .2em;
+}
+
+.projectTabs .table.dataTable thead .sorting{
+  padding-right: 1rem;
+  font-size: .9rem;
+}

@@ -1,0 +1,93 @@
+.accordion ul.stepper li a {
+  padding: 0;
+  padding-left: .5rem;
+
+}
+
+.accordion-innerRow {
+  border-bottom: 1px solid lightblue;
+
+}
+
+.accordion .md-form {
+  margin-top: .5rem !important;
+}
+
+.percentageButton {
+  margin: 0;
+  padding: 0;
+  /* width: 5rem;
+  height: 5rem; */
+}
+
+.projectTabs .md-accordion .card .card-header {
+  padding: .3rem;
+  font-size: 1rem;
+}
+
+.projectTabs .md-accordion .md-form {
+  padding: .2rem;
+  font-size: 1rem;
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+  padding: 0;
+
+}
+.projectTabs .md-accordion .md-form input {
+
+  /* font-size: .9rem; */
+}
+.projectTabs .md-accordion .accordionCheckBox {
+  width: 1.3rem;
+  opacity: 1 !important;
+  height: 1.2rem !important;
+  border: none !important;
+  background-color: white !important;
+  margin-top: .3rem !important;
+  margin-left: .6rem !important;
+  z-index: 10000;
+  pointer-events: all !important;
+  /* font-size: .9rem; */
+
+}
+
+.projectTabs .md-accordion .accordionCheckBox :focus{
+  border: none !important;
+  outline: none !important;
+}
+
+.projectTabs .customTreeView .md-accordion .accordionCheckBox {
+  width: 1.2rem;
+  opacity: 1 !important;
+  height: 1.2rem !important;
+  border: none !important;
+  background-color: white !important;
+  margin-top: 0rem !important;
+  margin-left: -1.3rem !important;
+  z-index: 10000;
+  pointer-events: all !important;
+  /* font-size: .9rem; */
+
+}
+
+.projectTabs .customTreeView .md-accordion .accordionCheckBox :focus{
+  border: none !important;
+  outline: none !important;
+}
+/* .projectTabs .customTreeView .md-accordion .card .card-header {
+  padding: .2rem;
+  font-size: .8rem !important;
+} */
+
+.projectTabs .customTreeView .md-accordion .accordionTitleRow {
+  padding: .2rem !important;
+  font-size: .9rem !important;
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+  padding: 0;
+}
+.projectTabs .customTreeView .md-accordion .dataComponent {
+
+  font-size: .9rem !important;
+
+}

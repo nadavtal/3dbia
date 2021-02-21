@@ -1,0 +1,45 @@
+.registrationProcess {
+    width: 31rem !important;
+    margin-top: 10rem;
+
+}
+
+.registrationProcess .md-form textarea.md-textarea {
+    padding: .5rem 0 ;
+    overflow-y: hidden;
+}
+.registrationProcess .login .md-form {
+    margin-top: 1.1rem !important;
+    margin-bottom: 1.1rem !important;
+    width: 90%;
+}
+.registrationProcess .basic_info .md-form {
+    margin-top: .1rem !important;
+    margin-bottom: .1rem !important;
+}
+
+.registrationProcess .steps-form-3 .active button{
+    border: 2px solid darkorange !important;
+}
+.registrationProcess .login label{
+    margin-left: 4.5rem;
+}
+.registrationProcess .steps-form-3 .active i{
+    color: darkorange;
+}
+
+#register .view {
+    background: url('../../images/LogIn_Big.jpg') no-repeat bottom center;
+    background-size: cover;
+    height: 100vh;
+    max-height: 100vh;
+}
+
+.selects {
+    
+}
+  
+  /* #register .card {
+    background-color: rgba(255, 255, 255, 0.85);
+  } */
+  

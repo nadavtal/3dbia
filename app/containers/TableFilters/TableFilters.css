@@ -1,0 +1,33 @@
+.organziationProject .actionInput {
+  margin: 0 !important;
+  /* padding-top: 0 !important; */
+  width: 20rem;
+}
+
+.organziationProject .md-form {
+  margin-top: 0 !important;
+}
+
+.organziationProject .accordion {
+  max-height: 40rem;
+  overflow-x: hidden;
+  /* overflow: auto; */
+}
+
+.organziationProject .card.card-cascade.narrower .view.view-cascade {
+  margin-top: -2.25rem;
+  margin-right: 4%;
+  margin-left: 4%;
+}
+
+.organziationProject .card-body {
+
+  padding: 0 !important;
+  padding-left: 1.25rem !important;
+}
+
+.organziationProject .table-responsive {
+  max-height: 26rem;
+}
+
+

@@ -1,0 +1,38 @@
+.reorderModuleSelect ul{
+    top: -20rem !important;
+ 
+}
+
+.reorderModule {
+    transition: all .3s;
+    /* background-color: white; */
+}
+
+.reorderModule input{
+    font-size: .8rem !important;
+    /* padding-right: 2rem !important;
+    width: 90% !important; */
+}
+
+.reorderModule button {
+    padding: .5rem 1rem !important;
+}
+
+.reorderModuleRow {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    width: 500rem;
+    max-width: 100%;
+    overflow-x: auto;
+}
+
+.reorderModuleCell {
+    width: 10rem !important;
+    /* margin: 0 1rem; */
+}
+
+.reorderModule .wj-state-selected, .reorderModule .wj-state-multi-selected {
+    /* background: none !important; */
+    /* color: #000 !important; */
+}

@@ -1,0 +1,52 @@
+.formElement {
+  display: flex;
+  flex-flow: column wrap;
+  height: 100%;
+  width: 100%;
+
+}
+
+.md-form {
+  position: relative;
+  margin-top: .5rem !important;
+  margin-bottom: .5rem !important;
+}
+
+.formRow {
+  width : 33%;
+}
+
+.bottomViewForm .md-form textarea.md-textarea {
+  padding: 0;
+}
+.bottomViewForm .md-form  {
+  padding: 0;
+  margin: 0 !important;
+}
+
+.bottomViewForm {
+  padding: .5rem;
+}
+.MainViewForm .md-form textarea.md-textarea {
+  padding: .5rem;
+  margin-bottom: 1rem;
+}
+.MainViewForm .md-form  {
+  padding: 0;
+  margin: 0 !important;
+}
+
+.MainViewForm {
+  padding: .5rem;
+}
+
+.modalFormBtn {
+  position: absolute;
+  bottom: -4.47rem;
+  right: 10rem;
+
+}
+
+.md-form .form-control:disabled {
+  color: rgb(170, 170, 170);
+}

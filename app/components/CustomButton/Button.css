@@ -1,0 +1,26 @@
+.CustomButton {
+    background-color: transparent;
+    border: none;
+    color: black;
+    outline: none;
+    cursor: pointer;
+    font: inherit;
+    /* padding: 10px; */
+    /* margin: 10px; */
+    font-weight: bold;
+}
+
+
+
+.CustomButton:disabled {
+    color: #ccc;
+    cursor: not-allowed;
+}
+
+.Success {
+    color: #5C9210;
+}
+
+.Danger {
+    color: #944317;
+}

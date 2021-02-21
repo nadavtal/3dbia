@@ -1,0 +1,10 @@
+.wj-header {
+    background-color:rgba(142, 168, 131, 1) !important;
+    color: white !important;
+} 
+.wj-grouppanel {
+    background-color:rgba(28, 50, 69, 0.05) !important;
+} 
+.wj-cell.wj-group {
+    background-color: #dbdfe2 !important;
+} 

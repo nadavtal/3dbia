@@ -1,0 +1,96 @@
+.elementsComparison ul{
+  list-style: none;
+  font-size: 1rem;
+}
+.elementsComparison .hoveringElement {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+
+  background-color: lightgray; 
+  padding: .3rem;
+  font-size: .8rem;
+  z-index: 100000;
+  padding-left: .5rem;
+  border-radius: 5px;
+  transition: .3s all;
+}
+.elementsComparison .hoveringElement.thin {
+  width: 15rem;
+  
+}
+.elementsComparison .hoveringElement.wide {
+  width: 30rem;
+}
+  
+.elementsComparison .saveButton {
+  position: absolute;
+  bottom: -5.5rem;
+  right: 8rem;
+}
+.elementsComparison .hide {
+  opacity: 0;
+  content: hidden;
+  display: none;
+}
+.elementsComparison .show {
+  opacity: 1;
+  display: block;
+}
+.elementsComparison label{
+  padding-left: .3rem;
+  margin-right: .3rem;
+}
+/* .elementsComparison .classic-tabs .nav li div:not(.active) {
+  margin-bottom: 3px;
+} */
+/* .elementsComparison .classic-tabs .tab.active, .classic-tabs .nav-item.open .tab {
+  color: #fff;
+  background-color: rgba(0, 0, 0, 0.2);
+  border-radius: 0.25rem;
+  transition: all 1s;
+} */
+.elementsComparison .classic-tabs .nav {
+  position: relative;
+  height: 3.1rem;
+  white-space: nowrap;
+  border-radius: 0;
+  overflow-x: hidden !important;
+  /* background-color: hsla(30, 100%, 48%, 0.143) */
+}
+.elementsComparison .classic-tabs .nav li a {
+  display: block;
+  padding: 10px 10px;
+  /* font-size: 10px; */
+  color: rgba(255, 255, 255, 0.7);
+  text-align: center;
+  text-transform: none !important;
+  border-radius: 0;
+}
+.elementsComparison .classic-tabs .tab {
+  /* color: #fff;
+  border: 0;
+  transition: all 0.4s; */
+  /* padding: 30%; */
+  /* font-size: 1.1rem; */
+}
+.elementsComparison .elementsList {
+  max-height: 33rem;
+  overflow-y: auto;
+  /* overflow-x: visible !important; */
+}
+.elementsComparison .checkbox-label:before{
+  border: 2px solid red !important;
+
+}
+.elementsComparison .checkbox-label-padding {
+  padding-left: 20px !important;
+
+}
+.modalSaveBtn {
+  position: absolute !important;
+  bottom: -5.47rem;
+  right: 10rem;
+  z-index: 101;
+}
+

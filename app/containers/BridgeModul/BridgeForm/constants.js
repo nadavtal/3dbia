@@ -1,0 +1,1 @@
+export const SAVE_BRIDGEFORM_ELEMENT = 'bridgeForm/SAVE_BRIDGEFORM_ELEMENT';

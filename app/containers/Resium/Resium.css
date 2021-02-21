@@ -1,0 +1,43 @@
+.cesium-viewer-toolbar {
+  margin-right: 3rem;
+}
+
+.cesium-infoBox {
+  width: 30%;
+}
+
+.cesium-infoBox-iframe {
+  height: auto;
+}
+
+.cesiumOverlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  pointer-events: none;
+  padding: .4rem;
+  background-color: black;
+  color: white;
+}
+
+.cesiumTitle {
+  color: white;
+  padding: .3rem;
+  font-size: 1rem;
+}
+
+.mouseLocation {
+  position: absolute;
+  bottom: 0.8rem;
+  right: 0;
+  padding: .5rem;
+  width: 30%;
+}
+/* .rightClickMenuSubOption :hover{
+  background-color: lightgray !important;
+  color: black !important;
+}
+
+.rightClickMenuSubOption {
+  height: 1.5rem;
+} */

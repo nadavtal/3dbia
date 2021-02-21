@@ -1,0 +1,9 @@
+.tableHeaders {
+  display: flex;
+  font-weight: bold;
+
+}
+
+/* .wj-flexgrid .wj-column-selector:not(.wj-column-selector-group) {
+  display: none;
+} */

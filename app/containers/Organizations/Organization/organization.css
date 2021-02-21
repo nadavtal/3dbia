@@ -1,0 +1,40 @@
+
+
+.column-picker-div {
+    display: none;
+}
+.wj-listbox.column-picker {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-gap: 0 10px;    
+    columns: 4; /* IE fallback */
+    padding: 12px;
+    margin-left: 12px;
+    margin-top: 26px;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
+}
+.wj-listbox .wj-listbox-item > label {
+    display: block;
+    margin: 0 0 3px 0;
+}
+.wj-listbox .wj-listbox-item.wj-state-selected
+{
+    background: transparent;
+    color: inherit;
+}
+.wj-listbox .wj-listbox-item:hover {
+    background: rgba(0,0,0,.05);
+}
+.wj-listbox .drop-marker {
+    position: absolute;
+    background: #0085c7;
+    opacity: 0.5;
+    pointer-events: none;
+    z-index: 1000;
+}
+
+.createBridgeButton {
+    position: absolute;
+    right: 1.3rem;
+}
+

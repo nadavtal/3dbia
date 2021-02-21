@@ -1,0 +1,184 @@
+
+.resiumToolBar_top {
+  padding: .3rem;
+  position: absolute;
+  top: 0;
+  left: 0;
+  background-color: transparent;
+  color: white;
+}
+
+.resiumToolBar_top .active{
+  /* border: 1px solid white; */
+}
+.resiumToolBar_top .toolBar_input{
+  width: 80%;
+}
+
+.resiumToolBar_tool {
+  width: 2rem;
+  height: 2rem;
+}
+.resiumToolBar_sideBar .active{
+  color: orangered;
+  transform: scale(1.06);
+  padding: .2rem;
+  border-bottom: 1px solid orangered;
+}
+
+
+.resiumToolBar_top div{
+  margin-right: .5rem;
+}
+
+.resiumToolBar_topBar {
+  margin-left: 2.5rem;
+}
+
+.resiumToolBar_top_slider{
+  width: 15rem;
+  margin-top: .3rem;
+}
+.resiumToolBar_top_text{
+  margin-top: .3rem;
+}
+.resiumToolBar_sideBar {
+  margin-top: 1.5rem;
+}
+
+.resiumToolBar_actionsWrapper {
+  padding: .3rem;
+  /* transition: all .3s; */
+  position: absolute;
+  top: 2.5rem;
+  left: 2.5rem;
+  height: auto;
+  min-width: 125%;
+  /* width: 100%; */
+  background-color: lightgray;
+  color: black;
+  font-size: .8rem;
+  opacity: 1;
+  /* cursor: ; */
+  /* z-index: 100; */
+}
+
+.resiumToolBar_actionsWrapper .md-form{
+
+  font-size: .9rem;
+
+}
+
+.resiumToolBar_actionsWrapper .btn-sm{
+  width: 3.5rem;
+  height: 2.2rem;
+  padding: .5rem !important;
+
+}
+.resiumToolBar_actionsWrapper .btn-sm.saveViewButton{
+
+  padding: .2rem !important;
+
+}
+
+.resiumToolBar_actionsWrapper > div{
+  margin: 0;
+
+}
+.resiumToolBar_actionsWrapper .md-form{
+  margin: 0 !important;
+}
+
+.resiumToolBar_actionsWrapper hr {
+  margin: .4rem;
+}
+
+.open {
+  height: auto;
+  width: 17rem;
+}
+.resiumToolBar_action label {
+  font-size: .8rem;
+  padding-top: .3rem;
+  width: 4rem;
+}
+.resiumToolBar_action input {
+  font-size: .8rem;
+  margin-left: .3rem;
+  padding: .1rem;
+  border: none;
+}
+.resiumToolBar_action .md-form {
+  margin-left: .5rem;
+}
+.resiumToolBar_action .form-check {
+  padding-left: .5rem;
+  font-size: .9rem;
+  color: black;
+
+}
+
+.resiumToolBar_action .form-check label{
+  padding-left: 1.5rem;
+
+
+}
+.resiumToolBar_view_button {
+  display: inline;
+  width: 43%;
+}
+.cesium-credit-textContainer, .cesium-widget-credits{
+  display: none !important;
+}
+
+.resiumToolBar_corner{
+  position: absolute;
+  padding: .3rem;
+  top: 0;
+  left: 0;
+  font-size: 2rem;
+}
+
+.cesiumSlider {
+  background: rgba(42, 42, 42, 0.8);
+  padding: 4px;
+  border-radius: 4px;
+}
+.cesiumSlider input {
+  vertical-align: middle;
+  padding-top: 2px;
+  padding-bottom: 2px;
+}
+
+
+.example-appear {
+  opacity: 0.01;
+}
+
+.example-appear.example-appear-active {
+  opacity: 1;
+  transition: opacity .5s ease-in;
+}
+
+.example-enter {
+  opacity: 0.01;
+}
+
+.example-enter.example-enter-active {
+  opacity: 1;
+  transition: opacity 500ms ease-in;
+}
+
+.example-leave {
+  opacity: 1;
+}
+
+.example-leave.example-leave-active {
+  opacity: 0.01;
+  transition: opacity 300ms ease-in;
+}
+
+
+
+
+

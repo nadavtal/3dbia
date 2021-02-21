@@ -1,0 +1,319 @@
+
+.MuiButtonBase-root {
+    color: inherit;
+    border: 0;
+    cursor: pointer;
+    margin: 0;
+    display: inline-flex;
+    outline: 0;
+    padding: 0;
+    position: relative;
+    align-items: center;
+    user-select: none;
+    border-radius: 0;
+    vertical-align: middle;
+    -moz-appearance: none;
+    justify-content: center;
+    text-decoration: none;
+    background-color: transparent;
+    -webkit-appearance: none;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.MuiIconButton-root:hover {
+    background-color: rgba(0, 0, 0, 0.04);
+}
+
+.MuiIconButton-label {
+    width: 100%;
+    display: flex;
+    align-items: inherit;
+    justify-content: inherit;
+}
+.MuiButton-root {
+    color: rgba(0, 0, 0, 0.87);
+    padding: 6px 16px;
+    font-size: 1.4rem;
+    min-width: 64px;
+    box-sizing: border-box;
+    transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+    font-family: Muli,Roboto,"Helvetica",Arial,sans-serif;
+    font-weight: 600;
+    line-height: 1.75;
+    border-radius: 4px;
+    text-transform: uppercase;
+}
+.MuiButton-text {
+    padding: 6px 8px;
+}
+.makeStyles-contactButton-270 {
+        flex: 0 0 auto;
+    width: 70px;
+    min-width: 70px;
+}
+.MuiButton-label {
+    width: 100%;
+    display: inherit;
+    align-items: inherit;
+    justify-content: inherit;
+}
+
+.MuiButton-root:hover {
+    text-decoration: none;
+    background-color: rgba(0, 0, 0, 0.04);
+}
+
+.MuiIcon-root {
+    width: 1em;
+    height: 1em;
+    overflow: hidden;
+    font-size: 2.4rem;
+    flex-shrink: 0;
+    user-select: none;
+}
+
+.makeStyles-unreadBadge-271 {
+    top: 4px;
+    left: 10px;
+    color: rgba(0, 0, 0, 0.87);
+    height: 18px;
+    display: flex;
+    padding: 0 5px;
+    z-index: 10;
+    position: absolute;
+    font-size: 11px;
+    min-width: 18px;
+    box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.35);
+    text-align: center;
+    align-items: center;
+    border-radius: 9px;
+    justify-content: center;
+    background-color: #61dafb;
+}
+
+.makeStyles-status-272.online {
+    background-color: #4CAF50;
+}
+.makeStyles-status-272 {
+    left: 44px;
+    width: 12px;
+    border: 2px solid #f6f7f9;
+    bottom: 4px;
+    height: 12px;
+    z-index: 10;
+    position: absolute;
+    border-radius: 50%;
+}
+
+.MuiAvatar-root {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    overflow: hidden;
+    position: relative;
+    font-size: 2rem;
+    align-items: center;
+    flex-shrink: 0;
+    font-family: Muli,Roboto,"Helvetica",Arial,sans-serif;
+    line-height: 1;
+    user-select: none;
+    border-radius: 50%;
+    justify-content: center;
+}
+
+.MuiAvatar-img {
+    color: transparent;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    text-align: center;
+    text-indent: 10000px;
+}
+
+.MuiTouchRipple-root {
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 0;
+    overflow: hidden;
+    position: absolute;
+    border-radius: inherit;
+    pointer-events: none;
+}
+
+.makeStyles-messageRow-274 {
+    flex: 0 0 auto;
+    display: flex;
+    padding: 0 16px 4px 16px;
+    position: relative;
+    align-items: flex-start;
+    justify-content: flex-end;
+}
+
+.makeStyles-messageRow-274.contact .makeStyles-bubble-276 .makeStyles-time-278 {
+    margin-left: 12px;
+}
+
+.makeStyles-messageRow-274.last-of-group .makeStyles-bubble-276 .makeStyles-time-278 {
+    display: flex;
+}
+
+
+
+.MuiTypography-colorTextSecondary {
+    color: rgba(0, 0, 0, 0.54);
+}
+
+.MuiTypography-body1 {
+    font-size: 1.4rem;
+    font-family: Muli,Roboto,"Helvetica",Arial,sans-serif;
+    font-weight: 400;
+    line-height: 1.5;
+}
+
+.MuiTypography-root {
+    margin: 0;
+}
+
+.makeStyles-message-277 {
+    line-height: 1.2;
+    white-space: pre-wrap;
+}
+
+.makeStyles-messageRow-274.contact .makeStyles-bubble-276 {
+    color: rgba(0, 0, 0, 0.87);
+    background-color: #FFFFFF;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 20px;
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 20px;
+}
+
+.makeStyles-bubble-276 {
+    display: flex;
+    padding: 12px;
+    position: relative;
+    max-width: 100%;
+    box-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2), 0px 1px 1px 0px rgba(0,0,0,0.14), 0px 1px 3px 0px rgba(0,0,0,0.12);
+    align-items: center;
+    justify-content: center;
+}
+
+.makeStyles-messageRow-274.last-of-group .makeStyles-bubble-276 {
+    padding-bottom: 13px;
+    border-bottom-left-radius: 20px;
+}
+
+.makeStyles-messageRow-274.first-of-group .makeStyles-bubble-276 {
+    padding-top: 13px;
+    border-top-left-radius: 20px;
+}
+
+.makeStyles-messageRow-274.contact .makeStyles-bubble-276 {
+    color: rgba(0, 0, 0, 0.87);
+    background-color: #FFFFFF;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 20px;
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 20px;
+}
+
+.makeStyles-messageRow-274.contact.last-of-group .makeStyles-bubble-276 {
+    border-bottom-left-radius: 20px;
+}
+
+.makeStyles-messageRow-274.contact.first-of-group .makeStyles-bubble-276 {
+    border-top-left-radius: 20px;
+}
+
+.makeStyles-avatar-275 {
+    left: -32px;
+    margin: 0;
+    position: absolute;
+}
+
+.MuiAvatar-root {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    overflow: hidden;
+    position: relative;
+    font-size: 2rem;
+    align-items: center;
+    flex-shrink: 0;
+    font-family: Muli,Roboto,"Helvetica",Arial,sans-serif;
+    line-height: 1;
+    user-select: none;
+    border-radius: 50%;
+    justify-content: center;
+}
+
+[dir='ltr'] .ltr\:pl-40, [dir='ltr'].ltr\:pl-40 {
+    padding-left: 4rem;
+}
+
+
+.makeStyles-time-278 {
+    top: 100%;
+    left: 0;
+    width: 100%;
+    position: absolute;
+    font-size: 11px;
+    margin-top: 8px;
+    white-space: nowrap;
+}
+
+.makeStyles-messageRow-274.contact + .me, .makeStyles-messageRow-274.me + .contact {
+    margin-top: 20px;
+    padding-top: 20px;
+}
+
+.makeStyles-messageRow-274.me .makeStyles-bubble-276 {
+    color: #fff;
+    margin-left: auto;
+    background-color: #192d3e;
+    border-top-left-radius: 20px;
+    border-top-right-radius: 5px;
+    border-bottom-left-radius: 20px;
+    border-bottom-right-radius: 5px;
+}
+
+
+.makeStyles-inputWrapper-280 {
+    border-radius: 24px;
+}
+
+
+.MuiInputBase-input {
+    font: inherit;
+    color: currentColor;
+    width: 100%;
+    border: 0;
+    height: 1.1876em;
+    margin: 0;
+    display: block;
+    padding: 6px 0 7px;
+    min-width: 0;
+    background: none;
+    box-sizing: content-box;
+    animation-name: mui-auto-fill-cancel;
+    letter-spacing: inherit;
+    animation-duration: 10ms;
+    -webkit-tap-highlight-color: transparent;
+}
+
+[dir='ltr'] .ltr\:mr-48, [dir='ltr'].ltr\:mr-48 {
+    margin-right: 4.8rem;
+}
+
+.MuiFormControl-root {
+    border: 0;
+    margin: 0;
+    display: inline-flex;
+    padding: 0;
+    position: relative;
+    min-width: 0;
+    flex-direction: column;
+    vertical-align: top;
+}

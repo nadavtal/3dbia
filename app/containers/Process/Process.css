@@ -1,0 +1,56 @@
+.surveyWrapper{
+  /* display: flex; */
+  /* flex-flow: column wrap; */
+  height: 100%;
+  width: 95%;
+}
+
+.surveyWrapper .tab-content {
+  height: 95%;
+  padding-top: 1rem;
+}
+.surveyWrapper .tab-pane {
+  height: 95%;
+}
+
+
+
+.taskRow ul.stepper li a {
+  padding: 0;
+  text-align: center;
+}
+
+.taskRow {
+  max-width: 100%;
+  width: 100%;
+  max-height: 100%;
+  overflow: auto;
+}
+.taskRow .stepper-vertical{
+  margin: 0;
+  padding: 0;
+  height: 31rem;
+  max-height: 31rem;
+  overflow: auto;
+}
+.taskRow .stepper-vertical .step-content{
+  margin-top: .4rem;
+  margin-bottom: .4rem;
+  padding: 0;
+}
+.taskRow .stepper-vertical .md-form{
+  margin-top: .5rem;
+  margin-bottom: .5rem;
+}
+
+.taskRow .stepper-vertical li{
+  height: 4.5rem;
+}
+
+.stepper-vertical li {
+  position: relative;
+  display: flex;
+  flex: none;
+  flex-direction: column;
+  align-items: flex-start;
+}

@@ -1,0 +1,13 @@
+
+.surveysTab .treeview-colorful-list .treeview-colorful-element .far{
+    display: none !important;
+  }
+  .surveysTab .treeview-colorful-list .treeview-colorful-element .fa{
+    margin-right: .3rem;
+  }
+  
+  .surveysTab .nodeRowId  {
+    font-size: .8rem;
+    overflow: hidden;
+  }
+  

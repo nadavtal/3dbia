@@ -1,0 +1,21 @@
+.spansModuleSelect ul{
+    /* top: -6rem !important; */
+    width: 250%;
+    /* max-height: 10rem;
+    overflow-y: auto; */
+}
+
+.spansModule {
+    transition: all .3s;
+    /* background-color: white; */
+}
+
+.spansModule input{
+    font-size: .8rem !important;
+    /* padding-right: 2rem !important;
+    width: 90% !important; */
+}
+
+.spansModule button {
+    padding: .5rem 1rem !important;
+}

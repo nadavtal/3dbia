@@ -1,0 +1,12 @@
+.modal-body {
+    max-height: 75vh;
+    /* overflow: auto; */
+}
+
+.modal-header button {
+    transition: .3s all;
+    color: inherit;
+}
+.modal-header button:hover{
+    color: white;
+}

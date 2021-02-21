@@ -1,0 +1,103 @@
+.tasksFilterSection {
+    
+    transition: all .3s;
+    background-color: rgb(238, 231, 231);
+    position: absolute;
+    top:  -1rem;
+    right: 0;
+    z-index: 10;
+    box-shadow: 0 0 5px 3px rgba(0, 0, 0, 0.30);
+    
+}
+.tasksFilterSection--open {
+    width: 100%;
+    height: auto;
+}
+.tasksFilterSection--close {
+    width: 1.8rem;
+    height: 1.5rem;
+    /* float: right; */
+    
+}
+
+.topBottons .surveyAllocationButton {
+    width: 15rem;
+}
+.topBottons .btn {
+    border-radius: 0.3rem;
+}
+
+.tasksFilterSection--open .filters {
+   visibility: visible;
+}
+.tasksFilterSection--close .filters {
+   visibility: hidden;
+    
+}
+
+
+.manageTasks .wj-control [type="checkbox"] {
+    opacity: 1 !important;
+    position: relative !important;
+}
+
+.manageTasks .wj-flexgrid {
+    /* max-height: 35rem !important; */
+    font-size: .9rem;
+}
+
+.manageTasks .column-picker-icon {
+    cursor: pointer !important;
+    color: #FF8754;
+    margin: 3px;
+}
+.column-picker-div {
+    display: none;
+}
+.wj-listbox.column-picker {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-gap: 0 10px;    
+    columns: 4; /* IE fallback */
+    padding: 12px;
+    margin-left: 12px;
+    margin-top: 26px;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
+}
+.wj-listbox .wj-listbox-item > label {
+    display: block;
+    margin: 0 0 3px 0;
+}
+.manageTasks .wj-listbox .wj-listbox-item.wj-state-selected
+{
+    background: transparent;
+    color: inherit;
+}
+.manageTasks .wj-listbox .wj-listbox-item:hover {
+    background: rgba(0,0,0,.05);
+}
+.manageTasks .wj-listbox .drop-marker {
+    position: absolute;
+    background: #0085c7;
+    opacity: 0.5;
+    pointer-events: none;
+    z-index: 1000;
+}
+
+.manageTasks .wj-column-selector-group {
+    display: none;
+}
+
+.manageTasks .steps-form-2 .steps-row-2 .steps-step-2.active .btn-circle-2 {
+
+    border: 2px solid #FF892F;
+    background-color: white !important;
+    color: #FF892F !important;
+
+}
+/* .manageTasks div[wj-part="div-markers"] .wj-groupmarker:first-child .wj-remove  {
+    display: none;
+  }
+.manageTasks div[wj-part="div-markers"] .wj-groupmarker:nth-child(2) .wj-remove  {
+    display: none;
+  } */

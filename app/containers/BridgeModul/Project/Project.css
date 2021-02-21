@@ -1,0 +1,261 @@
+.stage {
+  font-size: .8rem;
+}
+
+.projectTabs {
+  width: 100%;
+  /* height: 100%; */
+  padding: 0;
+  position: absolute;
+  top: 0;
+  left: 0;
+  max-height: 88vh;
+  /* overflow: hidden; */
+  /* max-width: 1155px */
+}
+
+
+.projectTabs .classic-tabs .nav {
+  position: relative;
+  /* height: 3.1rem; */
+  white-space: nowrap;
+  border-radius: 0;
+  overflow-x: hidden !important;
+  /* background-color: hsla(30, 100%, 48%, 0.143) */
+}
+.projectTabs .classic-tabs .nav li a.active {
+    /* background-color: rgba(28, 50, 69, 0.474); */
+    font-size: 1rem;
+    color: white;
+    /* border-bottom: 2px solid darkmagenta; */
+}
+
+
+.projectTabs .classic-tabs .nav.tabs-pink li a {
+  border-color: none;
+}
+.projectTabs .classic-tabs .nav.tabs-pink li a.active {
+  border-color: none;
+}
+.projectTabs .classic-tabs {
+  height: 100%;
+}
+
+
+.projectTabs .nav {
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-wrap: wrap;
+  flex-wrap: nowrap;
+}
+
+.projectTabs .nav-item {
+  /* width: 33%; */
+  opacity: .8;
+  text-align: center;
+  /* background-color: hsla(30, 100%, 48%, 0.643) !important; */
+}
+.projectTabs .innerTabs .nav-item {
+  /* width: 33%; */
+  opacity: .8;
+  text-align: center;
+  /* background-color: hsla(30, 100%, 48%, 0.643) !important; */
+}
+
+
+.classic-tabs .preloader-wrapper.small {
+  width: 1rem !important;
+  height: 1rem !important;
+}
+
+
+
+.projectTabs .classic-tabs .nav li a {
+  display: block;
+  padding: 10px 10px;
+  /* font-size: 10px; */
+  color: rgba(255, 255, 255, 0.7);
+  text-align: center;
+  text-transform: none !important;
+  border-radius: 0;
+}
+.projectTabs .tab-content>.tab-pane {
+  /* display: none; */
+  height: 100%;
+}
+.projectTabs .wj-flexgrid {
+  font-size: .7rem;
+}
+
+
+.loadDataBtn {
+  position: absolute;
+  left: 38%;
+  top: -2px;
+  padding: .2rem .5rem !important;
+}
+
+.projectTabs .classic-tabs .tab-content  {
+  padding-top: 0;
+  padding: .5rem;
+  /* height: 90%; */
+  /* max-height: 78vh;
+  overflow-y: auto; */
+  /* width: 99%;
+  max-width: 99%; */
+  /* overflow-x: hidden; */
+}
+
+/* .projectTabs .classic-tabs .tab-content .table  {
+
+  height: 90%;
+  max-height: 90%;
+} */
+
+.projectTabs .classic-tabs .card {
+  box-shadow: none !important;
+  padding-top: 0.2rem;
+}
+.projectTabs .classic-tabs .switch label  {
+  margin-bottom: 0.3rem;
+}
+.projectTabs .classic-tabs .switch label .lever {
+  margin: 0 .4rem;
+}
+
+.projectTabsHeader {
+  font-weight: bold;
+  font-size: .9rem;
+  }
+
+.projectTabs .dataTables_wrapper {
+  /* font-size: 1rem; */
+}
+.projectTabs .dataTables_wrapper .dataTables_length .mt-4 {
+  margin-top: .5rem!important;
+}
+.projectTabs .dataTables_wrapper .pagination .page-item .page-link {
+  font-size: 0.8rem !important;
+  padding: 0.7rem;
+}
+.projectTabs .dataTables_wrapper .col-md-5,
+.projectTabs .dataTables_wrapper .col-md-7 {
+  flex: none !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  /* padding: 0 !important; */
+}
+
+
+
+@media (min-width: 62em){
+  .projectTabs .classic-tabs .nav li:first-child {
+      margin-left: 0;
+  }
+
+}
+
+.bridgePageDataTable{
+  overflow: auto;
+}
+
+.bridgePageDataTable .dataTables_length {
+  display: block !important;
+}
+.bridgePageDataTable .dataTables_length label{
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+}
+.bridgePageDataTable .dataTables_length .md-form{
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+}
+.bridgePageDataTable .dataTables_length .md-form .select-dropdown{
+  margin-top: 0 !important;
+
+}
+.bridgePageDataTable .dataTables_length .md-form span{
+  margin-top: 0 !important;
+
+}
+
+.bridgePageDataTable .dataTables_filter{
+  display: block !important;
+  margin-top: 0 !important;
+}
+
+.projectTabs .treeview-colorful-list .treeview-colorful-element .far{
+  display: none !important;
+}
+.projectTabs .treeview-colorful-list .treeview-colorful-element .fa{
+  margin-right: .3rem;
+}
+
+.projectTabs .nodeRowId  {
+  font-size: .8rem;
+  overflow: hidden;
+}
+.projectTabs .treeview-colorful ul .nested .active{
+
+  padding-bottom: .5rem;
+
+}
+.projectTabs .treeview-colorful{
+  /* background-color: hsla(30, 100%, 48%, 0.143) */
+}
+
+.projectTabs .treeview-colorful .treeview-colorful-element:hover {
+  background-color: rgba(28, 50, 69, 0.2) !important
+}
+
+.projectTabs .treeview-colorful .treeview-colorful-element {
+  display: flex !important;
+  align-items: center;
+}
+.projectTabs .treeview-colorful .treeview-colorful-element > span{
+  width: 100%;
+}
+
+.projectTabs .treeview-colorful .treeview-colorful-list ul {
+
+  background-color: rgba(28, 50, 69, 0.1) !important
+}
+
+.projectTabs .treeview-colorful .treeview-colorful-element.opened {
+  background-color: rgba(28, 50, 69, 0.2) !important;
+  border: none;
+  color : black
+}
+
+.projectTabs .treeview-colorful ul .nested .active{
+  
+  padding-bottom: .5rem;
+
+}
+.projectTabs .treeview-colorful{
+  /* background-color: hsla(30, 100%, 48%, 0.143) */
+}
+
+.projectTabs .treeview-colorful .treeview-colorful-element:hover {
+  background-color: rgba(28, 50, 69, 0.2) !important
+}
+
+.projectTabs .treeview-colorful .treeview-colorful-element {
+  display: flex !important;
+  align-items: center;
+}
+.projectTabs .treeview-colorful .treeview-colorful-element > span{
+  width: 100%;
+}
+
+.projectTabs .treeview-colorful .treeview-colorful-list ul {
+  margin-top: 0;
+  /* background-color: rgba(28, 50, 69, 0.1) */
+}
+
+.projectTabs .treeview-colorful .treeview-colorful-element.opened {
+  background-color: rgba(28, 50, 69, 0.2) !important;
+  border: none;
+  color : black
+}
+

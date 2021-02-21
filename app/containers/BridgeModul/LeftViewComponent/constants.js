@@ -1,0 +1,1 @@
+export const SET_SELECTED_TAB = 'leftViewComponent/SET_SELECTED_TAB';

@@ -1,0 +1,18 @@
+.surveyWrapper{
+  /* display: flex; */
+  /* flex-flow: column wrap; */
+  height: 100%;
+  width: 95%;
+}
+
+.surveyWrapper .tab-content {
+  height: 95%;
+  padding-top: 1rem;
+}
+.surveyWrapper .tab-pane {
+  height: 95%;
+}
+
+
+
+

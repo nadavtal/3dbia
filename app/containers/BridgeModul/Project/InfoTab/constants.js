@@ -1,0 +1,1 @@
+export const SET_SELECTED_TAB = 'infoTab/SET_SELECTED_TAB';
