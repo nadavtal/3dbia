@@ -208,6 +208,7 @@ const bridgePageReducer = (state = initialState, action) =>
         draft[action.key] = action.value;
         break
       case actionTypes.MODEL_DELETED:
+        console.log(action)
         draft.bridgeModels = state.bridgeModels.filter(
           model => model.id !== action.modelId
         )

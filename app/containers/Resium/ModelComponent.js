@@ -33,15 +33,6 @@ const ModelComponent = (props) => {
 
   
   useEffect(() => {
-    // console.log('RUNING USEEFFECT')
-    // console.log('viewer', viewer.scene.primitives)
-    // viewer.scene.primitives.add(
-    //   new Cesium.DebugModelMatrixPrimitive({
-    //     modelMatrix: modelMatrix,
-    //     length: 50.0,
-    //     width: 10.0,
-    //   })
-    // );
     if (props.model.ion_id) {
       let promise = Cesium.IonResource.fromAssetId(props.model.ion_id)
         .then(function (resource) {
@@ -56,8 +47,8 @@ const ModelComponent = (props) => {
     }
     return () => {
       console.log('cleanup')
-      modelRef.current.cesiumElement.destroy()
-      cloneModelRef.current.cesiumElement.destroy()
+      // modelRef.current.cesiumElement.destroy()
+      // cloneModelRef.current.cesiumElement.destroy()
     };
   }, [])
   // useEffect(() => {
@@ -95,19 +86,19 @@ const ModelComponent = (props) => {
 
   }, [props.mode])
   // console.log(props.calibrationData)
-  useEffect(() => {
-    console.log('modelRef', modelRef)
-    if (modelRef && modelRef.current) {
+  // useEffect(() => {
+  //   console.log('modelRef', modelRef)
+  //   if (modelRef && modelRef.current) {
 
 
-      // const newModelCenter = modelRef.current.cesiumElement.boundingSphere.center
-      // console.log('newModelCenter', newModelCenter)
+  //     // const newModelCenter = modelRef.current.cesiumElement.boundingSphere.center
+  //     // console.log('newModelCenter', newModelCenter)
 
-    }
-    return () => {
+  //   }
+  //   return () => {
       
-    }
-  }, [modelRef])
+  //   }
+  // }, [modelRef])
 
   // useEffect(() => {
   //   console.log(props.zoomElement)
@@ -383,9 +374,9 @@ const ModelComponent = (props) => {
  
   }
 
-  
-  // console.log(modelResource)
-  // console.log(modelMatrix)
+
+
+
   if (modelResource) {
     handleSelectedIds
     // console.log(modelMatrix)
