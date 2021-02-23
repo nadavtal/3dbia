@@ -91,8 +91,8 @@ app.put("/surveys/:id/status/:status", function(req, res){
       const tiles = files.filter(file => file.name.includes("3d tiles") && file.name.includes(".json") && !file.name.includes("Data"))
       // console.log(tiles)
       // const tilesMedialLinks = tiles.map(tile => tile.metadata.mediaLink)
-      const publicUrls = tiles.map(tile => `https://storage.googleapis.com/${tile.bucket.name}/${tile.name}`)
-      await checkIfTilesExistAndAddIfNot(publicUrls, req.params.bid, req.params.id)
+      // const publicUrls = tiles.map(tile => `https://storage.googleapis.com/${tile.bucket.name}/${tile.name}`)
+      // await checkIfTilesExistAndAddIfNot(publicUrls, req.params.bid, req.params.id)
       res.send({
         smallImages,
         fullImages,

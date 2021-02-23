@@ -228,7 +228,7 @@ function TaskWizard({
 
      // receives array of files that are done uploading when submit button is clicked
     const uploadFile = file => {
-      console.log(file)
+      
       const fileExtentension = getFileExtension(file.name)
       switch (fileExtentension) {
         case 'zip':
@@ -244,8 +244,15 @@ function TaskWizard({
             
             const formData = new FormData();
             formData.append('file', file);
+            formData.append('taskId', task.id);
+            formData.append('surveyId', task.survey_id);
+            formData.append('bid', task.bid);
+            formData.append('userId', currentUser.userInfo.id);
+            formData.append('created_by', currentUser.userInfo.first_name + ' ' + currentUser.userInfo.last_name );
             formData.append('bucketName', '3dbia_organization_' + task.organization_id);
             formData.append('filePath', filePath);
+            const newFolderName = Date.now()
+            if (task.name !== 'Upload images') formData.append('newFolderName', newFolderName);
              axios
               .post(
                 apiUrl + 'cloud-upload/zip',
@@ -356,8 +363,8 @@ function TaskWizard({
           break;
         case 'Upload 3D-Tiles':
 
-          const newBridgeTileSet = prepareNewBridgeModel(uploadedFile, 'model');
-          onCreateNewBridgeModel(newBridgeTileSet)
+          // const newBridgeTileSet = prepareNewBridgeModel(uploadedFile, 'model');
+          // onCreateNewBridgeModel(newBridgeTileSet)
           break;
       
         default:

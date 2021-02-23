@@ -7,8 +7,8 @@ const upload = require("../middlewares/upload");
 const connection = require("../db.js");
 const { reject } = require("lodash");
 const elementsController = require("../controllers/bridgeElementsController")
+const modelsController = require("../controllers/modelsController")
 const storage = require("../utils/storage").storage
-const uploadImage = require("../utils/storage").uploadImage
 
 
 // // If modifying these scopes, delete token.json.
@@ -253,6 +253,7 @@ app.put("/bridges/:id/model/:modelId", function(req, res){
       res.send(result);
     });
 });
+
 app.get("/bridges/:id/details", async function(req, res){
   console.log("getting bridge details")
   const id = req.params.id
@@ -692,22 +693,24 @@ app.post("/bridges-models", function(req, res){
   const model = req.body
   // const values = createProjectsArray([bridge])[0]
   // console.log(values)
-  var q = `INSERT INTO tbl_bridge_models
-          (model_part, task_id, survey_id, bid, date_created, created_by, last_update, updated_by, status, name, url,
-            type, remarks, calibration_data, ion_id)
-           VALUES (${model.model_part ? model.model_part : null}, ${model.task_id}, ${model.survey_id}, 
-            ${model.bid}, now(), "${model.created_by}", now(),
-           "${model.created_by}", "${model.status}", "${model.name}", "${model.url}", "${model.type}",
-           "${model.remarks}", '${model.calibration_data}', ${model.ion_id ? model.ion_id : null})`;
-           console.log(q)
-  connection.query(q, function (error, result) {
-    console.log(result)
-    if (error) res.send(error);
-    else res.send(result);
-    });
+  const result = modelsController.createBridgeModel(model)
+  res.send(result)
+  // var q = `INSERT INTO tbl_bridge_models
+  //         (model_part, task_id, survey_id, bid, date_created, created_by, last_update, updated_by, status, name, url,
+  //           type, remarks, calibration_data, ion_id)
+  //          VALUES (${model.model_part ? model.model_part : null}, ${model.task_id}, ${model.survey_id}, 
+  //           ${model.bid}, now(), "${model.created_by}", now(),
+  //          "${model.created_by}", "${model.status}", "${model.name}", "${model.url}", "${model.type}",
+  //          "${model.remarks}", '${model.calibration_data}', ${model.ion_id ? model.ion_id : null})`;
+  //          console.log(q)
+  // connection.query(q, function (error, result) {
+  //   console.log(result)
+  //   if (error) res.send(error);
+  //   else res.send(result);
+  //   });
  });
 
- app.put("/bridges-models/:id", function(req, res){
+app.put("/bridges-models/:id", function(req, res){
   console.log("updating model", req.body);
   const model = req.body;
   var q = `UPDATE tbl_bridge_models
@@ -732,7 +735,51 @@ app.post("/bridges-models", function(req, res){
 
 
 });
+app.post("/bridges-models/delete/:id", async function(req, res){
+  console.log("deleting model", req.body);
+  var q = `DELETE FROM tbl_bridge_models WHERE id=${req.params.id}`
 
+  connection.query(q, function(err, result) {
+    if (err) {
+      res.send(err);
+      // return
+    }
+    // res.send(result)
+    storage.bucket(req.body.bucketName).deleteFiles({
+      prefix: req.body.prefix
+    }, function(err) {
+      if (!err) {
+        res.send({status: 200})
+        // All files in the `images` directory have been deleted.
+      } else {
+        res.send(err)
+      }
+    });
+    
+    // res.send(result);
+  });
+
+
+});
+// const bucket = storage.bucket('organization_169')
+// console.log(bucket)
+// bucket.getFiles(function(err, files) {
+//   console.log(err)
+//   if (!err) {
+//     // files is an array of File objects.
+//     console.log(files)
+//   }
+// });
+// storage.bucket('3dbia_organization_169').deleteFiles({
+//   prefix: 'bid_1200/survey_559/Models/3d tiles/1614073539016/'
+// }, function(err) {
+//   if (!err) {
+//     console.log('Files Deleted')
+//     // All files in the `images` directory have been deleted.
+//   } else {
+//     console.log(err)
+//   }
+// });
 
 
 

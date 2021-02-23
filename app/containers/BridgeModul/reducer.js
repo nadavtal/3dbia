@@ -215,6 +215,10 @@ export const initialState = {
           
           draft[action.key] = action.value
           break
+        case actionTypes.MODEL_DELETED:
+          
+          draft.bridgeModels = state.bridgeModels.filter(model => model.id !== action.modelId)
+          break
         case actionTypes.NEW_MODEL_CREATED:
 
           if (action.model.type == 'cad') {

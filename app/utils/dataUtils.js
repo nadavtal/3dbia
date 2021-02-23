@@ -266,3 +266,10 @@ export const splitStringToArray = (str, charecter) => {
 export function capitalizeFirstLetter(string) {
   return string.charAt(0).toUpperCase() + string.slice(1);
 }
+
+
+export const is_date = function(input) {
+  if ( Object.prototype.toString.call(input) === "[object Date]" ) 
+    return true;
+  return false;   
+    };

@@ -353,7 +353,12 @@ const SpansTab = ({
               editElement={(modalType, objectId) =>
                 toggleModal(modalType, objectId)
               }
-              zoomToElement={objectId => onZoomToElement(objectId)}
+              zoomToElement={objectId => {
+                onZoomToElement(objectId)
+                setTimeout(() => {
+                  onZoomToElement();
+                }, 300);
+              }}
               showElements={(elementsObjectIds, showBottomView) => {
                 
                 onElementsSelected(elementsObjectIds);

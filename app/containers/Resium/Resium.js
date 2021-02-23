@@ -11,10 +11,17 @@ import {
 } from 'cesium';
 import * as actions from './actions';
 import * as selectors from './selectors';
-import { editElement, updateElements, updateModel, showInView, saveElements, updateBridgeDefaultView } from 'containers/BridgeModul/actions';
+import { editElement, 
+  updateElements, 
+  updateModel, 
+  showInView, 
+  saveElements, 
+  updateBridgeDefaultView,
+  deleteModel } from 'containers/BridgeModul/actions';
 import { createMessage } from 'containers/AppData/actions';
-import { toggleModal } from 'containers/App/actions';
-import { setSelectedTab } from '../BridgeModul/LeftViewComponent/actions'
+import { toggleModal, toggleAlert } from 'containers/App/actions';
+import { setSelectedTab } from '../BridgeModul/LeftViewComponent/actions';
+
 import {
   Viewer,
   Entity,
@@ -236,13 +243,14 @@ const Resium = props => {
         if (props.bridge.default_view_data) {
           const defaultView = JSON.parse(props.bridge.default_view_data)
           console.log('defaultView', defaultView)
+          // console.log('camera', camera)
           setResetCameraView(defaultView)
           camera.setView({
             destination : defaultView.position,
             orientation: {
-                heading : defaultView.heading, // east, default value is 0.0 (north)
+                heading : defaultView.heading, 
                 pitch : defaultView.pitch,
-                roll : defaultView.roll                             // default value
+                roll : defaultView.roll                             
             }
           });
           // camera.flyToBoundingSphere(
@@ -442,34 +450,62 @@ const Resium = props => {
     // }
   };
 
-  const handleActionFromResiumToolBar = (value, actionGroup, actionName, modelName,) => {
+  const handleActionFromResiumToolBar = (value, actionGroup, actionName, modelName, modelId) => {
     console.log(
       'handleActionFromResiumToolBar',
       value,
       actionGroup,
       actionName,
       modelName,
+      modelId,
     );
     switch (actionGroup) {
 
       case 'Models':
         let updatedCalibrationState = { ...calibrationState };
-        let updatedItem;
-        if (actionName === 'Alpha') {
-          console.log('setting alpha ', value);
-          updatedItem = { ...updatedCalibrationState[modelName] };
-          updatedItem.alpha = value;
-          console.log(updatedItem);
-          updatedCalibrationState[modelName] = updatedItem;
-          setCalibrationState(updatedCalibrationState);
-          break;
-        } else {
-          updatedItem = { ...updatedCalibrationState[actionName] };
-          updatedItem.show = value === 'true' || value == true ? false : true;
-          updatedCalibrationState[actionName] = updatedItem;
-          setCalibrationState(updatedCalibrationState);
-          break;
+        let updatedItem = { ...updatedCalibrationState[modelName] };
+        console.log(updatedItem);
+        switch (actionName) {
+          case 'Alpha':
+            console.log('setting alpha ', value);
+            
+            updatedItem.alpha = value;
+            
+            updatedCalibrationState[modelName] = updatedItem;
+            setCalibrationState(updatedCalibrationState);
+            break;
+          case 'Delete': 
+            props.onToggleAlert({
+              title: `Are you sure you want to delete ${modelName}?`,
+              text: "Model will be deleted from database and google cloud permanently",
+              confirmButton: 'Delete',
+              cancelButton: 'Cancel',
+              alertType: 'danger',
+              confirmFunction: () => {    
+                console.log(props.models)
+                console.log(modelName)
+                console.log(modelId)
+                const model = props.models.find(model => model.id == modelId)
+                console.log(model)
+                // const urlTimeStamp = model.url.split('/').find(string => !isNaN(+string) && +string !== 0 && string.length > 10)
+                // console.log(urlTimeStamp)
+                props.onDeleteModel(
+                  model.id, 
+                  `3dbia_organization_${props.bridge.organization_id}`, 
+                  `bid_${model.bid}/survey_${model.survey_id}/Models/3d tiles/${model.folder_id}/`)
+              }
+            });
+            break
+          case 'Show': 
+            // updatedItem.show = value === 'true' || value == true ? false : true;
+            updatedItem.show = !updatedItem.show;
+            updatedCalibrationState[modelName] = updatedItem;
+            setCalibrationState(updatedCalibrationState);
+            break;
+          default:
+            break;
         }
+        break
       case 'Views': 
         
         let heading
@@ -562,6 +598,7 @@ const Resium = props => {
         
             break;
         }
+        break
       case 'Calibration':
         switch (actionName) {
           case 'Select entity':
@@ -1047,11 +1084,12 @@ const Resium = props => {
           // },
           confirmFunction: (data, event) => {
             console.log(data)
-            const location = JSON.stringify({
-              lat: overLayPosition.lat,
-              lon: overLayPosition.lon,
-              height: overLayPosition.height 
-            })
+            // const location = JSON.stringify({
+            //   lat: overLayPosition.lat,
+            //   lon: overLayPosition.lon,
+            //   height: overLayPosition.height 
+            // })
+            const location = JSON.stringify(getCurrentViewData())
             addAnnotation(data.subject, data.message, location , overLayElement.id)
           },
         });
@@ -1767,7 +1805,7 @@ const Resium = props => {
        
         return (
           <TileSet
-            key={model.name}
+            key={model.id}
             item={model}
             viewerRef={viewerRef}
             onReady={tileSet => handleTileSetReady(tileSet, model.name)}
@@ -1801,12 +1839,13 @@ const Resium = props => {
       selectedItem={selectedItem}
       selectedColor={color}
       position="top"
-      onAction={(event, actionGroup, actionName, modelName) =>
+      onAction={(event, actionGroup, actionName, modelName, modelId) =>
         handleActionFromResiumToolBar(
           event,
           actionGroup,
           actionName,
           modelName,
+          modelId
         )
       }
       save={actionGroup => save(actionGroup)}
@@ -2068,6 +2107,8 @@ export function mapDispatchToProps(dispatch) {
     onSetSelectedTab: (selectedTab) => dispatch(setSelectedTab(selectedTab)),
     onCreateMessage: (messageObject) => dispatch(createMessage(messageObject)),
     onToggleModal: modalData => dispatch(toggleModal(modalData)),
+    onDeleteModel: (modelId, bucketName, prefix) => dispatch(deleteModel(modelId, bucketName, prefix)),
+    onToggleAlert: alertData => dispatch(toggleAlert(alertData)),
     
     // save: () => console.log('save')
 

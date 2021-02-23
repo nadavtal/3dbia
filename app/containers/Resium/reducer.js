@@ -20,6 +20,7 @@ const resiumReducer = (state = initialState, action) =>
       case(actionTypes.ZOOM_TO_ELEMENT):
         console.log(action)
         draft.zoomElement = action.objectId;
+
         break
       case(actionTypes.DESTROY_CESIUM):
         

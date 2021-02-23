@@ -29,6 +29,8 @@ export const UPDATE_SURVEY_STATUS = 'bridgeModule/UPDATE_SURVEY_STATUS';
 export const UPDATE_BRIDGE_PRIMARY_MODEL_ID = 'bridgeModule/UPDATE_BRIDGE_PRIMARY_MODEL_ID';
 export const GET_SURVEY = 'bridgeModule/GET_SURVEY';
 export const UPDATE_BRIDGE_DEFAULT_VIEW = 'bridgeModule/UPDATE_BRIDGE_DEFAULT_VIEW';
+export const DELETE_MODEL = 'bridgeModule/DELETE_MODEL';
+export const MODEL_DELETED = 'bridgeModule/MODEL_DELETED';
 // export const SET_DISPLAY_FOLDER = 'bridgeModule/SET_DISPLAY_FOLDER';
 
 // export const SAVE_BRIDGEFORM_ELEMENT = 'bridgeModule/SAVE_BRIDGEFORM_ELEMENT';

@@ -38,6 +38,20 @@ export function getBridge(id, orgId) {
     orgId
   }
 }
+export function deleteModel(modelId, bucketName, prefix) {
+  return {
+    type: actionTypes.DELETE_MODEL,
+    modelId, 
+    bucketName,
+    prefix
+  }
+}
+export function modelDeleted(modelId) {
+  return {
+    type: actionTypes.MODEL_DELETED,
+    modelId
+  }
+}
 
 export function showInView(view, componentName, mode, id=null) {
 

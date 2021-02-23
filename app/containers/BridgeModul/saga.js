@@ -449,6 +449,24 @@ function* updateSurveyStatus(action) {
     yield put(console.log(err));
   }
 }
+function* deleteModel(action) {
+  console.log(action);
+  const url = apiUrl + 'bridges-models/delete/' + action.modelId;
+  const args = {
+    method: 'POST',
+    body: JSON.stringify({bucketName: action.bucketName, prefix: action.prefix}),
+  }
+
+  try {
+    // Call our request helper (see 'utils/request')
+    const result = yield call(request, url, args);
+    console.log(result);
+    // const projectUsers =
+    yield put(actions.modelDeleted(action.modelId));
+  } catch (err) {
+    yield put(console.log(err));
+  }
+}
 function* deleteBridgeSpan(action) {
   console.log(action);
   const url = apiUrl + 'spans/'+action.spanId + '/' + action.userId;
@@ -537,6 +555,7 @@ export default function* projectSaga() {
   yield takeLatest(actionTypes.UPDATE_SURVEY_STATUS, updateSurveyStatus);
   yield takeLatest(actionTypes.UPDATE_BRIDGE_DEFAULT_VIEW, updateBridgeDefaultView);
 
+  yield takeLatest(actionTypes.DELETE_MODEL, deleteModel);
   yield takeLatest(actionTypes.GET_SURVEY, getSurvey);
   // yield takeLatest(actionTypes.CREATE_NEW_PROCESS, createNewProcess);
   // yield takeLatest(actionTypes.GET_FOLDER_STRUCTURE, getFolderStructure);

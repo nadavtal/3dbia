@@ -48,6 +48,7 @@ const ResiumToolBar = (props) => {
       modelActions.push(
         {
         label: model.name,
+        id: model.id,
         elementType: 'checkbox',
         // elementConfig: {
         //   options: props.models.map(model => {
@@ -72,19 +73,24 @@ const ResiumToolBar = (props) => {
           },
           value: props.calibrationData[model.name].alpha,
           stepMultyplier: 1
-        }
+        },
+        // {
+        //   label: 'Delete Model',
+        //   elementType: 'button',
+        //   elementConfig: {
+            
+        //   },
+        //   value: '',
+        //   validation: {},
+        //   valid: true
+        // },
       )
     })
     return modelActions
   }
   const createActionGroups = () => {
     console.log('createActionGroups', props.calibrationData)
-    // initialCalibrationState ? console.log('creating actions initialCalibrationState', initialCalibrationState) : console.log('NO initialCalibrationState')
-    
-    // console.log((incomingCalibrationData['rotate-x'] - initialCalibrationState['rotate-x']) * props.rotationMultiplier)
-    // setInitialCalibrationState(initialCalibrationCenter)
     const modelActions = createModelsActions()
-    // console.log(modelActions)
     let actions
     if (initialCalibrationState) {
       // console.log(incomingCalibrationData ?  (incomingCalibrationData['rotate-x'] - initialCalibrationState['rotate-x']) * props.rotationMultiplier: 'no incomingCalibrationData')
@@ -803,7 +809,6 @@ const ResiumToolBar = (props) => {
           }
 
           break;
-        case 'checkbox':
 
         default:
 
@@ -864,19 +869,33 @@ const ResiumToolBar = (props) => {
                 />
       case 'checkbox':
         // console.log(action.value)
-        return <div key={index} className="toolBar_input">
-                <Input
-                  label={action.label}
-                  elementtype='checkbox'
-                  value={action.value}
-                  changed={(event) => inputChangedHandler(action.value, actionGroup, action)}
-                  // invalid={!formElement.config.valid}
-                  shouldValidate={false}
-                  touched={false}
-                  // errMsg={formElement.config.errMsg}
-                />
-
-              </div>
+        return (
+          <div key={index} className="toolBar_input d-flex justify-content-between align-items-center">
+            <Input
+              label={action.label}
+              elementtype="checkbox"
+              value={action.value}
+              changed={event =>
+                props.onAction(action.value, actionGroup, 'Show', action.label)
+              }
+              // invalid={!formElement.config.valid}
+              shouldValidate={false}
+              touched={false}
+              // errMsg={formElement.config.errMsg}
+            />
+            <IconButtonToolTip
+              className="color-red"
+              iconName="trash"
+              toolTipType="error"
+              toolTipPosition="left"
+              toolTipEffect="float"
+              toolTipText="Delete Model"
+              onClickFunction={e =>
+                props.onAction(action.value, actionGroup, 'Delete', action.label, action.id)
+              }
+            />
+          </div>
+        );
       case 'slider':
         // console.log(action)
         return <div className="p-1"  key={index}>
