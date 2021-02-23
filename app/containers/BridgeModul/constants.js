@@ -1,4 +1,3 @@
-
 export const GET_BRIDGE = 'bridgeModule/GET_BRIDGE';
 export const GET_FOLDER_STRUCTURE = 'bridgeModule/GET_FOLDER_STRUCTURE';
 export const FOLDER_STRUCTURE_LOADED = 'bridgeModule/FOLDER_STRUCTURE_LOADED';
@@ -26,9 +25,11 @@ export const CREATE_NEW_BRIDGE_MODEL = 'bridgeModule/CREATE_NEW_BRIDGE_MODEL';
 export const NEW_MODEL_CREATED = 'bridgeModule/NEW_MODEL_CREATED';
 export const EDIT_BRIDGE = 'bridgeModule/EDIT_BRIDGE';
 export const UPDATE_SURVEY_STATUS = 'bridgeModule/UPDATE_SURVEY_STATUS';
-export const UPDATE_BRIDGE_PRIMARY_MODEL_ID = 'bridgeModule/UPDATE_BRIDGE_PRIMARY_MODEL_ID';
+export const UPDATE_BRIDGE_PRIMARY_MODEL_ID =
+  'bridgeModule/UPDATE_BRIDGE_PRIMARY_MODEL_ID';
 export const GET_SURVEY = 'bridgeModule/GET_SURVEY';
-export const UPDATE_BRIDGE_DEFAULT_VIEW = 'bridgeModule/UPDATE_BRIDGE_DEFAULT_VIEW';
+export const UPDATE_BRIDGE_DEFAULT_VIEW =
+  'bridgeModule/UPDATE_BRIDGE_DEFAULT_VIEW';
 export const DELETE_MODEL = 'bridgeModule/DELETE_MODEL';
 export const MODEL_DELETED = 'bridgeModule/MODEL_DELETED';
 // export const SET_DISPLAY_FOLDER = 'bridgeModule/SET_DISPLAY_FOLDER';
@@ -46,15 +47,3 @@ export const MODEL_DELETED = 'bridgeModule/MODEL_DELETED';
 // export const GET_FOLDER_STRUCTURE = 'bridgeModule/GET_FOLDER_STRUCTURE';
 // export const FOLDER_STRUCTURE_LOADED = 'bridgeModule/FOLDER_STRUCTURE_LOADED';
 export const REJECT_PREVIOUS_TASK = 'bridgeModule/REJECT_PREVIOUS_TASK';
-
-
-
-
-
-
-
-
-
-
-
-

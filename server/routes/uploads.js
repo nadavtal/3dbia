@@ -15,7 +15,7 @@ const { uploadFile } = require('../utils/storage');
 const { deleteFile } = require('../utils/storage');
 // const { resize } = require('../utils/files');
 const { getFileExtension } = require('../utils/files');
-const modelsController = require("../controllers/modelsController")
+const modelsController = require('../controllers/modelsController');
 const messagesController = require('../controllers/messagesControler');
 const uploadPath = './resources/static/assets/tmp';
 const unzipPath = './resources/static/assets/unzipped';
@@ -24,10 +24,10 @@ const imageFileExtensions = ['jpg', 'jpeg', 'pin'];
 // const isFolder = filePath => fs.lstatSync(filePath).isDirectory();
 
 function uploadFiles(files, bucketName, filePath, parentFolderName) {
-  console.log(parentFolderName)
+  console.log(parentFolderName);
   return new Promise(async (resolve, reject) => {
     console.log('files.length', files.length);
-    let length  = files.length;
+    let { length } = files;
     for (const file of files) {
       const fileExtentension = getFileExtension(file);
       // console.log(fileExtentension)
@@ -49,18 +49,27 @@ function uploadFiles(files, bucketName, filePath, parentFolderName) {
               file.split('.')[1]
             }`;
             smallFileName = smallFileName.split('\\').join('/');
-            if (parentFolderName) smallFileName = parentFolderName + '/' + smallFileName
-            await uploadFile(smallFile, bucketName, `${filePath}/${smallFileName}`);
+            if (parentFolderName)
+              smallFileName = `${parentFolderName}/${smallFileName}`;
+            await uploadFile(
+              smallFile,
+              bucketName,
+              `${filePath}/${smallFileName}`,
+            );
           });
       }
-      await uploadFileFromLocalDiskToBucket(file, bucketName, filePath, parentFolderName);
+      await uploadFileFromLocalDiskToBucket(
+        file,
+        bucketName,
+        filePath,
+        parentFolderName,
+      );
       length--;
-      
     }
-    console.log(length)
+    console.log(length);
     if (length == 0) {
-      resolve(true) 
-    
+      resolve(true);
+
       // console.log('Over', length);
       // sendMail(
       //   ['nadavtalalmagor@gmail.com'],
@@ -69,21 +78,26 @@ function uploadFiles(files, bucketName, filePath, parentFolderName) {
       //   `<h3>HEADER</h3>`,
       // );
     } else {
-      reject(false)
+      reject(false);
     }
-  
-
-  })
+  });
 }
-const uploadFileFromLocalDiskToBucket = (file, bucketName, filePath, parentFolderName) => {
+const uploadFileFromLocalDiskToBucket = (
+  file,
+  bucketName,
+  filePath,
+  parentFolderName,
+) => {
   // console.log(file)
   // const newFile = file.replace('\\', '/')
-  let newFile = file.split('\\').join('/');
+  const newFile = file.split('\\').join('/');
   // if (parentFolderName) newFile = parentFolderName + '/' + newFile
   // console.log(newFile)
   return new Promise((resolve, reject) => {
     const options = {
-      destination: parentFolderName ? `${filePath}/${parentFolderName}/${newFile}` : `${filePath}/${newFile}`,
+      destination: parentFolderName
+        ? `${filePath}/${parentFolderName}/${newFile}`
+        : `${filePath}/${newFile}`,
       resumable: false,
     };
     console.log(`Uploading '${newFile}' to bucket`);
@@ -219,12 +233,14 @@ app.post('/cloud-upload', upload.single('file'), async (req, res) => {
 app.post('/cloud-upload/zip', async (req, res) => {
   let bucketName;
   let filePath;
-  let createdBy
-  let taskId
-  let newFolderName
-  let surveyId
-  let bid
-  let userId
+  let createdBy;
+  let taskId;
+  let newFolderName;
+  let surveyId;
+  let bid;
+  let userId;
+  let emails;
+  let msg;
   const busboy = new Busboy({ headers: req.headers });
   busboy.on('field', function(fieldname, val, valTruncated, keyTruncated) {
     console.log(fieldname, val, valTruncated, keyTruncated);
@@ -236,8 +252,10 @@ app.post('/cloud-upload/zip', async (req, res) => {
     if (fieldname == 'surveyId') surveyId = val;
     if (fieldname == 'bid') bid = val;
     if (fieldname == 'userId') userId = val;
+    if (fieldname == 'emails') emails = val;
+    if (fieldname == 'msg') msg = val;
   });
-  console.log('newFolderName', newFolderName)
+  console.log('newFolderName', newFolderName);
   busboy.on('file', function(fieldname, file, filename, encoding, mimetype) {
     // console.log('file', file)
     // console.log('File [' + fieldname + ']: filename: ' + filename);
@@ -267,86 +285,114 @@ app.post('/cloud-upload/zip', async (req, res) => {
       //   zip.close();
       // });
       const strzip = fs.createReadStream(`${uploadPath}//${filename}`);
-      strzip.pipe(unzipper.Extract({ path: unzipPath })).on('close', async () => {
-        console.log('zip file unZipped');
-        const filesPaths = getAllFiles(unzipPath);
-        
-        console.log(filesPaths);
-        const filesUploaded = await uploadFiles(filesPaths, bucketName, filePath, newFolderName);
-        console.log('filesUploaded', filesUploaded)
-        if (filesUploaded) {
-          fs.unlink(`${uploadPath}//${filename}`, err => {
-            if (err) {
-              console.error(err);
-              return;
-            }
-            console.log('Zip removed');
-          });
-          const bucket = storage.bucket(bucketName);
-          bucket.getFiles({
-            prefix: filePath + '/' + newFolderName
-            }, async function(err, files) {
-              if (err) console.log(err)
-              // console.log(files)
+      strzip
+        .pipe(unzipper.Extract({ path: unzipPath }))
+        .on('close', async () => {
+          console.log('zip file unZipped');
+          const filesPaths = getAllFiles(unzipPath);
 
-              try {
-                const firstJsonFile = files.find(file => file.name.includes('.json') && !file.name.includes('data') && !file.name.includes('Data'))
-                console.log('firstJsonFile', firstJsonFile)
-                const model = {
-                  name: `${firstJsonFile.name.split('/')[firstJsonFile.name.split('/').length - 1]}`,
-                  task_id: taskId,
-                  survey_id: surveyId,
-                  bid: bid,
-                  created_by: createdBy,
-                  updated_by: createdBy,
-                  url: `https://storage.googleapis.com/${firstJsonFile.bucket.name}/${firstJsonFile.name}`,
-                  type: 'model',
-                  newFolderName: newFolderName
-                }
-                const newModelResult = await modelsController.createBridgeModel(model)
-                if (newModelResult.insertId) {
-                  messagesController.sendMail(
-                    ['nadavtalalmagor@gmail.com'],
-                    '3d tiles uploaded',
-                    'Upload successfull',
-                    `<h3>HEADER</h3>
-                    <a>https://storage.googleapis.com/${firstJsonFile.bucket.name}/${firstJsonFile.name}</a>`,
-                  );
-                  const message = {
-                    sender_user_id: userId,
-                    receiver_user_id: null,
-                    subject: 'New 3d tiles uploaded',
-                    message: `https://storage.googleapis.com/${firstJsonFile.bucket.name}/${firstJsonFile.name}`,
-                    createdAt: Date.now(),
-                    type: 'System',
-                    status: 'Sent',
-                    task_id: taskId,
-                    survey_id: surveyId,
-                    bid: bid,
-                    parent_message_id: null,
-                    location: '',
-                    element_id: null
-                  }
-                  messagesController.createMessage(message)
-                }
-
-              } catch (err) {
-                console.log(err)
+          console.log(filesPaths);
+          const filesUploaded = await uploadFiles(
+            filesPaths,
+            bucketName,
+            filePath,
+            newFolderName,
+          );
+          console.log('filesUploaded', filesUploaded);
+          if (filesUploaded) {
+            fs.unlink(`${uploadPath}//${filename}`, err => {
+              if (err) {
+                console.error(err);
+                return;
               }
-          })
-        }
-        // fs.readdir(unzipPath, async function (err, files) {
-        //   console.log('files read from disk')
-        //     // handling error
-        //   if (err) {
-        //       return console.log('Unable to scan directory: ' + err);
-        //   }
-        // console.log(files)
-        // uploadFiles(files, bucketName, filePath)
+              console.log('Zip removed');
+            });
+            const bucket = storage.bucket(bucketName);
+            bucket.getFiles(
+              {
+                prefix: `${filePath}/${newFolderName}`,
+              },
+              async function(err, files) {
+                if (err) console.log(err);
+                // console.log(files)
 
-        //   })
+                try {
+                  if (msg == 'New Tileset uploaded') {
+                    const firstJsonFile = files.find(
+                      file =>
+                        file.name.includes('.json') &&
+                        !file.name.includes('data') &&
+                        !file.name.includes('Data'),
+                    );
+                    console.log('firstJsonFile', firstJsonFile);
+                    if (firstJsonFile) {
+                      const model = {
+                        name: `${
+                          firstJsonFile.name.split('/')[
+                            firstJsonFile.name.split('/').length - 1
+                          ]
+                        }`,
+                        task_id: taskId,
+                        survey_id: surveyId,
+                        bid,
+                        created_by: createdBy,
+                        updated_by: createdBy,
+                        url: `https://storage.googleapis.com/${
+                          firstJsonFile.bucket.name
+                        }/${firstJsonFile.name}`,
+                        type: 'model',
+                        newFolderName,
+                      };
+                      const newModelResult = await modelsController.createBridgeModel(
+                        model,
+                      );
 
-      });
+                    }
+
+                  }
+                  console.log('msg', msg)
+                  // if (newModelResult.insertId) {
+                    messagesController.sendMail(
+                      emails,
+                      msg,
+                      'Upload successfull',
+                      `<h3>HEADER</h3>
+                    `,
+                    );
+                    const message = {
+                      sender_user_id: userId,
+                      receiver_user_id: null,
+                      subject: '',
+                      message: msg,
+                      createdAt: Date.now(),
+                      type: 'System',
+                      status: 'Sent',
+                      task_id: taskId,
+                      survey_id: surveyId,
+                      bid,
+                      parent_message_id: null,
+                      location: '',
+                      element_id: null,
+                    };
+                    messagesController.createMessage(message);
+                  // }
+                } catch (err) {
+                  console.log(err);
+                }
+              },
+            );
+          }
+          // fs.readdir(unzipPath, async function (err, files) {
+          //   console.log('files read from disk')
+          //     // handling error
+          //   if (err) {
+          //       return console.log('Unable to scan directory: ' + err);
+          //   }
+          // console.log(files)
+          // uploadFiles(files, bucketName, filePath)
+
+          //   })
+        });
       // fs.createReadStream(path.join(uploadPath, filename))
       // .pipe(unzipper.Parse())
       // .on('entry', async function (entry) {

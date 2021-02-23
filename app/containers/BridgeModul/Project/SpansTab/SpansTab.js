@@ -1,12 +1,16 @@
-import React, {useState, memo, useEffect, useMemo, useRef} from "react";
+import React, { useState, memo, useEffect, useMemo, useRef } from 'react';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { useInjectReducer } from 'utils/injectReducer';
 import { createStructuredSelector } from 'reselect';
-import reducer from './reducer';
-import FilesUploadComponent from "components/FilesUploadComponent";
-import { MDBIcon, MDBCardImage,MDBInput, MDBListGroup, MDBListGroupItem } from 'mdbreact';
-import * as actions from './actions';
+import FilesUploadComponent from 'components/FilesUploadComponent';
+import {
+  MDBIcon,
+  MDBCardImage,
+  MDBInput,
+  MDBListGroup,
+  MDBListGroupItem,
+} from 'mdbreact';
 import { 
   showInView, 
   onUpdateElements,
@@ -32,13 +36,15 @@ import AccordionTable from "containers/AccordionTable/AccordionTable";
 import { elementSelected, elementsSelected, receiveAction, zoomToElement } from 'containers/Resium/actions';
 import { toggleModal, showNotification, toggleAlert } from 'containers/App/actions';
 import { sortBy } from 'utils/dataUtils';
+import * as actions from './actions';
+import reducer from './reducer';
 
-const key = "spansTab";
+const key = 'spansTab';
 
 const SpansTab = ({
   selectedObjectIds,
   elementsGroups,
-  elementsTypes, 
+  elementsTypes,
   bridgeElements,
   structureTypes,
   bridgeSpans,
@@ -53,49 +59,61 @@ const SpansTab = ({
   selectedElements,
   mode,
   onZoomToElement,
-  focusedElement
+  focusedElement,
 }) => {
-
-  const allocatedRef = useRef()
-  const unAllocatedRef = useRef()
+  const allocatedRef = useRef();
+  const unAllocatedRef = useRef();
   // const [selectedAllocated, setSelectedAllocated] = useState([]);
   // const [selectedUnAllocated, setSelectedUnAllocated] = useState([]);
   // const selectedElements = selectedObjectIds.map(objectId => bridgeElements.find(rl => rl.object_id == objectId))
-  
+
   useEffect(() => {
+    if (focusedElement) {
+      const element = bridgeElements.find(el => el.object_id == focusedElement)
+      const parentDiv = document.getElementById('spanTabScrollContainer')
+      const elementDiv = document.getElementById(element.object_id)
+      // console.log(allocatedRef.current.offsetHeight)
+      // console.log(unAllocatedRef)
 
-      if (focusedElement) {
-        const element = bridgeElements.find(el => el.object_id == focusedElement)
-        const parentDiv = document.getElementById('spanTabScrollContainer')
-        const elementDiv = document.getElementById(element.object_id)
-        // console.log(allocatedRef.current.offsetHeight)
-        // console.log(unAllocatedRef)
-  
-        if (element.span_id) {
-          parentDiv.scrollTop = allocatedRef.current.offsetHeight / 2;
-        } else {
-          const topPos = elementDiv.offsetTop;
-          parentDiv.scrollTop = topPos - allocatedRef.current.offsetHeight - 50;
-        }
-
+      if (element.span_id) {
+        parentDiv.scrollTop = allocatedRef.current.offsetHeight / 2;
+      } else {
+        const topPos = elementDiv.offsetTop;
+        parentDiv.scrollTop = topPos - allocatedRef.current.offsetHeight - 50;
       }
-      // selectedObjectIds.forEach(objectId => {
-        //   const element = bridgeElements.find(el => el.object_id == objectId)
-        //   handleElementSelect(element)
-        // })
-        return () => {
+    }
+    // selectedObjectIds.forEach(objectId => {
+    //   const element = bridgeElements.find(el => el.object_id == objectId)
+    //   handleElementSelect(element)
+    // })
+    return () => {
         
-          }
-        }, [focusedElement])
+    }
+  }, [focusedElement])
   useInjectReducer({ key, reducer });
-        // const selectedAllocated = selectedElements.filter(el => el.span_id)
-        // const selectedUnAllocated = selectedElements.filter(el => !el.span_id)
+  // const selectedAllocated = selectedElements.filter(el => el.span_id)
+  // const selectedUnAllocated = selectedElements.filter(el => !el.span_id)
   // console.log('selectedElements', selectedElements)
   // console.log('selectedObjectIds', selectedObjectIds)
 
-  const selectedAllocated = useMemo(() => bridgeElements.filter(el => el.span_id && selectedObjectIds.includes(el.object_id)), [selectedObjectIds, bridgeElements])
-  const selectedUnAllocated = useMemo(() => bridgeElements.filter(el => !el.span_id && selectedObjectIds.includes(el.object_id)), [selectedObjectIds, bridgeElements])
-  const unAllocatedElements = useMemo(() => bridgeElements.filter(el => !el.span_id), bridgeElements)
+  const selectedAllocated = useMemo(
+    () =>
+      bridgeElements.filter(
+        el => el.span_id && selectedObjectIds.includes(el.object_id),
+      ),
+    [selectedObjectIds, bridgeElements],
+  );
+  const selectedUnAllocated = useMemo(
+    () =>
+      bridgeElements.filter(
+        el => !el.span_id && selectedObjectIds.includes(el.object_id),
+      ),
+    [selectedObjectIds, bridgeElements],
+  );
+  const unAllocatedElements = useMemo(
+    () => bridgeElements.filter(el => !el.span_id),
+    bridgeElements,
+  );
   // console.log('unAllocatedElements', unAllocatedElements)
   // if (selectedElements[0] && unAllocatedElements.includes(selectedElements[0])) {
   //   const elementDiv = document.getElementById(selectedElements[0].object_id)
@@ -105,9 +123,9 @@ const SpansTab = ({
   //   document.getElementById('spanTabScrollContainer').scrollTop = topPos - 300;
   // }
   const removeElementsSpanId = () => {
-    let updatedElements = [];
+    const updatedElements = [];
     selectedObjectIds.forEach((id, index) => {
-      let updatedElement = { ...bridgeElements.find(el => el.object_id == id) };
+      const updatedElement = { ...bridgeElements.find(el => el.object_id == id) };
       updatedElement.span_id = null;
       updatedElement.element_group_id = null;
       updatedElement.element_type_id = null;
@@ -154,8 +172,8 @@ const SpansTab = ({
           formType: 'spanAllocationForm',
           data: {
             spans: bridgeSpans,
-            elementsGroups: elementsGroups,
-            elementsTypes: elementsTypes,
+            elementsGroups,
+            elementsTypes,
             editMode: 'Allocate',
           },
           // options: {
@@ -164,7 +182,7 @@ const SpansTab = ({
           // },
           confirmFunction: (data, event) => prepareUpdateElements(data),
         });
-        break
+        break;
       case 'editSpan':
         onToggleModal({
           title: `Edit span`,
@@ -173,7 +191,7 @@ const SpansTab = ({
           cancelButton: 'Cancel',
           formType: 'spansForm',
           data: {
-            structureTypes: structureTypes,
+            structureTypes,
             // elementsGroups: elementsGroups,
             // elementsTypes: elementsTypes,
             item: bridgeSpans.find(span => span.id == objectId),
@@ -187,41 +205,39 @@ const SpansTab = ({
         });
         break;
       case 'editElement':
-          const item = bridgeElements.find(el => el.object_id == objectId)
-          onToggleModal({
-            title: `Edit element id ${objectId}: ${item.name}`,
-            text: '',
-            // confirmButton: 'Create',
-            cancelButton: 'Cancel',
-            formType: 'elementForm',
-            data: {
-              spans: bridgeSpans,
-              elementsGroups: elementsGroups,
-              elementsTypes: elementsTypes,
-              item: item,
-              editMode: 'edit',
-            },
-            // options: {
-            //   buttonText: 'Add users',
-            //   options: [],
-            // },
-            confirmFunction: (data, event) => onEditElement({...item, ...data}),
-          });
-          break;;
-        default: break
-      }
+        const item = bridgeElements.find(el => el.object_id == objectId)
+        onToggleModal({
+          title: `Edit element id ${objectId}: ${item.name}`,
+          text: '',
+          // confirmButton: 'Create',
+          cancelButton: 'Cancel',
+          formType: 'elementForm',
+          data: {
+            spans: bridgeSpans,
+            elementsGroups: elementsGroups,
+            elementsTypes: elementsTypes,
+            item,
+            editMode: 'edit',
+          },
+          // options: {
+          //   buttonText: 'Add users',
+          //   options: [],
+          // },
+          confirmFunction: (data, event) => onEditElement({...item, ...data}),
+        });
+        break;;
+      default: break
+    }
 
   };
 
   const prepareUpdateElements = data => {
     // console.log(bridgeElements);
-    const type = elementsTypes.find(
-      type => type.id == data.element_type_id,
-    );
+    const type = elementsTypes.find(type => type.id == data.element_type_id);
     // console.log(type);
-    let updatedElements = [];
+    const updatedElements = [];
     selectedObjectIds.forEach((id, index) => {
-      let updatedElement = {...bridgeElements.find(el => el.object_id == id)};
+      const updatedElement = { ...bridgeElements.find(el => el.object_id == id) };
       updatedElement.span_id = +data.span_id[0];
       updatedElement.element_group_id = +data.element_group_id[0];
       updatedElement.element_type_id = +data.element_type_id[0];
@@ -235,12 +251,12 @@ const SpansTab = ({
       updatedElement.element_order = index + 1;
 
       updatedElements.push(updatedElement);
-    }) 
+    });
     // console.log(updatedElements);
     onUpdateElements(updatedElements);
   };
 
-  const handleElementSelect = (el) => {
+  const handleElementSelect = el => {
     // console.log(el)
     // if (el.span_id) {
     //   if (selectedAllocated.includes(el)) {
@@ -257,27 +273,28 @@ const SpansTab = ({
     //     setSelectedUnAllocated([...selectedUnAllocated, el])
     //   }
     // }
-    onElementSelected(el.object_id, false)
-  }
+    onElementSelected(el.object_id, false);
+  };
 
   const selectAllElements = () => {
-    onElementsSelected(['all'])
+    onElementsSelected(['all']);
     // onShowInView('bottomView', 'elements', 'edit')
-  }
+  };
   const clearAllSelected = () => {
-    onElementsSelected([])
-    onShowInView('bottomView')
-  }
+    onElementsSelected([]);
+    onShowInView('bottomView');
+  };
   const scrollContainerStyle = {
-    width: "99%", 
-   //  maxHeight: `calc(100vh)-${theme.layout.topBarSize}`, 
-    maxHeight: `69vh`, 
+    width: '99%',
+    //  maxHeight: `calc(100vh)-${theme.layout.topBarSize}`,
+    maxHeight: `69vh`,
     overFlowY: 'auto',
-    overFlowX: 'hidden'
-   };
+    overFlowX: 'hidden',
+  };
 
-  if (!bridgeElements.length) return <div className="bold fullWidth p-2">No Elements yet</div>
-  else return (
+  if (!bridgeElements.length)
+    return <div className="bold fullWidth p-2">No Elements yet</div>;
+  return (
     <div>
       <div className="d-flex justify-content-between align-items-center mb-1 color-white bgPrimaryLight">
         {/* <MDBSwitch
@@ -294,9 +311,15 @@ const SpansTab = ({
             toolTipType="info"
             toolTipPosition="right"
             toolTipEffect="float"
-            toolTipText={selectedObjectIds.length ? 'Clear selected' : 'Select all'}
+            toolTipText={
+              selectedObjectIds.length ? 'Clear selected' : 'Select all'
+            }
             // className={selectedObjectIds.length ? '' : 'disabled'}
-            onClickFunction={() => selectedObjectIds.length ? clearAllSelected() : selectAllElements()}
+            onClickFunction={() =>
+              selectedObjectIds.length
+                ? clearAllSelected()
+                : selectAllElements()
+            }
           />
           <span className="mx-2">
             {selectedObjectIds.length
@@ -327,51 +350,50 @@ const SpansTab = ({
             toolTipPosition="left"
             toolTipEffect="float"
             toolTipText="Edit spans"
-            onClickFunction={() =>
-              onShowInView('bottomView', 'spans', 'edit')
-            }
+            onClickFunction={() => onShowInView('bottomView', 'spans', 'edit')}
           />
         </div>
-      </div> 
-      <div style={scrollContainerStyle}
+      </div>
+      <div
+        style={scrollContainerStyle}
         id="spanTabScrollContainer"
         className="scrollbar scrollbar-primary">
-          <div ref={allocatedRef}>
-            <TreeCustom
-              header="Spans"
-              className="customTreeView bgPrimaryFaded1 fontSmall"
-              data={{
-                level_1: bridgeSpans,
-                level_2: elementsGroups,
-                level_3: elementsTypes,
-                level_4: bridgeElements,
-              }}
-              // selectNodesMode={selectNodesMode}
-              selectedObjectIds={selectedObjectIds}
-              selectedElements={selectedElements}
-              onClick={element => handleElementSelect(element)}
-              editElement={(modalType, objectId) =>
-                toggleModal(modalType, objectId)
-              }
-              zoomToElement={objectId => {
-                onZoomToElement(objectId)
-                setTimeout(() => {
-                  onZoomToElement();
-                }, 300);
-              }}
-              showElements={(elementsObjectIds, showBottomView) => {
-                
-                onElementsSelected(elementsObjectIds);
-                showBottomView
-                  ? onShowInView('bottomView', 'elements', 'edit')
-                  : onShowInView('bottomView');
-              }}
-            />
-
-          </div>
-        <div className="projectTabsHeader d-flex justify-content-between p-2 stickyTop z-100 bgPrimaryLight color-white"
+        <div ref={allocatedRef}>
+          <TreeCustom
+            header="Spans"
+            className="customTreeView bgPrimaryFaded1 fontSmall"
+            data={{
+              level_1: bridgeSpans,
+              level_2: elementsGroups,
+              level_3: elementsTypes,
+              level_4: bridgeElements,
+            }}
+            // selectNodesMode={selectNodesMode}
+            selectedObjectIds={selectedObjectIds}
+            selectedElements={selectedElements}
+            onClick={element => handleElementSelect(element)}
+            editElement={(modalType, objectId) =>
+              toggleModal(modalType, objectId)
+            }
+            zoomToElement={objectId => {
+              onZoomToElement(objectId)
+              setTimeout(() => {
+                onZoomToElement();
+              }, 300);
+            }}
+            showElements={(elementsObjectIds, showBottomView) => {
+              onElementsSelected(elementsObjectIds);
+              showBottomView
+                ? onShowInView('bottomView', 'elements', 'edit')
+                : onShowInView('bottomView');
+            }}
+          />
+        </div>
+        <div
+          className="projectTabsHeader d-flex justify-content-between p-2 stickyTop z-100 bgPrimaryLight color-white"
           id="unAllocatedHeader"
-          ref={unAllocatedRef}>
+          ref={unAllocatedRef}
+        >
           <span> Unallocated elements:</span>
 
           <IconButtonToolTip
@@ -386,16 +408,17 @@ const SpansTab = ({
             onClickFunction={() => toggleModal('allocateToSpan')}
           />
         </div>
-        <MDBListGroup className=""
-          >
+        <MDBListGroup
+className="">
           {unAllocatedElements.map((el, index) => (
             <MDBListGroupItem
               key={el.id}
               id={el.object_id}
               className={`hoverBgPrimaryFaded1 cursor-pointer ${
-                selectedObjectIds.includes(el.object_id) ? 'bgPrimaryFaded3' : ''
+                selectedObjectIds.includes(el.object_id)
+                  ? 'bgPrimaryFaded3'
+                  : ''
               }`}
-              
             >
               <MDBInput
                 containerClass="pl-0"
@@ -409,7 +432,6 @@ const SpansTab = ({
             </MDBListGroupItem>
           ))}
         </MDBListGroup>
-
       </div>
       {/* {unAllocatedElements.map((el, index) => (
         <MDBInput
@@ -425,8 +447,6 @@ const SpansTab = ({
   );
 };
 
-
-
 const mapStateToProps = createStructuredSelector({
   bridge: makeSelectBridge(),
   selectedObjectIds: makeSelectSelectedObjectIds(),
@@ -437,23 +457,20 @@ const mapStateToProps = createStructuredSelector({
   elementsTypes: makeSelectElementsTypes(),
   structureTypes: makeSelectStructureTypes(),
   mode: makeSelectMode(),
-  focusedElement: selectors.makeSelectFocusedElement()
+  focusedElement: selectors.makeSelectFocusedElement(),
 });
 
-
-const mapDispatchToProps = (dispatch) => {
-  return {
-    onElementsSelected: ids => dispatch(elementsSelected(ids)),
-    onShowInView: (view, componentName, mode, id) => dispatch(showInView(view, componentName, mode, id)),
-    onToggleModal: modalData => dispatch(toggleModal(modalData)),
-    onToggleAlert: data => dispatch(toggleAlert(data)),
-    onUpdateElements: elements => dispatch(updateElements(elements)),
-    onElementSelected: (id, mode) => dispatch(elementSelected(id, mode)),
-    editSpan: span => dispatch(updateSpan(span)),
-    onEditElement: element => dispatch(editElement(element)),
-    onZoomToElement: objectId => dispatch(zoomToElement(objectId)),
-  };
-}
+const mapDispatchToProps = dispatch => ({
+  onElementsSelected: ids => dispatch(elementsSelected(ids)),
+  onShowInView: (view, componentName, mode, id) => dispatch(showInView(view, componentName, mode, id)),
+  onToggleModal: modalData => dispatch(toggleModal(modalData)),
+  onToggleAlert: data => dispatch(toggleAlert(data)),
+  onUpdateElements: elements => dispatch(updateElements(elements)),
+  onElementSelected: (id, mode) => dispatch(elementSelected(id, mode)),
+  editSpan: span => dispatch(updateSpan(span)),
+  onEditElement: element => dispatch(editElement(element)),
+  onZoomToElement: objectId => dispatch(zoomToElement(objectId)),
+})
 
 const withConnect = connect(
   mapStateToProps,
@@ -464,4 +481,3 @@ export default compose(
   withConnect,
   memo,
 )(SpansTab);
-

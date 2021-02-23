@@ -1,4 +1,4 @@
-import * as actionTypes  from './constants';
+import * as actionTypes from './constants';
 
 // import {TOGGLE_MESSAGES} from 'containers/App/constants'
 
@@ -10,10 +10,10 @@ import * as actionTypes  from './constants';
  * @return {object} An action object with a type of UPLOAD_PROJECT
  */
 export function editBridge(bridge) {
-  if(bridge.main_image && bridge.main_image.length) {
-    console.log(typeof(bridge.main_image))
-    const file = bridge.main_image[0]
-    console.log(file.name)
+  if (bridge.main_image && bridge.main_image.length) {
+    console.log(typeof bridge.main_image);
+    const file = bridge.main_image[0];
+    console.log(file.name);
     bridge.main_image_name = file.name;
     bridge.main_image_type = file.type;
     bridge.main_image_size = file.size;
@@ -30,74 +30,64 @@ export function editBridge(bridge) {
   };
 }
 
-
 export function getBridge(id, orgId) {
   return {
     type: actionTypes.GET_BRIDGE,
-    id, 
-    orgId
-  }
+    id,
+    orgId,
+  };
 }
 export function deleteModel(modelId, bucketName, prefix) {
   return {
     type: actionTypes.DELETE_MODEL,
-    modelId, 
+    modelId,
     bucketName,
-    prefix
-  }
+    prefix,
+  };
 }
 export function modelDeleted(modelId) {
   return {
     type: actionTypes.MODEL_DELETED,
-    modelId
-  }
+    modelId,
+  };
 }
 
-export function showInView(view, componentName, mode, id=null) {
-
+export function showInView(view, componentName, mode, id = null) {
   return {
     type: actionTypes.SHOW_IN_VIEW,
     view,
     componentName,
     mode,
-    id
-
+    id,
   };
 }
 export function surveyMessagesLoaded(messages) {
-
-
   return {
     type: actionTypes.SURVEY_MESSAGES_LOADED,
-    messages
+    messages,
   };
 }
 export function loadSurveyData(survey) {
-
-
   return {
     type: actionTypes.LOAD_SURVEY_DATA,
-    survey
+    survey,
   };
 }
 
 export function surveyFilesLoaded(data) {
-
   return {
     type: actionTypes.SURVEY_FILES_LOADED,
-    data
+    data,
   };
 }
 
 export function setSharedState(key, value) {
-
   return {
     type: actionTypes.SET_SHARED_STATE,
     key,
-    value
+    value,
   };
 }
-
 
 // export function setDisplayFolder(folder) {
 
@@ -108,19 +98,16 @@ export function setSharedState(key, value) {
 // }
 
 export function updateElements(data) {
-  console.log(data)
+  console.log(data);
   return {
     type: actionTypes.UPDATE_ELEMENTS,
     data,
-
   };
 }
 export function elementsUpdated(data) {
-  
   return {
     type: actionTypes.ELEMENTS_UPDATED,
     data,
-
   };
 }
 
@@ -129,7 +116,6 @@ export function updateSpan(data) {
   return {
     type: actionTypes.UPDATE_SPAN,
     data,
-
   };
 }
 export function spanUpdated(data) {
@@ -137,7 +123,6 @@ export function spanUpdated(data) {
   return {
     type: actionTypes.SPAN_UPDATED,
     data,
-
   };
 }
 
@@ -145,36 +130,34 @@ export function spanDeleted(spanId) {
   // console.log(spanId)
   return {
     type: actionTypes.SPAN_DELETED,
-    spanId
+    spanId,
   };
 }
 export function saveSpans(data) {
-  console.log('SAVING SPANSSSSSSSSSSS', data)
+  console.log('SAVING SPANSSSSSSSSSSS', data);
   return {
     type: actionTypes.SAVE_SPANS,
-    data
+    data,
   };
 }
 export function spansCreated(data) {
   // console.log(data)
   return {
     type: actionTypes.SPANS_CREATED,
-    data
+    data,
   };
 }
 export function spansUpdated(data) {
   // console.log(data)
   return {
     type: actionTypes.SPANS_UPDATED,
-    data
+    data,
   };
 }
 export function editElement(data) {
-
   return {
     type: actionTypes.EDIT_ELEMENT,
     data,
-
   };
 }
 
@@ -183,7 +166,6 @@ export function elementUpdated(data) {
   return {
     type: actionTypes.ELEMENT_UPDATED,
     data,
-
   };
 }
 export function updateBridgePrimaryModelId(bid, modelId) {
@@ -192,7 +174,6 @@ export function updateBridgePrimaryModelId(bid, modelId) {
     type: actionTypes.UPDATE_BRIDGE_PRIMARY_MODEL_ID,
     bid,
     modelId,
-
   };
 }
 
@@ -201,7 +182,7 @@ export function saveElements(data, userId) {
   return {
     type: actionTypes.SAVE_ELEMENTS,
     data,
-    userId
+    userId,
   };
 }
 export function elementsSaved(data) {
@@ -212,23 +193,19 @@ export function elementsSaved(data) {
   };
 }
 
-/////////////////////////////
-
+// ///////////////////////////
 
 export function createNewBridgeModel(data) {
-
   return {
     type: actionTypes.CREATE_NEW_BRIDGE_MODEL,
-    data
+    data,
   };
 }
 
 export function newModelCreated(model) {
-
   return {
     type: actionTypes.NEW_MODEL_CREATED,
     model,
-    
   };
 }
 
@@ -236,16 +213,15 @@ export function getSurvey(id) {
   // console.log(id)
   return {
     type: actionTypes.GET_SURVEY,
-    id
-  }
+    id,
+  };
 }
 
 export function bridgeLoaded(data) {
-
   return {
     type: actionTypes.BRIDGE_LOADED,
-    data
-  }
+    data,
+  };
 }
 // export function bridgeModelsLoaded(data) {
 
@@ -256,21 +232,18 @@ export function bridgeLoaded(data) {
 // }
 
 export function updateSurveyStatus(status, surveyId) {
-
   return {
     type: actionTypes.UPDATE_SURVEY_STATUS,
     status,
-    surveyId
+    surveyId,
   };
 }
-
-
 
 export function updateModel(data) {
   // console.log(componentName)
   return {
     type: actionTypes.UPDATE_MODEL,
-    data
+    data,
   };
 }
 
@@ -279,39 +252,36 @@ export function deleteBridgeSpan(spanId, userId) {
   return {
     type: actionTypes.DELETE_BRIDGE_SPAN,
     spanId,
-    userId
+    userId,
   };
 }
-
 
 export function getFolderStructure(organization_id) {
   // console.log(data)
   return {
     type: actionTypes.GET_FOLDER_STRUCTURE,
-    organization_id
+    organization_id,
   };
 }
 export function folderStructureLoaded(data) {
   // console.log(data)
   return {
     type: actionTypes.FOLDER_STRUCTURE_LOADED,
-    data
+    data,
   };
 }
 export function rejectPreviousTask(task) {
   // console.log(data)
   return {
     type: actionTypes.REJECT_PREVIOUS_TASK,
-    task
+    task,
   };
 }
 
 export function updateBridgeDefaultView(view, bid) {
-  
   return {
     type: actionTypes.UPDATE_BRIDGE_DEFAULT_VIEW,
     view,
-    bid
+    bid,
   };
 }
-
