@@ -1,8 +1,9 @@
 .spansModuleSelect ul{
-    /* top: -6rem !important; */
+    /* top: -1rem !important; */
     width: 250%;
-    /* max-height: 10rem;
-    overflow-y: auto; */
+    max-height: 6rem;
+    overflow-y: auto;
+    
 }
 
 .spansModule {

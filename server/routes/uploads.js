@@ -11,8 +11,7 @@ const connection = require('../db.js');
 const upload = require('../middlewares/upload');
 const uploadController = require('../controllers/upload');
 const { storage } = require('../utils/storage');
-const { uploadFile } = require('../utils/storage');
-const { deleteFile } = require('../utils/storage');
+const { uploadFile, deleteFile, getFiles } = require('../utils/storage');
 // const { resize } = require('../utils/files');
 const { getFileExtension } = require('../utils/files');
 const modelsController = require('../controllers/modelsController');
@@ -183,8 +182,8 @@ app.get('/profile_images/:type/:id', function(req, res) {
 
 app.post('/cloud-upload', upload.single('file'), async (req, res) => {
   // const imageUrls = await createFileWithCopy(req.file, req.body)
-  console.log(req.file);
-  console.log(req.body);
+  // console.log(req.file.mimetype);
+  // console.log(req.body);
   let smallImageUrl;
 
   if (req.file.size > 1024000 && req.file.mimetype == 'image/jpeg') {
@@ -219,7 +218,27 @@ app.post('/cloud-upload', upload.single('file'), async (req, res) => {
       req.body.bucketName,
       req.body.fileName,
     );
-    console.log('fileUrl', fileUrl);
+    // console.log('fileUrl', fileUrl);
+    const fileExtentension = getFileExtension(req.body.fileName);
+    console.log(fileExtentension)
+    if (fileExtentension === 'glb') {
+      const message = {
+        sender_user_id: req.body.userId,
+        receiver_user_id: null,
+        subject: '',
+        message: 'New Glb model uploaded',
+        createdAt: Date.now(),
+        type: 'System',
+        status: 'Sent',
+        task_id: req.body.taskId,
+        survey_id: req.body.surveyId,
+        bid: req.body.bid,
+        parent_message_id: null,
+        location: '',
+        element_id: null,
+      };
+      messagesController.createMessage(message);
+    }
     res.status(200).json({
       message: 'Upload was successful',
       fileUrl,
@@ -235,7 +254,7 @@ app.post('/cloud-upload/zip', async (req, res) => {
   let filePath;
   let createdBy;
   let taskId;
-  let newFolderName;
+  let folder_id;
   let surveyId;
   let bid;
   let userId;
@@ -248,14 +267,14 @@ app.post('/cloud-upload/zip', async (req, res) => {
     if (fieldname == 'filePath') filePath = val;
     if (fieldname == 'created_by') createdBy = val;
     if (fieldname == 'taskId') taskId = val;
-    if (fieldname == 'newFolderName') newFolderName = val;
+    if (fieldname == 'folder_id') folder_id = val;
     if (fieldname == 'surveyId') surveyId = val;
     if (fieldname == 'bid') bid = val;
     if (fieldname == 'userId') userId = val;
     if (fieldname == 'emails') emails = val;
     if (fieldname == 'msg') msg = val;
   });
-  console.log('newFolderName', newFolderName);
+  console.log('folder_id', folder_id);
   busboy.on('file', function(fieldname, file, filename, encoding, mimetype) {
     // console.log('file', file)
     // console.log('File [' + fieldname + ']: filename: ' + filename);
@@ -296,7 +315,7 @@ app.post('/cloud-upload/zip', async (req, res) => {
             filesPaths,
             bucketName,
             filePath,
-            newFolderName,
+            folder_id,
           );
           console.log('filesUploaded', filesUploaded);
           if (filesUploaded) {
@@ -307,80 +326,148 @@ app.post('/cloud-upload/zip', async (req, res) => {
               }
               console.log('Zip removed');
             });
-            const bucket = storage.bucket(bucketName);
-            bucket.getFiles(
-              {
-                prefix: `${filePath}/${newFolderName}`,
-              },
-              async function(err, files) {
-                if (err) console.log(err);
-                // console.log(files)
 
-                try {
-                  if (msg == 'New Tileset uploaded') {
-                    const firstJsonFile = files.find(
-                      file =>
-                        file.name.includes('.json') &&
-                        !file.name.includes('data') &&
-                        !file.name.includes('Data'),
-                    );
-                    console.log('firstJsonFile', firstJsonFile);
-                    if (firstJsonFile) {
-                      const model = {
-                        name: `${
-                          firstJsonFile.name.split('/')[
-                            firstJsonFile.name.split('/').length - 1
-                          ]
-                        }`,
-                        task_id: taskId,
-                        survey_id: surveyId,
-                        bid,
-                        created_by: createdBy,
-                        updated_by: createdBy,
-                        url: `https://storage.googleapis.com/${
-                          firstJsonFile.bucket.name
-                        }/${firstJsonFile.name}`,
-                        type: 'model',
-                        newFolderName,
-                      };
-                      const newModelResult = await modelsController.createBridgeModel(
-                        model,
-                      );
-
-                    }
-
-                  }
-                  console.log('msg', msg)
-                  // if (newModelResult.insertId) {
-                    messagesController.sendMail(
-                      emails,
-                      msg,
-                      'Upload successfull',
-                      `<h3>HEADER</h3>
-                    `,
-                    );
-                    const message = {
-                      sender_user_id: userId,
-                      receiver_user_id: null,
-                      subject: '',
-                      message: msg,
-                      createdAt: Date.now(),
-                      type: 'System',
-                      status: 'Sent',
+            if (msg == 'New Tileset uploaded') {
+              const tileSetFiles = await getFiles(bucketName, `${filePath}/${folder_id}`)
+              console.log('tileSetFiles', tileSetFiles)
+              try {
+                if (msg == 'New Tileset uploaded') {
+                  const firstJsonFile = tileSetFiles.find(
+                    file =>
+                      file.name.includes('.json') &&
+                      !file.name.includes('data') &&
+                      !file.name.includes('Data'),
+                  );
+                  // console.log('firstJsonFile', firstJsonFile);
+                  if (firstJsonFile) {
+                    const model = {
+                      name: `${
+                        firstJsonFile.name.split('/')[
+                          firstJsonFile.name.split('/').length - 1
+                        ]
+                      }`,
                       task_id: taskId,
                       survey_id: surveyId,
                       bid,
-                      parent_message_id: null,
-                      location: '',
-                      element_id: null,
+                      created_by: createdBy,
+                      updated_by: createdBy,
+                      url: `https://storage.googleapis.com/${
+                        firstJsonFile.bucket.name
+                      }/${firstJsonFile.name}`,
+                      type: 'model',
+                      folder_id,
                     };
-                    messagesController.createMessage(message);
-                  // }
-                } catch (err) {
-                  console.log(err);
+                    const newModelResult = await modelsController.createBridgeModel(
+                      model,
+                    );
+
+                  }
+
                 }
-              },
-            );
+                
+                // }
+              } catch (err) {
+                console.log(err);
+              }
+            }
+            // if (newModelResult.insertId) {
+              messagesController.sendMail(
+                emails,
+                msg,
+                'Upload successfull',
+                `<h3>HEADER</h3>
+              `,
+              );
+              const message = {
+                sender_user_id: userId,
+                receiver_user_id: null,
+                subject: '',
+                message: msg,
+                createdAt: Date.now(),
+                type: 'System',
+                status: 'Sent',
+                task_id: taskId,
+                survey_id: surveyId,
+                bid,
+                parent_message_id: null,
+                location: '',
+                element_id: null,
+              };
+              messagesController.createMessage(message);
+
+            
+            // const bucket = storage.bucket(bucketName);
+            // bucket.getFiles(
+            //   {
+            //     prefix: `${filePath}/${folder_id}`,
+            //   },
+            //   async function(err, files) {
+            //     if (err) console.log(err);
+            //     try {
+            //       if (msg == 'New Tileset uploaded') {
+            //         const firstJsonFile = files.find(
+            //           file =>
+            //             file.name.includes('.json') &&
+            //             !file.name.includes('data') &&
+            //             !file.name.includes('Data'),
+            //         );
+            //         console.log('firstJsonFile', firstJsonFile);
+            //         if (firstJsonFile) {
+            //           const model = {
+            //             name: `${
+            //               firstJsonFile.name.split('/')[
+            //                 firstJsonFile.name.split('/').length - 1
+            //               ]
+            //             }`,
+            //             task_id: taskId,
+            //             survey_id: surveyId,
+            //             bid,
+            //             created_by: createdBy,
+            //             updated_by: createdBy,
+            //             url: `https://storage.googleapis.com/${
+            //               firstJsonFile.bucket.name
+            //             }/${firstJsonFile.name}`,
+            //             type: 'model',
+            //             folder_id,
+            //           };
+            //           const newModelResult = await modelsController.createBridgeModel(
+            //             model,
+            //           );
+
+            //         }
+
+            //       }
+            //       console.log('msg', msg)
+            //       // if (newModelResult.insertId) {
+            //         messagesController.sendMail(
+            //           emails,
+            //           msg,
+            //           'Upload successfull',
+            //           `<h3>HEADER</h3>
+            //         `,
+            //         );
+            //         const message = {
+            //           sender_user_id: userId,
+            //           receiver_user_id: null,
+            //           subject: '',
+            //           message: msg,
+            //           createdAt: Date.now(),
+            //           type: 'System',
+            //           status: 'Sent',
+            //           task_id: taskId,
+            //           survey_id: surveyId,
+            //           bid,
+            //           parent_message_id: null,
+            //           location: '',
+            //           element_id: null,
+            //         };
+            //         messagesController.createMessage(message);
+            //       // }
+            //     } catch (err) {
+            //       console.log(err);
+            //     }
+            //   },
+            // );
           }
           // fs.readdir(unzipPath, async function (err, files) {
           //   console.log('files read from disk')

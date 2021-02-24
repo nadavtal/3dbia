@@ -279,9 +279,9 @@ function TaskWizard({
           formData.append('created_by', `${currentUser.userInfo.first_name  } ${  currentUser.userInfo.last_name}` );
           formData.append('bucketName', `3dbia_organization_${  task.organization_id}`);
           formData.append('filePath', filePath);
-          console.log(currentSubTask.name)
-          const newFolderName = Date.now()
-          if (currentSubTask.name !== 'Upload images') formData.append('newFolderName', newFolderName);
+          // console.log(currentSubTask.name)
+          const folder_id = Date.now()
+          if (currentSubTask.name !== 'Upload images') formData.append('folder_id', folder_id);
           switch (currentSubTask.name) {
             case 'Upload images':
               formData.append('msg', 'New images uploaded');
@@ -348,19 +348,15 @@ function TaskWizard({
           // console.log(smallFileName)
           const formData = new FormData();
           formData.append('file', file);
-          formData.append(
-            'bucketName',
-            '3dbia_organization_' +
-                task.organization_id,
+          formData.append('bucketName', `3dbia_organization_${task.organization_id}`,
           );
           formData.append('fileName', fileName);
-          formData.append(
-            'smallFileName',
-            smallFileName,
-          );
-
-          axios
-            .post(
+          formData.append('smallFileName', smallFileName);
+          formData.append('surveyId', task.survey_id);
+          formData.append('taskId', task.id);
+          formData.append('bid', task.bid);
+          formData.append('userId', currentUser.userInfo.id);   
+          axios.post(
               apiUrl + 'cloud-upload',
               formData,
               {

@@ -6,8 +6,9 @@ const upload = require('../middlewares/upload');
 const connection = require('../db.js');
 const { reject } = require('lodash');
 const elementsController = require('../controllers/bridgeElementsController');
+const surveysController = require('../controllers/surveysController');
 const modelsController = require('../controllers/modelsController');
-const {storage} = require("../utils/storage")
+const {storage, getFiles} = require("../utils/storage")
 
 
 // // If modifying these scopes, delete token.json.
@@ -147,7 +148,7 @@ app.get('/bridges/:id', async function(req, res) {
     }`;
     const fileName = `bid_${id}/folder_structure.csv`;
     // const fileName = `folder_structure.csv`
-    const folderStructureFile = await getFile(bucketName, fileName);
+    const folderStructureFile = await getFiles(bucketName, fileName);
     let folderFile = null;
     // console.log('folderStructureFile', folderStructureFile)
     if (folderStructureFile.length) {
@@ -177,24 +178,7 @@ const getBridgeBasicInfo = bridgeId => new Promise((resolve, reject) => {
       }
     })
   })
-const getFile = (bucketName, filePrefix) => {
-  console.log(bucketName, filePrefix);
-  return new Promise((resolve, reject) => {
-    const bucket = storage.bucket(bucketName);
-    bucket.getFiles(
-      {
-        prefix: filePrefix,
-      },
-      function(err, file) {
-        if (err) {
-          reject(err);
-        } else {
-          resolve(file);
-        }
-      },
-    );
-  });
-};
+
 const readFile = (bucketName, fileName) => {
   console.log(bucketName, fileName);
   return new Promise((resolve, reject) => {
@@ -389,17 +373,10 @@ app.get('/bridges/:id/spans', function(req, res) {
     res.send(results);
   });
 });
-app.get('/bridges/:id/surveys', function(req, res) {
-  console.log('getting bridge surveys', req.params);
-  console.log(req.params);
-  const {id} = req.params
-  let q = 'SELECT * FROM tbl_survey WHERE bid = ' + req.params.id;
-  console.log(q);
-  connection.query(q, function(error, results) {
-    if (error) throw error;
+app.get('/bridges/:id/surveys', async function(req, res) {
+  const surveys = await surveysController.getSurveys(req.params.id)
 
-    res.send(results);
-  });
+  res.send(surveys)
 });
 app.post('/bridges/:id/spans', async function(req, res) {
   console.log('saving bridge spans', req.body);

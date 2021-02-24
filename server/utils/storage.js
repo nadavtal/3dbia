@@ -39,8 +39,28 @@ async function deleteFile(bucketName, filename) {
   return `gs://${bucketName}/${filename} deleted.`;
 }
 
+const getFiles = (bucketName, filePrefix) => {
+  console.log(bucketName, filePrefix);
+  return new Promise((resolve, reject) => {
+    const bucket = storage.bucket(bucketName);
+    bucket.getFiles(
+      {
+        prefix: filePrefix,
+      },
+      function(err, files) {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(files);
+        }
+      },
+    );
+  });
+};
+
 module.exports = {
   storage,
   uploadFile,
   deleteFile,
+  getFiles
 };

@@ -37,8 +37,7 @@ function* getBridge(action) {
       request,
       `${apiUrl}bridges/${action.id}/details`,
     );
-    // console.log(bridgeDetails)
-    // const models = yield call(request, apiUrl + 'bridges-models/' + action.id);
+
     const model = bridge.primary_model_id
       ? yield call(
         request,
