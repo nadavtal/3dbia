@@ -346,12 +346,12 @@ class WijmoTable extends React.Component {
           // console.log(groups)
           groups.forEach(g => {
             const groupName = g.innerText.slice(0, -1).toLowerCase().split(' ').join('_')
-            console.log(groupName)
-            console.log(this.props.tableConfig.groups)
+            // console.log(groupName)
+            // console.log(this.props.tableConfig.groups)
             // let rgx = /\s*(Bridge name|Survey name)\s*/i;
             // let text = g.innerText;
             // if (rgx.test(text.substr(0, text.length - 1))) {
-              console.log(this.props.tableConfig.groups.includes(groupName))
+              // console.log(this.props.tableConfig.groups.includes(groupName))
             if (this.props.tableConfig.groups.includes(groupName)) {
               g.removeChild(g.querySelector(".wj-remove"));
             }
@@ -483,7 +483,7 @@ class WijmoTable extends React.Component {
  
         // console.log('this.props.selectedItems', this.props.selectedItems)
         if (prevProps.data !== this.props.data) {
-            console.log('DATA CHANGED', this.props.multiSelectionMode)
+            // console.log('DATA CHANGED', this.props.multiSelectionMode)
             this.setState({}, () => {
                 this.state.flex.itemsSource = this._createItemsSource(this.state.itemsCount);
                 // this.state.flex.collapseGroupsToLevel(0);

@@ -36,6 +36,20 @@ export function setSelectedComponent(componentName) {
       componentName,
     };
   }
+export function getTasksByOrgId(orgId) {
+
+    return {
+      type: actionTypes.GET_SURVEYS_TASKS_AND_PROCESSES,
+      orgId,
+    };
+  }
+export function surveysTasksAndProcessesLoaded(data) {
+
+    return {
+      type: actionTypes.SURVEYS_TASKS_AND_PROCESSES_LOADED,
+      data,
+    };
+  }
 
 export function processesCreated(data) {
   // console.log('organization')

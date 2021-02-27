@@ -96,11 +96,13 @@ const ResiumToolBar = props => {
         models: {
           name: 'Models',
           iconName: 'cubes',
+          show: true,
           actions: modelActions,
         },
         views: {
           name: 'Views',
           iconName: 'eye',
+          show: true,
           actions: [
             {
               label: 'Top',
@@ -155,6 +157,7 @@ const ResiumToolBar = props => {
         calibration: {
           name: 'Calibration',
           iconName: 'arrows-alt',
+          show: props.selectedSubTask == 'Calibrate models',
           actions: [
             {
               label: 'Select entity',
@@ -195,22 +198,6 @@ const ResiumToolBar = props => {
               },
               value: incomingCalibrationData ? incomingCalibrationData.lon : 0,
             },
-            // {
-            //   label: 'Lon',
-            //   elementType: 'slider',
-            //   elementConfig: {
-            //     min: -50,
-            //     max: 50,
-            //     defaultValue: 0,
-            //     step: 1,
-            //     // defaultMin: 0,
-            //     // defaultMax: 100,
-            //     range: false
-            //   },
-            //   value: incomingCalibrationData ?  (incomingCalibrationData.lon - initialCalibrationState.lon) * props.multiplier : 0,
-            //   defaultValue: initialCalibrationState ? initialCalibrationState.lon : 0,
-            //   stepMultyplier: props.multiplier
-            // },
             {
               label: 'Lat',
               elementType: 'input',
@@ -220,22 +207,6 @@ const ResiumToolBar = props => {
               },
               value: incomingCalibrationData ? incomingCalibrationData.lat : 0,
             },
-            // {
-            //   label: 'Lat',
-            //   elementType: 'slider',
-            //   elementConfig: {
-            //     min: -50,
-            //     max: 50,
-            //     defaultValue: 0,
-            //     step: 1,
-            //     // defaultMin: 0,
-            //     // defaultMax: 100,
-            //     range: false
-            //   },
-            //   value: incomingCalibrationData ?  (incomingCalibrationData.lat - initialCalibrationState.lat) * props.multiplier : 0,
-            //   defaultValue: initialCalibrationState ? initialCalibrationState.lat : 0,
-            //   stepMultyplier: props.multiplier
-            // },
             {
               label: 'Height',
               elementType: 'input',
@@ -246,33 +217,6 @@ const ResiumToolBar = props => {
                 ? incomingCalibrationData.height
                 : 0,
             },
-            // {
-            //   label: 'Height',
-            //   elementType: 'slider',
-            //   elementConfig: {
-            //     min: -999,
-            //     max: 999,
-            //     defaultValue:  initialCalibrationState ? initialCalibrationState.height : 0,
-            //     step: 1,
-            //     // defaultMin: 0,
-            //     // defaultMax: 100,
-            //     range: false
-            //   },
-            //   value: incomingCalibrationData ? incomingCalibrationData.height : 0,
-            //   defaultValue: initialCalibrationState ? initialCalibrationState.height : 0,
-            //   stepMultyplier: 1
-            // },
-            // {
-            //   label: 'Select entity',
-            //   elementType: 'select',
-            //   elementConfig: {
-            //     options: props.models.map(model => {
-            //       return {text: model.name, value: model.name}
-            //     })
-            //   },
-            //   value: props.selectedItem,
-
-            // },
             // {
             //   label: 'Adust Accuracy',
             //   showLabel: true,
@@ -391,11 +335,13 @@ const ResiumToolBar = props => {
         models: {
           name: 'Models',
           iconName: 'cubes',
+          show: true,
           actions: modelActions,
         },
         views: {
           name: 'Views',
           iconName: 'eye',
+          show: true,
           actions: [
             {
               label: 'Top',
@@ -450,6 +396,7 @@ const ResiumToolBar = props => {
         calibration: {
           name: 'Calibration',
           iconName: 'arrows-alt',
+          show: props.selectedSubTask == 'Calibrate models',
           actions: [
             {
               label: 'Select entity',
@@ -711,9 +658,9 @@ const ResiumToolBar = props => {
     // console.log(actionGroups)
     return actionGroups;
   };
-
+  // console.log('props.selectedSubTask', props.selectedSubTask)
   const actionGroups = useMemo(() => createActionGroups(), [
-    props.calibrationData,
+    props.calibrationData, props.selectedSubTask
   ]);
   // console.log(props.mode)
   // actionGroups = useMemo(() => updatedActionsMultipliers(actionGroups), [
@@ -813,18 +760,18 @@ const ResiumToolBar = props => {
   };
 
   const topActionGroups = Object.keys(actionGroups).map(
-    (actionGroup, index) => (
+    (actionGroup, index) => actionGroups[actionGroup].show && (
       <IconButtonToolTip
-    key={index}
-    className="resiumToolBar_tool p-1 active align-middle"
-    iconName={actionGroups[actionGroup].iconName}
-    toolTipType="info"
-    toolTipPosition="bottom"
-        toolTipEffect="float"
-    toolTipText={actionGroups[actionGroup].name}
-    onClickFunction={() => onActionGroupClick(actionGroups[actionGroup].name)}
-  />)
-  )
+        key={index}
+        className="resiumToolBar_tool p-1 active align-middle"
+        iconName={actionGroups[actionGroup].iconName}
+        toolTipType="info"
+        toolTipPosition="bottom"
+            toolTipEffect="float"
+        toolTipText={actionGroups[actionGroup].name}
+        onClickFunction={() => onActionGroupClick(actionGroups[actionGroup].name)}
+      />)
+      )
 
   const sideActionsHtml = sideActions.map((action, index) => (
     <IconButtonToolTip

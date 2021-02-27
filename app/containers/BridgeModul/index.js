@@ -10,7 +10,10 @@ import saga from './saga';
 import { makeSelectLoading, makeSelectError, makeSelectCurrentUser,
   makeSelectRoleTypes, makeSelectCurrentUserRole} from 'containers/App/selectors';
 import * as selectors from './selectors'
-import { getOrgTechnicalInfo, getOrgCustomFieldsTemplate } from '../AppData/actions'
+import { getOrgTechnicalInfo, getOrgCustomFieldsTemplate } from '../AppData/actions';
+
+
+
 import * as actions from './actions';
 const key = "bridgeModule";
 import './BridgeModule.css'
@@ -42,6 +45,7 @@ const BridgeModule = ({
       
     }
   }, [])
+
   return (
 
       <div className="">

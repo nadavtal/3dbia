@@ -96,12 +96,14 @@ const ProjectData = ({
       <div className="my-1 d-flex justify-content-between">
         <IconButtonToolTip
           className="ml-2"
-          size="lg"
-          iconName="chevron-left"
+          size="3x"
+          iconName="sign-out-alt"
           toolTipType="info"
           toolTipPosition="right"
+          // flip="vertical"
+          rotate="180"
           // toolTipEffect="float"
-          toolTipText="Back to bridges"
+          toolTipText="Exit bridge"
           onClickFunction={() => handleBackToBridges()}
         />
         <h5>{bridge.name}</h5>

@@ -14,13 +14,13 @@ import { editElement,
   updateElements, 
   updateModel, 
   showInView, 
-  saveElements, 
+  setSharedState, 
   updateBridgeDefaultView,
   deleteModel } from 'containers/BridgeModul/actions';
 import { createMessage } from 'containers/AppData/actions';
 import { toggleModal, toggleAlert } from 'containers/App/actions';
 import { setSelectedTab } from '../BridgeModul/LeftViewComponent/actions';
-
+import { MDBBtn, MDBIcon } from 'mdbreact'
 import {
   Viewer,
   Entity,
@@ -914,9 +914,6 @@ const Resium = props => {
     const cartesian = viewer.scene.pickPosition(m.position);
     const {ellipsoid} = viewer.scene.globe
     const degrees = convertCartesianToDegrees(cartesian, ellipsoid);
-    console.log(pickedFeature);
-    console.log(props.mode);
-    console.log(props.selectedSubTask);
     if (
       props.selectedSubTask &&
       props.selectedSubTask.name == 'Calibrate models'
@@ -1814,6 +1811,11 @@ const Resium = props => {
       setDegrees2dArray(degrees);
     });
   };
+
+  const exitTaskState = () => {
+    props.onSetSharedState('selectedSubTask', null)
+    props.onSetSharedState('selectedTask', null)
+  }
   // console.log(props.models)
   const models = useMemo(
     () =>
@@ -1913,10 +1915,10 @@ const Resium = props => {
         save={actionGroup => save(actionGroup)}
         reset={actionGroup => reset(actionGroup)}
         saveView={() => saveView()}
-        selectedSubTask={props.selectedSubTask}
+        selectedSubTask={props.selectedSubTask && props.selectedSubTask.name}
       />
     ),
-    [props.models, calibrationState, props.mode, toolBarOpen, resetCameraView],
+    [props.models, calibrationState, props.mode, toolBarOpen, resetCameraView, props.selectedSubTask],
   );
 
   const pointsHtml = useMemo(
@@ -2005,9 +2007,22 @@ const Resium = props => {
             <span className="bold">
               {props.selectedTask && props.selectedTask.name}
             </span>
-            {props.selectedSubTask && (
-              <span className="">{` - ${props.selectedSubTask.name}`}</span>
-            )}
+         
+              <span className="">                
+                {props.selectedSubTask && (` - ${props.selectedSubTask.name}`)}
+              </span>
+              {(props.selectedTask || props.selectedSubTask) && (
+                <MDBBtn
+                  className="bgSecondary"
+                  size="sm"
+                  onClick={() => exitTaskState()}>
+                    Exit Task
+                  <MDBIcon icon='sign-out-alt' className='ml-1' />
+                
+                </MDBBtn>
+
+              )}
+         
           </div>
           {/* <PointPrimitiveCollection modelMatrix={Transforms.eastNorthUpToFixedFrame(center)}> */}
 
@@ -2184,6 +2199,7 @@ export function mapDispatchToProps(dispatch) {
     onDeleteModel: (modelId, bucketName, prefix) =>
       dispatch(deleteModel(modelId, bucketName, prefix)),
     onToggleAlert: alertData => dispatch(toggleAlert(alertData)),
+    onSetSharedState: (key, value) => dispatch(setSharedState(key, value)),
 
     // save: () => console.log('save')
   };

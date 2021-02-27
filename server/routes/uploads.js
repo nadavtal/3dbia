@@ -143,10 +143,6 @@ const getAllFiles = function(dirPath, arrayOfFiles) {
   return arrayOfFiles;
 };
 
-// const filesPaths = getAllFiles(unzipPath)
-// console.log(filesPaths)
-// uploadFiles(filesPaths)
-
 app.post('/uploads', upload.single('profileImg'), uploadController.uploadFiles);
 app.post(
   '/profile_images',
@@ -276,9 +272,6 @@ app.post('/cloud-upload/zip', async (req, res) => {
   });
   console.log('folder_id', folder_id);
   busboy.on('file', function(fieldname, file, filename, encoding, mimetype) {
-    // console.log('file', file)
-    // console.log('File [' + fieldname + ']: filename: ' + filename);
-    // Create a write stream of the new file
     const fstream = fs.createWriteStream(path.join(uploadPath, filename));
     // Pipe it trough
     file.pipe(fstream);
@@ -287,22 +280,9 @@ app.post('/cloud-upload/zip', async (req, res) => {
     fstream.on('close', async () => {
       console.log(`Upload of '${filename}' finished`);
       res.send('ok');
-      // decompress(uploadPath+"//"+filename, unzipPath).then(files => {
-      //   console.log('done files.length!', files.length);
-      //  });
       const zip = new StreamZip.async({ file: `${uploadPath}//${filename}` });
       // console.log(zip)
       await zip.extract(`${uploadPath}//${filename}`, unzipPath);
-
-      // zip.on('ready', () => {
-      //   console.log('Entries read: ' + zip.entriesCount);
-      //   for (const entry of Object.values(zip.entries())) {
-      //       const desc = entry.isDirectory ? 'directory' : `${entry.size} bytes`;
-      //       console.log(`Entry ${entry.name}: ${desc}`);
-      //   }
-      //   // Do not forget to close the file once you're done
-      //   zip.close();
-      // });
       const strzip = fs.createReadStream(`${uploadPath}//${filename}`);
       strzip
         .pipe(unzipper.Extract({ path: unzipPath }))
@@ -393,81 +373,8 @@ app.post('/cloud-upload/zip', async (req, res) => {
                 location: '',
                 element_id: null,
               };
-              messagesController.createMessage(message);
-
+              messagesController.createMessage(message);      
             
-            // const bucket = storage.bucket(bucketName);
-            // bucket.getFiles(
-            //   {
-            //     prefix: `${filePath}/${folder_id}`,
-            //   },
-            //   async function(err, files) {
-            //     if (err) console.log(err);
-            //     try {
-            //       if (msg == 'New Tileset uploaded') {
-            //         const firstJsonFile = files.find(
-            //           file =>
-            //             file.name.includes('.json') &&
-            //             !file.name.includes('data') &&
-            //             !file.name.includes('Data'),
-            //         );
-            //         console.log('firstJsonFile', firstJsonFile);
-            //         if (firstJsonFile) {
-            //           const model = {
-            //             name: `${
-            //               firstJsonFile.name.split('/')[
-            //                 firstJsonFile.name.split('/').length - 1
-            //               ]
-            //             }`,
-            //             task_id: taskId,
-            //             survey_id: surveyId,
-            //             bid,
-            //             created_by: createdBy,
-            //             updated_by: createdBy,
-            //             url: `https://storage.googleapis.com/${
-            //               firstJsonFile.bucket.name
-            //             }/${firstJsonFile.name}`,
-            //             type: 'model',
-            //             folder_id,
-            //           };
-            //           const newModelResult = await modelsController.createBridgeModel(
-            //             model,
-            //           );
-
-            //         }
-
-            //       }
-            //       console.log('msg', msg)
-            //       // if (newModelResult.insertId) {
-            //         messagesController.sendMail(
-            //           emails,
-            //           msg,
-            //           'Upload successfull',
-            //           `<h3>HEADER</h3>
-            //         `,
-            //         );
-            //         const message = {
-            //           sender_user_id: userId,
-            //           receiver_user_id: null,
-            //           subject: '',
-            //           message: msg,
-            //           createdAt: Date.now(),
-            //           type: 'System',
-            //           status: 'Sent',
-            //           task_id: taskId,
-            //           survey_id: surveyId,
-            //           bid,
-            //           parent_message_id: null,
-            //           location: '',
-            //           element_id: null,
-            //         };
-            //         messagesController.createMessage(message);
-            //       // }
-            //     } catch (err) {
-            //       console.log(err);
-            //     }
-            //   },
-            // );
           }
           // fs.readdir(unzipPath, async function (err, files) {
           //   console.log('files read from disk')

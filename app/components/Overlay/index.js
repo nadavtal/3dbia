@@ -37,8 +37,8 @@ const Overlay = ({
       timeout={300}
       classNames={animationType}
       unmountOnExit
-      onEnter={() => console.log('ENTER')}
-      onExited={() => console.log('EXIT')}
+      // onEnter={() => console.log('ENTER')}
+      // onExited={() => console.log('EXIT')}
     >
        <OverlayWrapper>
          <CloseIcon>

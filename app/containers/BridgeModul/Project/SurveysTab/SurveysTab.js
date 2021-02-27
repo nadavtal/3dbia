@@ -112,9 +112,6 @@ const SurveyTab = ({
       // confirmButton: 'Delete',
       cancelButton: 'Close',
       body: <DataComponent data={item} />
-      // createFunction={(formData) => this.prepareNewBridgeModel(formData)}
-      // editFunction={(formData) => this.props.editBridge(formData, this.props.bridge.bid)}
-      // confirmFunction: () => console.log('DELETE ', model),
     });
   }
 

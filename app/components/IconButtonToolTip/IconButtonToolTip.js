@@ -34,7 +34,10 @@ const IconButtonToolTip = (props) => {
           rotate={props.rotate}
           pulse={props.pulse}
           spin={props.spin}
-          far={props.far}/>
+          far={props.far}
+          flip={props.flip}
+          rotate={props.rotate}
+          />
         {/* <FontAwesomeIcon icon={props.iconName} /> */}
       </a>
       <ReactTooltip

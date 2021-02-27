@@ -213,39 +213,17 @@ function* getOrganizationById(action) {
       request,
       apiUrl + 'organizations/' + action.id + '/bridgeTypes',
     );
-    // console.log(bridges);
-    // const projects = yield call(
-    //   request,
-    //   apiUrl + 'organizations/' + action.id + '/projects',
-    // );
-    // console.log(projects);
+
 
     const surveys = yield call(
       request,
       apiUrl + 'organizations/' + action.id + '/surveys'
     );
-    // console.log(surveys)
-    // const generalProcessesTemplates = yield call(
+
+    // const tasks = yield call(
     //   request,
-    //   apiUrl + 'process-templates'
+    //   apiUrl + 'organizations/' + action.id + '/tasks',
     // );
-    // console.log(generalProcessesTemplates)
-    // const processes = []
-    // const projectsProcesses = []
-    // console.log(processes);
-    // const projectsProcesses = yield call(
-    //   request,
-    //   apiUrl + 'organizations/' + action.id + '/project-processes',
-    // );
-    // console.log(projectsProcesses);
-    // const tasks = []
-    // const projects = []
-    const tasks = yield call(
-      request,
-      apiUrl + 'organizations/' + action.id + '/tasks',
-    );
-    // console.log(projectsProcesses);
-    // const processesTasks = []
     const processesTasks = yield call(
       request,
       apiUrl +
@@ -253,12 +231,12 @@ function* getOrganizationById(action) {
         action.id +
         '/processes-tasks'
     );
-    console.log(processesTasks);
+
     const processesTemplates = yield call(
       request,
       apiUrl + 'organizations/' + action.id + '/process-templates'
     );
-    console.log(processesTemplates)
+
     const providers = yield call(
       request,
       apiUrl + 'organizations/' + action.id + '/providers',
@@ -286,7 +264,7 @@ function* getOrganizationById(action) {
         providers,
         processesTasks,
         bridgeTypes,
-        tasks,
+        // tasks,
         providersRoles
       }),
     );

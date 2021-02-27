@@ -33,8 +33,10 @@ import { ExportService } from 'containers/Wijmo/export';
 import { useInjectReducer } from 'utils/injectReducer';
 import { useInjectSaga } from 'utils/injectSaga';
 import TextSearch from 'components/TextSearch/TextSearch';
+import Menu from '../Management/Menu'
 import DataTable from '../../components/DataTable/DataTable';
 import MyWijmoDetailedTable from 'containers/MyTables/MyWijmoDetailedTable'; 
+
 // import DetailedTable from 'containers/MyTables/DetailedTable'; 
 import * as actions from './actions'
 import IconButtonToolTip from 'components/IconButtonToolTip/IconButtonToolTip';
@@ -43,19 +45,24 @@ import saga from './saga';
 import './Projects.css';
 import { searchAll } from 'utils/dataUtils';
 import { MenuItem } from 'react-bootstrap';
+import BasicMap from '../Resium/BasicMap';
 
 
 export function Projects(props) {
 
   useInjectSaga({ key, saga });
-  const [tableMode, setTableMode] = useState(false);
+  const [tableMode, setTableMode] = useState('Card view');
   const [selection, setSelection] = useState([]);
   const [searchResults, setSearchResults] = useState(props.items);
   useEffect(() => {
     // console.log('[ProjectwPage.js] useEffect', props.projects);
 
   }, [tableMode]);
-
+  const menu = [
+    { name: 'Card view' },
+    { name: 'Map view' },
+    { name: 'Table view' }
+  ]
   const history = useHistory()
   const projectsCards = searchResults.map((item, index) => {
     const scrollContainerStyle = {
@@ -142,16 +149,16 @@ export function Projects(props) {
     
     <div className="d-flex justify-content-between align-items-center">
       <div className="d-flex"> 
-          <MDBSwitch
+          {/* <MDBSwitch
             className="mt-2 color-white"
             checked={tableMode}
             onChange={() => setTableMode(!tableMode)}
             labelLeft=""
             labelRight={`${tableMode ? 'Card view' : 'Table view'}`}
-          />
+          /> */}
         <MDBAnimation type="fadeIn" className="d-flex">
           {useMemo(() => <TextSearch
-            className={`ml-3 mt-0 color-white ${tableMode && 'hide-content'}`}
+            className={`ml-3 mt-0 color-white ${tableMode == 'Table view' && 'hide-content'}`}
             // value=""
             onChange={val => handleSearch(val)}
           />, [])}
@@ -184,12 +191,12 @@ export function Projects(props) {
    };
 
   const Component = () => {
-     return (
-       <div 
-        style={scrollContainerStyle}
-        className="scrollbar scrollbar-primary">
-         {tableMode ? (
-           <MDBAnimation type="fadeIn" className="">
+    switch (tableMode) {
+      case 'Map view':
+        return <BasicMap />
+        
+      case 'Table view':
+        return <MDBAnimation type="fadeIn" className="">
              <MyWijmoDetailedTable
                className="bridgeDetailedTable"
                data={props.items}
@@ -219,41 +226,90 @@ export function Projects(props) {
                selectionMode="CellRange"
              />
            </MDBAnimation>
-         ) : (
-           <>
-             <MDBAnimation type="fadeIn" className="">
-               <MDBCardGroup deck>
-                 <MDBRow>{projectsCards}</MDBRow>
-               </MDBCardGroup>
-             </MDBAnimation>
-           </>
-         )}
-       </div>
-     );
+        
+    
+      default:
+        return  <MDBAnimation type="fadeIn" className="">
+        <MDBCardGroup deck>
+          <MDBRow>{projectsCards}</MDBRow>
+        </MDBCardGroup>
+      </MDBAnimation>
+        
+    }
+    //  return (
+    //    <div 
+    //     style={scrollContainerStyle}
+    //     className="scrollbar scrollbar-primary">
+    //      {tableMode ? (
+    //        <MDBAnimation type="fadeIn" className="">
+    //          <MyWijmoDetailedTable
+    //            className="bridgeDetailedTable"
+    //            data={props.items}
+    //            subData={props.surveys}
+    //            exportService={new ExportService()}
+    //            onRowClick={bridge => props.onProjectClick(bridge.bid)}
+    //            tableConfig={{
+    //              exludesFields: [
+    //                'id',
+    //                'user_id',
+    //                'survey_id',
+    //                'provider_id',
+    //                'organization_id',
+    //                'role_type_id',
+    //              ],
+
+    //              editableFields: [],
+    //              longFields: [],
+    //              dateFields: [],
+    //              fixedColumns: [],
+    //              wholeNumberFields: [],
+    //              decimelNumberFields: [],
+    //            }}
+    //            connectingParentField="bid"
+    //            connectingChildField="bid"
+    //            detailedHeader="Surveys history"
+    //            selectionMode="CellRange"
+    //          />
+    //        </MDBAnimation>
+    //      ) : (
+    //        <>
+    //          <MDBAnimation type="fadeIn" className="">
+    //            <MDBCardGroup deck>
+    //              <MDBRow>{projectsCards}</MDBRow>
+    //            </MDBCardGroup>
+    //          </MDBAnimation>
+    //        </>
+    //      )}
+    //    </div>
+    //  );
   }
 
   return (
-    <MDBCard narrow>
-      <MDBView
-        cascade
-        className="mdb-color color-white card-header bgPrimary"
-      >
-        {/* <MDBAnimation type="bounceInRight" className=""> */}
-        {useMemo(() => <Header length={bridgesLength}/>, [tableMode])}
-        {/* <Header length={bridgesLength}/> */}
-        {/* </MDBAnimation> */}
-      </MDBView>
-      <MDBAnimation type="fadeIn" className="">
-        <MDBCardBody className=""><Component /></MDBCardBody>
-      </MDBAnimation>
-    </MDBCard>
-    // <Layout
-    //   bodyTitle={'All surveys'}
-    //   menuTitle="Filters"
-    //   // menu={<Filters filters={filters} handleChange={handleFiletrChange} />}
-    //   headerComponent={<Header />}
-    //   component={<Component />}
-    // />
+    // <MDBCard narrow>
+    //   <MDBView
+    //     cascade
+    //     className="mdb-color color-white card-header bgPrimary"
+    //   >
+    //     {/* <MDBAnimation type="bounceInRight" className=""> */}
+    //     {useMemo(() => <Header length={bridgesLength}/>, [tableMode])}
+    //     {/* <Header length={bridgesLength}/> */}
+    //     {/* </MDBAnimation> */}
+    //   </MDBView>
+    //   <MDBAnimation type="fadeIn" className="">
+    //     <MDBCardBody className=""><Component /></MDBCardBody>
+    //   </MDBAnimation>
+    // </MDBCard>
+    <Layout
+      bodyTitle={'All Bridges'}
+      menuTitle="Views"
+      menu={<Menu
+        menu={menu}
+        handleClick={item => setTableMode(item)}
+        selected={tableMode}
+      />}
+      headerComponent={<Header length={bridgesLength}/>}
+      component={<Component />}
+    />
   );
 
 

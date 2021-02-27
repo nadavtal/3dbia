@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { createStructuredSelector } from 'reselect';
 import * as selectors from './selectors';
+import { getTasksByOrgId } from './actions'
 import Tasks from 'containers/Tasks';
 
 const SurveyTasksManager = ({
@@ -10,9 +11,16 @@ const SurveyTasksManager = ({
     surveys,
     organizationUsers,
     bridges,
+    onGetTasksByOrgId
     // providerUsers
 }) => {
-
+    useEffect(() => {
+      
+      onGetTasksByOrgId(bridges[0].organization_id)
+      return () => {
+        
+      }
+    }, [])
     const mergeBridgeInfo = array => {
         array.forEach(item => {
             const bridge = bridges.find(bridge => bridge.bid == item.bid)
@@ -28,21 +36,21 @@ const SurveyTasksManager = ({
         })
         return array
     }   
-  const createFullTasksTable = () => {
-    console.log(surveys)
-    let finalTable = bridges.length ? mergeBridgeInfo(tasks) : tasks;
-    finalTable.forEach(task => {
-      console.log(task)
-      const user = organizationUsers.find(user => user.user_id == task.user_id);
-      const userFullName = user ? user.first_name + ' ' + user.last_name : 'Unallocated'
-      task['user'] = userFullName
-      task['survey_name'] = surveys.find(survey => survey.id == task.survey_id).process_template_name,
-      task['survey_status'] = surveys.find(survey => survey.id == task.survey_id).status
-      // task['provider_name'] = task.provider_id ? provider.name : 'No provider'
-    })
-    
-    return finalTable
-  }
+    const createFullTasksTable = () => {
+      // console.log(surveys)
+      let finalTable = bridges.length ? mergeBridgeInfo(tasks) : tasks;
+      finalTable.forEach(task => {
+        // console.log(task)
+        const user = organizationUsers.find(user => user.user_id == task.user_id);
+        const userFullName = user ? user.first_name + ' ' + user.last_name : 'Unallocated'
+        task['user'] = userFullName
+        task['survey_name'] = surveys.find(survey => survey.id == task.survey_id).process_template_name,
+        task['survey_status'] = surveys.find(survey => survey.id == task.survey_id).status
+        // task['provider_name'] = task.provider_id ? provider.name : 'No provider'
+      })
+      
+      return finalTable
+    }
   return <Tasks tasks={createFullTasksTable()}
     readOnly={true}
     surveys={surveys}
@@ -60,7 +68,7 @@ const mapStateToProps = createStructuredSelector({
 
 const mapDispatchToProps = dispatch => {
   return {
-    //   onUpdateTask: (task) => dispatch(updateTask(task)),
+    onGetTasksByOrgId: (orgId) => dispatch(getTasksByOrgId(orgId))
   };
 };
 

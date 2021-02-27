@@ -58,6 +58,42 @@ function* getProcessesByProjectId(action) {
   }
 
 }
+function* getTasksByOrgIds(action) {
+  // console.log('getProcessesByProjectId')
+  try {
+
+    // const surveys = yield call(
+    //   request,
+    //   apiUrl + 'organizations/' + action.orgId + '/surveys'
+    // );
+
+    const tasks = yield call(
+      request,
+      apiUrl + 'organizations/' + action.orgId + '/tasks',
+    );
+    // const processesTasks = yield call(
+    //   request,
+    //   apiUrl +
+    //     'organizations/' +
+    //     action.orgId +
+    //     '/processes-tasks'
+    // );
+
+    // const processesTemplates = yield call(
+    //   request,
+    //   apiUrl + 'organizations/' + action.orgId + '/process-templates'
+    // );
+    yield put(actions.surveysTasksAndProcessesLoaded({
+      // surveys,
+      tasks,
+      // processesTasks,
+      // processesTemplates,
+    }))
+  } catch (err) {
+    yield put(loadError(err));
+  }
+
+}
 function* createNewSurveys(action) {
   console.log(action)
   try {
@@ -217,4 +253,5 @@ export default function* organizationsSaga() {
   yield takeLatest(actionTypes.ALLOCATE_SURVEYS, allocateSurveys);
   yield takeEvery(actionTypes.CREATE_SURVEY_AND_TASKS, createSurveyAndTasks);
   yield takeLatest(actionTypes.CREATE_NEW_BRIDGE, createNewBridge);
+  yield takeLatest(actionTypes.GET_SURVEYS_TASKS_AND_PROCESSES, getTasksByOrgIds);
 }

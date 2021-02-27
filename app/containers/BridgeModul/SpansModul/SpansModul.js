@@ -34,7 +34,8 @@ const SpansModule = ({
     show = true,
     onDeleteBridgeSpan,
     currentUser,
-    bottomViewSize
+    bottomViewSize,
+    onToggleModal
 }) => {
     const [numSpans, setNumSpans] = useState();
     const [spans, setSpans] = useState([]);
@@ -138,6 +139,27 @@ const SpansModule = ({
             structureTypes={structureTypes} 
             onChangeSpan={(element, value) => onChangeSpan(span, element, value)}
             changeSpanOrder={(direction, index, span) => changeSpanOrder(direction, index, span)}/>)
+    }
+
+    const handleChangeStructureType = (span) => {
+      onToggleModal({
+        title: "Select structure type",
+        text: '',
+        // confirmButton: 'Select',
+        cancelButton: 'Close',
+        body: <ul>
+          {structureTypes.map(type => <li 
+            key={type.id}
+            className="hoverBgPrimaryFaded1 cursor-pointer "
+            onClick={() => {
+              onChangeSpan(span, 'structure_type_id', type.id);
+              onToggleModal()
+            }
+          }
+            >
+              {type.name}</li>)}
+        </ul>
+      });
     }
 
     const propareSaveSpans = () => {
@@ -259,7 +281,7 @@ const SpansModule = ({
                             }
                           />
                         </div>
-                        <div className="col-4">
+                        <div className="col-3">
                           <MDBInput
                             // id="spanDescription"
                             className=""
@@ -275,8 +297,25 @@ const SpansModule = ({
                             }
                           />
                         </div>
-                        <div className="col-2">
-                          <Select
+                        {console.log(structureTypes)}
+                        {console.log(span.structure_type_id)}
+                        <div className="col-3 d-flex justify-content-between align-items-center">
+                            <span className="fontSmall">
+                              {span.structure_type_id && structureTypes.find(type => type.id == span.structure_type_id).name}
+                            </span>
+                            <IconButtonToolTip
+                              className="ml-2"
+                              size="sm"
+                              iconName="edit"
+                              toolTipType="info"
+                              toolTipPosition="left"
+                              // flip="vertical"
+                              // rotate="180"
+                              // toolTipEffect="float"
+                              toolTipText="Change structure type"
+                              onClickFunction={() => handleChangeStructureType(span)}
+                            />
+                          {/* <Select
                             value={span.structure_type_id}
                             className="fullWidth spansModuleSelect"
                             labelClass="d-none"
@@ -289,7 +328,7 @@ const SpansModule = ({
                                 val,
                               )
                             }
-                          />
+                          /> */}
                         </div>
                         <div className="col-1 pl-1">
                           <MDBInput

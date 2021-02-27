@@ -180,7 +180,7 @@ const getBridgeBasicInfo = bridgeId => new Promise((resolve, reject) => {
   })
 
 const readFile = (bucketName, fileName) => {
-  console.log(bucketName, fileName);
+
   return new Promise((resolve, reject) => {
     const bucket = storage.bucket(bucketName);
     const remoteFile = bucket.file(fileName);

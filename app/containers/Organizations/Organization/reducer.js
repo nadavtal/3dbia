@@ -60,8 +60,15 @@ const organizationReducer = (state = initialState, action) =>
         draft.providers = action.data.providers;
         draft.processesTasks = action.data.processesTasks;
         draft.bridgeTypes = action.data.bridgeTypes;
-        draft.tasks = action.data.tasks;
+        // draft.tasks = action.data.tasks;
         draft.providersRoles = action.data.providersRoles;
+        break;
+      case actionTypes.SURVEYS_TASKS_AND_PROCESSES_LOADED:
+        console.log('SURVEYS_TASKS_AND_PROCESSES_LOADED', action)
+        // draft.surveys = action.data.surveys;
+        // draft.processesTemplates = action.data.processesTemplates;
+        // draft.processesTasks = action.data.processesTasks;
+        draft.tasks = action.data.tasks;
         break;
       case LOGOUT:
         draft.organization = null;
