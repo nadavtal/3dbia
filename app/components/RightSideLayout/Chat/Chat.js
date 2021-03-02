@@ -9,9 +9,11 @@ import './Chat.css'
 import { makeSelectLoading, makeSelectError, makeSelectCurrentUser,
   makeSelectChatUsers, makeSelectCurrentUserRole, makeSelectShowChat,
 } from 'containers/App/selectors';
-import { makeSelectSelectedTask, makeSelectDisplayedSurvey, makeSelectBridge, makeSelectSurveyMessages } from 'containers/BridgeModul/selectors'
+import { makeSelectSelectedTask, makeSelectDisplayedSurvey, makeSelectBridge, makeSelectSurveyMessages } from 'containers/BridgeModul/selectors';
+import { loadSurveyMessages } from 'containers/BridgeModul/actions';
 import { createMessage } from 'containers/AppData/actions'
 import { getUniqueUsers } from 'utils/dataUtils';
+import IconButtonToolTip from 'components/IconButtonToolTip/IconButtonToolTip';
 import { theme } from 'global-styles' 
 import ChatInput from './Input';
 import DateField from 'components/DateField/DateField';
@@ -24,9 +26,11 @@ const Chat = ({
   task,
   survey,
   currentUser,
-  messages
+  messages,
+  onLoadSurveyMessages
 }) => {
     const [open, setOpen] = useState(false)
+    const [loading, setLoading] = useState(false)
     // console.log(getUniqueUsers(users))
     // console.log('messages', messages)
     const uniqueUsers = getUniqueUsers(users)
@@ -153,6 +157,19 @@ const Chat = ({
                 onClick={() => setOpen(!open)}
               />
             </IconWrapper>
+            <IconButtonToolTip
+              className="ml-2"
+              size="lg"
+              iconName="sync-alt"
+              toolTipType="info"
+              toolTipPosition="right"
+              // flip="vertical"
+              rotate="180"
+              spin={loading && true}
+              // toolTipEffect="float"
+              toolTipText="Refresh messages"
+              onClickFunction={() => onLoadSurveyMessages(survey.id)}
+            />
             <span className="ml-3 mr-4">Team chat</span>
             <MDBIcon
               icon="times"
@@ -222,6 +239,7 @@ const mapStateToProps = createStructuredSelector({
 const mapDispatchToProps = dispatch => {
   return {
     onCreateMessage: (messageObject) => dispatch(createMessage(messageObject)),
+    onLoadSurveyMessages: (surveyId) => dispatch(loadSurveyMessages(surveyId))
   }
 }
 const withConnect = connect(

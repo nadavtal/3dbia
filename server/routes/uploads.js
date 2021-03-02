@@ -7,15 +7,17 @@ const unzipper = require('unzipper');
 const StreamZip = require('node-stream-zip');
 const request = require('request');
 const connection = require('../db.js');
-
+const useServerSentEventsMiddleware = require('../middlewares/serverSideEvents')
 const upload = require('../middlewares/upload');
 const uploadController = require('../controllers/upload');
 const { storage } = require('../utils/storage');
 const { uploadFile, deleteFile, getFiles } = require('../utils/storage');
+const convertToMySqlDateFormat = require('../utils/mysqlUtils').convertToMySqlDateFormat;
 // const { resize } = require('../utils/files');
 const { getFileExtension } = require('../utils/files');
 const modelsController = require('../controllers/modelsController');
 const messagesController = require('../controllers/messagesControler');
+const logsController = require('../controllers/logsController');
 const uploadPath = './resources/static/assets/tmp';
 const unzipPath = './resources/static/assets/unzipped';
 const path = require('path');
@@ -256,6 +258,8 @@ app.post('/cloud-upload/zip', async (req, res) => {
   let userId;
   let emails;
   let msg;
+  let organization_id
+  let sub_task_name
   const busboy = new Busboy({ headers: req.headers });
   busboy.on('field', function(fieldname, val, valTruncated, keyTruncated) {
     console.log(fieldname, val, valTruncated, keyTruncated);
@@ -269,9 +273,12 @@ app.post('/cloud-upload/zip', async (req, res) => {
     if (fieldname == 'userId') userId = val;
     if (fieldname == 'emails') emails = val;
     if (fieldname == 'msg') msg = val;
+    if (fieldname == 'organization_id') organization_id = val;
+    if (fieldname == 'sub_task_name') sub_task_name = val;
   });
   console.log('folder_id', folder_id);
   busboy.on('file', function(fieldname, file, filename, encoding, mimetype) {
+    // console.log('file', file)
     const fstream = fs.createWriteStream(path.join(uploadPath, filename));
     // Pipe it trough
     file.pipe(fstream);
@@ -279,7 +286,24 @@ app.post('/cloud-upload/zip', async (req, res) => {
     // On finish of the upload
     fstream.on('close', async () => {
       console.log(`Upload of '${filename}' finished`);
-      res.send('ok');
+      // create uploading log
+      const log = {
+        bid,
+        type: 'zip',
+        organization_id,
+        survey_id: surveyId,
+        task_id: taskId,
+        sub_task_name,
+        user_id: userId,
+        status: 'Uploading',
+        name: filename,
+        path: '', 
+        size: null
+      }
+      const logResult = await logsController.createLog(log)
+      //return created log
+      res.send({log, logResult});
+
       const zip = new StreamZip.async({ file: `${uploadPath}//${filename}` });
       // console.log(zip)
       await zip.extract(`${uploadPath}//${filename}`, unzipPath);
@@ -289,8 +313,8 @@ app.post('/cloud-upload/zip', async (req, res) => {
         .on('close', async () => {
           console.log('zip file unZipped');
           const filesPaths = getAllFiles(unzipPath);
+         
 
-          console.log(filesPaths);
           const filesUploaded = await uploadFiles(
             filesPaths,
             bucketName,
@@ -299,6 +323,13 @@ app.post('/cloud-upload/zip', async (req, res) => {
           );
           console.log('filesUploaded', filesUploaded);
           if (filesUploaded) {
+            const updatedLog = {
+              id: logResult.insertId,
+              finished: convertToMySqlDateFormat(Date.now()),
+              status: 'Complete',
+              path: ''
+            }
+            const updatedLogResult = await logsController.updateLog(updatedLog)
             fs.unlink(`${uploadPath}//${filename}`, err => {
               if (err) {
                 console.error(err);
@@ -345,7 +376,7 @@ app.post('/cloud-upload/zip', async (req, res) => {
 
                 }
                 
-                // }
+  
               } catch (err) {
                 console.log(err);
               }
@@ -358,70 +389,29 @@ app.post('/cloud-upload/zip', async (req, res) => {
                 `<h3>HEADER</h3>
               `,
               );
-              const message = {
-                sender_user_id: userId,
-                receiver_user_id: null,
-                subject: '',
-                message: msg,
-                createdAt: Date.now(),
-                type: 'System',
-                status: 'Sent',
-                task_id: taskId,
-                survey_id: surveyId,
-                bid,
-                parent_message_id: null,
-                location: '',
-                element_id: null,
-              };
-              messagesController.createMessage(message);      
+              if (msg !== 'Upload images') {
+                const message = {
+                  sender_user_id: userId,
+                  receiver_user_id: null,
+                  subject: '',
+                  message: msg,
+                  createdAt: Date.now(),
+                  type: 'System',
+                  status: 'Sent',
+                  task_id: taskId,
+                  survey_id: surveyId,
+                  bid,
+                  parent_message_id: null,
+                  location: '',
+                  element_id: null,
+                };
+                messagesController.createMessage(message);      
+
+              }
             
           }
-          // fs.readdir(unzipPath, async function (err, files) {
-          //   console.log('files read from disk')
-          //     // handling error
-          //   if (err) {
-          //       return console.log('Unable to scan directory: ' + err);
-          //   }
-          // console.log(files)
-          // uploadFiles(files, bucketName, filePath)
-
-          //   })
         });
-      // fs.createReadStream(path.join(uploadPath, filename))
-      // .pipe(unzipper.Parse())
-      // .on('entry', async function (entry) {
-      //   // console.log('entry', entry)
-      //   const fileName = entry.path;
-      //   const type = entry.type; // 'Directory' or 'File'
-      //   const size = entry.vars.uncompressedSize; // There is also compressedSize;
-      //   console.log(fileName, type, size)
-      //   const content = await entry.buffer();
-      //   // console.log('content', content)
-      //   // const fileUrl = await uploadFile(req.file, req.body.bucketName, req.body.fileName)
-      //   // sharp(content).resize(200)
-      //   // .toBuffer(async function(err, buf) {
-
-      //   //   if (err) console.log('err', err)
-      //   //   else {
-      //   //     // console.log('buf', buf)
-      //   //     const smallFile = {...entry, buffer: buf}
-      //   //     // console.log(smallFile);
-      //   //     try {
-      //   //       smallImageUrl = await uploadFile(smallFile, '3dbia_organization_169', `bid_1200/survey_559/Images/Bearings/${entry.path}`)
-      //   //       // console.log('smallImageUrl', smallImageUrl)
-      //   //     } catch (error) {
-
-      //   //     }
-      //   //   }
-      //   // })
-      //   // const file = await uploadFile({entry, buffer: content}, '3dbia_organization_169', `bid_1200/survey_559/Images/Bearings/${fileName}`)
-      //   // entry.autodrain();
-      //   // if (fileName === "this IS the file I'm looking for") {
-      //   //   entry.pipe(fs.createWriteStream('output/path'));
-      //   // } else {
-      //   //   entry.autodrain();
-      //   // }
-      // });
+ 
     });
   });
   // busboy.on('field', function(fieldname, val, fieldnameTruncated, valTruncated) {

@@ -87,14 +87,15 @@ const SurveyTasksTree = ({
             />
             {surveyFilesLoaded ? <IconButtonToolTip
               className={`ml-1`}
-              iconClassName={surveyFilesLoaded && selectedSurvey && selectedSurvey.id === survey.id ? 'colorSeondary' : ''}
+              iconClassName={surveyFilesLoaded && selectedSurvey && selectedSurvey.id === survey.id ? 'colorSecondary' : ''}
               size="sm"
-              iconName={surveyFilesLoaded && selectedSurvey && selectedSurvey.id === survey.id ? "check-circle" : "file-import"}
+              iconName={surveyFilesLoaded && selectedSurvey && selectedSurvey.id === survey.id ? "sync" : "file-import"}
               toolTipType={surveyFilesLoaded && selectedSurvey && selectedSurvey.id === survey.id ? 'success' : 'info'}
               toolTipPosition="left"
               toolTipEffect="float"
               toolTipText={surveyFilesLoaded && selectedSurvey && selectedSurvey.id === survey.id ? 'Loaded' : 'Load data'}
-              onClickFunction={() => selectedSurvey.id !== survey.id && onLoadData(survey)}
+              // onClickFunction={() => selectedSurvey.id !== survey.id && onLoadData(survey)}
+              onClickFunction={() => onLoadData(survey)}
             /> :
             selectedSurvey && selectedSurvey.id === survey.id 
             ? <MDBSpinner  small className="" /> 

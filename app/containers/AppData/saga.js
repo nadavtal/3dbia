@@ -2146,7 +2146,17 @@ function* createMessage(action) {
 
 
 }
-
+function* getMessages(action) {
+  try {
+    const surveyMessages = yield call(
+      request,
+      `${apiUrl}messages/survey/${action.surveyId}`,
+    );
+    yield put(messagesLoaded(surveyMessages));
+  } catch (err) {
+    yield put(loadError(err));
+  }
+}
 export default function* addDataSaga() {
   // Watches for LOAD_REPOS actions and calls getRepos when one comes in.
   // By using `takeLatest` only the result of the latest API call is applied.
@@ -2203,4 +2213,5 @@ export default function* addDataSaga() {
   yield takeLatest(actionTypes.DOWNLOAD_FILE, downloadFile);
   yield takeLatest(actionTypes.GET_INITIAL_DATA, getAppInitialData);
   yield takeLatest(actionTypes.CREATE_MESSAGE, createMessage);
+  yield takeLatest(actionTypes.GET_MESSAGES, getMessages);
 }

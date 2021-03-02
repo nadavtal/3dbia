@@ -142,23 +142,24 @@ const SpansModule = ({
     }
 
     const handleChangeStructureType = (span) => {
+      console.log(structureTypes)
       onToggleModal({
         title: "Select structure type",
         text: '',
         // confirmButton: 'Select',
         cancelButton: 'Close',
-        body: <ul>
-          {structureTypes.map(type => <li 
+        body: <div>
+          {structureTypes.map(type => <div 
             key={type.id}
-            className="hoverBgPrimaryFaded1 cursor-pointer "
+            className="hoverBgPrimary cursor-pointer p-1 hover-white transitioned"
             onClick={() => {
               onChangeSpan(span, 'structure_type_id', type.id);
               onToggleModal()
             }
           }
             >
-              {type.name}</li>)}
-        </ul>
+              {`${type.primary_element_id ? type.primary_element_id : ''} - ${type.name} (${type.description})`}</div>)}
+        </div>
       });
     }
 
@@ -300,7 +301,7 @@ const SpansModule = ({
                         {console.log(structureTypes)}
                         {console.log(span.structure_type_id)}
                         <div className="col-3 d-flex justify-content-between align-items-center">
-                            <span className="fontSmall">
+                            <span className="fontSmall cursor-pointer" onClick={() => handleChangeStructureType(span)}>
                               {span.structure_type_id && structureTypes.find(type => type.id == span.structure_type_id).name}
                             </span>
                             <IconButtonToolTip

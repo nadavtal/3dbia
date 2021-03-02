@@ -122,6 +122,19 @@ function* loadSurveyData(action) {
     yield put(loadError(err));
   }
 }
+function* loadSurveyMessages(action) {
+  const { survey } = action;
+  try {
+    
+    const surveyMessages = yield call(
+      request,
+      `${apiUrl}messages/survey/${action.surveyId}`,
+    );
+    yield put(actions.surveyMessagesLoaded(surveyMessages));
+  } catch (err) {
+    yield put(loadError(err));
+  }
+}
 
 function* getFolderStructure(action) {
   try {
@@ -572,6 +585,7 @@ export default function* projectSaga() {
 
   yield takeLatest(actionTypes.DELETE_MODEL, deleteModel);
   yield takeLatest(actionTypes.GET_SURVEY, getSurvey);
+  yield takeLatest(actionTypes.LOAD_SURVEY_MESSAGES, loadSurveyMessages);
   // yield takeLatest(actionTypes.CREATE_NEW_PROCESS, createNewProcess);
   // yield takeLatest(actionTypes.GET_FOLDER_STRUCTURE, getFolderStructure);
   // yield takeLatest(actionTypes.REJECT_PREVIOUS_TASK, rejectPreviousTask);

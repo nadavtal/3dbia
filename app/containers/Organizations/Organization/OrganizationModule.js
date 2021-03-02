@@ -28,7 +28,7 @@ import InnerPage from "../../../components/InnerPage";
 // import UserManagementModule from "./UserManagementModule";
 import OrganizationManagementModule from "./OrganizationManagementModule";
 import SurveyTypes from "components/SurveyTypes/SurveyTypes";
-import useEventSource from 'utils/customHooks/useEventSource';
+
 // import { selectOrganization } from "../../Organizations/Organization/selectors";
 const key = 'organization';
 const menu = menus['organizationMenu'];
@@ -83,10 +83,7 @@ const OrganizationModule = (props) => {
   
   }, [props.organization]);
 
-  // let url = apiUrl + 'stream-random-numbers'
-  let url = 'http://localhost:3000/stream-random-numbers'
-  const data = useEventSource(url);
-  console.log('data', data)
+
   // useEffect(() => {
 
   //   if (props.organization && props.organization.general_status === 'Active') {

@@ -334,11 +334,11 @@ export function allocateProviderToOrganization(data) {
   };
 }
 
-export function createMessage(message) {
+export function getMessages(surveyId) {
   console.log(message)
   return {
-    type: actionTypes.CREATE_MESSAGE,
-    message,
+    type: actionTypes.GET_MESSAGES,
+    surveyId,
   };
 }
 export function allocateUserToProv(user, prov, role_id, roleName, remarks, provider_id) {

@@ -4,7 +4,7 @@ import { ORG_TECH_INFO_LOADED, LOGOUT } from 'containers/AppData/constants';
 
 import { ELEMENT_SELECTED, UPDATE_RESIUM_MODE, ON_RIGHT_MENU_OPTION_CLICK, ELEMENTS_SELECTED,
   DESTROY_CESIUM, MODEL_LOADED } from 'containers/Resium/constants';
-import { TASK_UPDATED, MESSAGE_CREATED, BRIDGE_UPDATED, BRIDGE_SELECTED } from 'containers/App/constants';
+import { TASK_UPDATED, MESSAGE_CREATED, BRIDGE_UPDATED, BRIDGE_SELECTED, MESSAGES_LOADED } from 'containers/App/constants';
 import { sortBy, getLastCreateditem } from 'utils/dataUtils';
 import * as actionTypes from './constants';
 // import { initialState } from 'containers/App/reducer'
@@ -130,6 +130,9 @@ const bridgePageReducer = (state = initialState, action) =>
 
         draft.bridgeModels = updatedModels
         break
+      case MESSAGES_LOADED:
+
+        break
       case BRIDGE_SELECTED:
         if (!action.bid) {
           draft.bridgeLoaded = false,
@@ -232,6 +235,7 @@ const bridgePageReducer = (state = initialState, action) =>
           )
         break
       case actionTypes.SURVEY_MESSAGES_LOADED:
+        console.log('SURVEY_MESSAGES_LOADED', action)
         draft.messages = action.messages;
         break
       case TASK_UPDATED:

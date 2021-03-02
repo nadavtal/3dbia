@@ -96,7 +96,7 @@ const ProjectData = ({
       <div className="my-1 d-flex justify-content-between">
         <IconButtonToolTip
           className="ml-2"
-          size="3x"
+          size="2x"
           iconName="sign-out-alt"
           toolTipType="info"
           toolTipPosition="right"

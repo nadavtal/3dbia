@@ -7,6 +7,8 @@ import { hot } from 'react-hot-loader/root';
 
 import {
   Color,
+  ArcGisMapServerImageryProvider,
+  BingMapsImageryProvider
 } from 'cesium';
 import * as actions from './actions';
 import * as selectors from './selectors';
@@ -36,7 +38,6 @@ import {
   KmlDataSource,
   CesiumWidget,
   ScreenSpaceCameraController,
-  // ArcGisMapServerImageryProvider
 } from 'resium';
 import { getColor } from './cesiumUtils';
 import {
@@ -193,6 +194,8 @@ const Resium = props => {
       globe = scene.globe;
 
       ellipsoid = globe.ellipsoid;
+      console.log(viewer.scene.imageryLayers.get(0))
+      // console.log(viewer.scene.imageryLayers.get(2))
       setPointsCollection(
         scene.primitives.add(new Cesium.PointPrimitiveCollection()),
       );
@@ -1950,6 +1953,7 @@ const Resium = props => {
       }),
     [points],
   );
+  
   return (
     <Viewer
       full
@@ -1972,6 +1976,7 @@ const Resium = props => {
         minimumTerrainLevel={1}
         maximumTerrainLevel={1000}
         imageryProvider={
+          // new BingMapsImageryProvider()
           new ArcGisMapServerImageryProvider({
             url:
               '//services.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer',
@@ -1979,7 +1984,7 @@ const Resium = props => {
         } 
       />, [])} */}
       {/* {viewerRef.current && <Transforms viewer={viewerRef.current.cesiumElement}/>} */}
-
+      {/* <ImageryLayer imageryProvider={provider3} /> */}
       {calibrationState && (
         <>
           {viewerRef.current && calibrationGlobePosition && (
@@ -2003,26 +2008,42 @@ const Resium = props => {
           {props.models.length && tiles}
           {props.models.length && selectedItem && toolbar}
 
-          <div className="cesiumTitle topMiddle">
-            <span className="bold">
-              {props.selectedTask && props.selectedTask.name}
-            </span>
-         
-              <span className="">                
-                {props.selectedSubTask && (` - ${props.selectedSubTask.name}`)}
-              </span>
-              {(props.selectedTask || props.selectedSubTask) && (
-                <MDBBtn
-                  className="bgSecondary"
-                  size="sm"
-                  onClick={() => exitTaskState()}>
-                    Exit Task
-                  <MDBIcon icon='sign-out-alt' className='ml-1' />
-                
-                </MDBBtn>
+          <div className="cesiumTitle topMiddle d-flex">
+            {(props.selectedTask || props.selectedSubTask) && (
+            <span>
+              {/* <MDBBtn
+                className="bgSecondary"
+                size="sm"
+                onClick={() => exitTaskState()}
+              >
+                  <MDBIcon icon="sign-out-alt" className="ml-1" size="lg" rotate="180"/>
+              </MDBBtn> */}
+              <IconButtonToolTip
+                className="mr-2"
+                size="lg"
+                iconName="sign-out-alt"
+                toolTipType="info"
+                toolTipPosition="right"
+                // flip="vertical"
+                rotate="180"
+                // toolTipEffect="float"
+                toolTipText="Exit task"
+                onClickFunction={() => exitTaskState()}
+              />
 
-              )}
-         
+            </span>
+
+            )}
+            <div>
+              <span className="bold">
+                {props.selectedTask && props.selectedTask.name}
+              </span>
+
+              <span className="">
+                {props.selectedSubTask && ` - ${props.selectedSubTask.name}`}
+              </span>
+
+            </div>
           </div>
           {/* <PointPrimitiveCollection modelMatrix={Transforms.eastNorthUpToFixedFrame(center)}> */}
 
@@ -2054,14 +2075,14 @@ const Resium = props => {
             (props.mode === 'Measure line' ||
               props.mode === 'Measure polygone' ||
               props.mode === 'Measure polyline') && (
-            <Polyline
-              flyTo={false}
-              center={Cesium.Cartesian3.fromDegrees(34.91307, 32.41295)}
-              viewer={viewerRef.current.cesiumElement}
-              color={LINECOLOR}
-              positions={movingPolylinePositions}
-            />
-          )}
+              <Polyline
+                flyTo={false}
+                center={Cesium.Cartesian3.fromDegrees(34.91307, 32.41295)}
+                viewer={viewerRef.current.cesiumElement}
+                color={LINECOLOR}
+                positions={movingPolylinePositions}
+              />
+            )}
 
           {closingPolylinePositions &&
             props.mode === 'Measure polygone' &&

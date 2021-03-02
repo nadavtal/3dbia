@@ -285,3 +285,9 @@ export function updateBridgeDefaultView(view, bid) {
     bid,
   };
 }
+export function loadSurveyMessages(surveyId) {
+  return {
+    type: actionTypes.LOAD_SURVEY_MESSAGES,
+    surveyId
+  };
+}

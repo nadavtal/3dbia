@@ -36,7 +36,7 @@ import TextSearch from 'components/TextSearch/TextSearch';
 import Menu from '../Management/Menu'
 import DataTable from '../../components/DataTable/DataTable';
 import MyWijmoDetailedTable from 'containers/MyTables/MyWijmoDetailedTable'; 
-
+import Select from 'components/Select/Select';
 // import DetailedTable from 'containers/MyTables/DetailedTable'; 
 import * as actions from './actions'
 import IconButtonToolTip from 'components/IconButtonToolTip/IconButtonToolTip';
@@ -141,13 +141,17 @@ export function Projects(props) {
     }
   }
 
+  const tableModes = [
+    {name: 'Card view'},
+    {name: 'Map view'},
+    {name: 'Table view'},
+  ]
 
-  console.log('searchResults', searchResults)
   const bridgesLength = searchResults.length
   // console.log(bridgesLength)
   const Header = ({length}) => (
     
-    <div className="d-flex justify-content-between align-items-center">
+    <div className="d-flex justify-content-between align-items-center header">
       <div className="d-flex"> 
           {/* <MDBSwitch
             className="mt-2 color-white"
@@ -156,6 +160,13 @@ export function Projects(props) {
             labelLeft=""
             labelRight={`${tableMode ? 'Card view' : 'Table view'}`}
           /> */}
+          <Select
+            value={tableMode}
+            className="color-white"
+            labelClass="color-white"
+            options={tableModes}
+            onChange={val => setTableMode(val)}
+          />
         <MDBAnimation type="fadeIn" className="d-flex">
           {useMemo(() => <TextSearch
             className={`ml-3 mt-0 color-white ${tableMode == 'Table view' && 'hide-content'}`}
@@ -185,6 +196,7 @@ export function Projects(props) {
   const scrollContainerStyle = {
     width: "100%", 
    //  maxHeight: `calc(100vh)-${theme.layout.topBarSize}`, 
+    minHeight: `75vh`, 
     maxHeight: `75vh`, 
     overFlowY: 'auto',
     overFlowX: 'hidden'
@@ -285,31 +297,41 @@ export function Projects(props) {
   }
 
   return (
-    // <MDBCard narrow>
-    //   <MDBView
-    //     cascade
-    //     className="mdb-color color-white card-header bgPrimary"
-    //   >
-    //     {/* <MDBAnimation type="bounceInRight" className=""> */}
-    //     {useMemo(() => <Header length={bridgesLength}/>, [tableMode])}
-    //     {/* <Header length={bridgesLength}/> */}
-    //     {/* </MDBAnimation> */}
-    //   </MDBView>
-    //   <MDBAnimation type="fadeIn" className="">
-    //     <MDBCardBody className=""><Component /></MDBCardBody>
-    //   </MDBAnimation>
-    // </MDBCard>
-    <Layout
-      bodyTitle={'All Bridges'}
-      menuTitle="Views"
-      menu={<Menu
-        menu={menu}
-        handleClick={item => setTableMode(item)}
-        selected={tableMode}
-      />}
-      headerComponent={<Header length={bridgesLength}/>}
-      component={<Component />}
-    />
+    <MDBCard narrow>
+      <MDBView
+        cascade
+        className="mdb-color color-white card-header bgPrimary"
+      >
+        {/* <MDBAnimation type="bounceInRight" className=""> */}
+        {useMemo(
+          () => (
+            <Header length={bridgesLength} />
+          ),
+          [tableMode],
+        )}
+        {/* <Header length={bridgesLength}/> */}
+        {/* </MDBAnimation> */}
+      </MDBView>
+      <MDBAnimation type="fadeIn" className="">
+        <div
+          style={scrollContainerStyle}
+          className="scrollbar scrollbar-primary p-2 position-relative"
+        >
+          <Component />
+        </div>
+      </MDBAnimation>
+    </MDBCard>
+    // <Layout
+    //   bodyTitle={'All Bridges'}
+    //   menuTitle="Views"
+    //   menu={<Menu
+    //     menu={menu}
+    //     handleClick={item => setTableMode(item)}
+    //     selected={tableMode}
+    //   />}
+    //   headerComponent={<Header length={bridgesLength}/>}
+    //   component={<Component />}
+    // />
   );
 
 

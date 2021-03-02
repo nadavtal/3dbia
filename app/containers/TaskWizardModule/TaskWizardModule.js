@@ -29,6 +29,7 @@ import { apiUrl } from 'containers/App/constants';
 import DateField from 'components/DateField/DateField';
 import AnimatedComponent from 'components/AnimatedComponent/AnimatedComponent';
 import { toggleAlert, toggleModal } from 'containers/App/actions';
+
 import {
   uploadFile,
   downLoadFile,
@@ -43,7 +44,7 @@ import {
   updateSurveyStatus,
 } from 'containers/BridgeModul/actions';
 import { setSelectedTab } from 'containers/BridgeModul/LeftViewComponent/actions';
-
+import useEventSource from 'utils/customHooks/useEventSource';
 import Gallery from 'components/Gallery/Gallery';
 import {
   getFileExtension,
@@ -139,8 +140,30 @@ function TaskWizard({
   const [selectedFolders, setSelectedFolders] = useState([])
   const [updatingSubTask, setUpdatingSubTask] = useState()
 
+  // const useSse = useEventSource()
   useEffect(() => {
     setUpdatingSubTask()
+    setFilesInProgress([])
+    task && axios.get(apiUrl + `logs/${task.survey_id}/${task.id}`)
+      .then(res => {
+        const logs = res.data
+        console.log(logs)
+        
+        if (logs.length) {
+          let updatedFilesInProgress = [...filesInProgress]
+          logs.forEach(log => {
+            const existingFile = updatedFilesInProgress.find(file => log.id == file.id)
+            if (existingFile) {
+              updatedFilesInProgress = updatedFilesInProgress.filter(file => file.id !== log.id)
+              // updatedFilesInProgress.push(log)
+            } else {
+              updatedFilesInProgress.push(log)
+            }
+          })
+          setFilesInProgress(updatedFilesInProgress)
+          setFilesStatus('uploading')
+        }
+      })
     // console.log(surveyFiles)
     // subTasks = createSubTasksArray();
     // firstInCompletedTask = subTasks.find(subTask => !subTask.completed.length);
@@ -156,6 +179,33 @@ function TaskWizard({
     }
   }, [task])
 
+  useEffect(() => {
+    // currentSubTask && axios.get(apiUrl + `logs/${task.survey_id}/${task.id}/${currentSubTask.name}`)
+    currentSubTask && axios.get(apiUrl + `logs/${task.survey_id}/${task.id}`)
+            .then(res => {
+              const logs = res.data
+              console.log(logs)
+              if (logs.length) {
+                let updatedFilesInProgress = [...filesInProgress]
+                logs.forEach(log => {
+                  const existingFile = updatedFilesInProgress.find(file => log.id == file.id)
+                  if (existingFile) {
+                    // console.log(existingFile)
+                    updatedFilesInProgress = updatedFilesInProgress.filter(file => file.id !== existingFile.id)
+                    // updatedFilesInProgress = []
+                    // console.log(updatedFilesInProgress)
+                    updatedFilesInProgress.push(log)
+                  } else {
+                    updatedFilesInProgress.push(log)
+                  }
+                })
+                setFilesInProgress(updatedFilesInProgress)
+              }
+            })
+    return () => {
+      
+    }
+  }, [currentSubTask])
   const onDrop = acceptedFiles => {
     let allowedFiles = []
     let rejectedFiled = []
@@ -279,6 +329,8 @@ function TaskWizard({
           formData.append('created_by', `${currentUser.userInfo.first_name  } ${  currentUser.userInfo.last_name}` );
           formData.append('bucketName', `3dbia_organization_${  task.organization_id}`);
           formData.append('filePath', filePath);
+          formData.append('organization_id', task.organization_id);
+          formData.append('sub_task_name', currentSubTask.name);
           // console.log(currentSubTask.name)
           const folder_id = Date.now()
           if (currentSubTask.name !== 'Upload images') formData.append('folder_id', folder_id);
@@ -296,6 +348,9 @@ function TaskWizard({
             default:
               break;
           }
+          // let url = apiUrl + 'cloud-upload/zip'
+          // const data = useSse(url);
+          // console.log(data)
           axios
             .post(
               apiUrl + 'cloud-upload/zip',
@@ -306,21 +361,24 @@ function TaskWizard({
             )
             .then(res => {
               console.log(res);
-              const updatedFiles = [...filesWithStatuses];
-              if (res.status == 200) {
-                resolve(res);
-                updatedFiles.find(
-                  f => f.name === file.name,
-                ).status = 'Uploaded';
-                setFilesInProgress(updatedFiles);
-                handleUploadedFiles(res.data);
-              } else {
-                updatedFiles.find(
-                  f => f.name === file.name,
-                ).status = 'Error';
-                setFilesInProgress(updatedFiles);
-                reject(res);
-              }
+              if (res.status == 200) resolve(res);
+              else reject(res)
+
+              // const updatedFiles = [...filesWithStatuses];
+              // if (res.status == 200) {
+              //   resolve(res);
+              //   updatedFiles.find(
+              //     f => f.name === file.name,
+              //   ).status = 'Uploaded';
+              //   setFilesInProgress(updatedFiles);
+              //   handleUploadedFiles(res.data);
+              // } else {
+              //   updatedFiles.find(
+              //     f => f.name === file.name,
+              //   ).status = 'Error';
+              //   setFilesInProgress(updatedFiles);
+              //   reject(res);
+              // }
             });
         });
 
@@ -429,7 +487,7 @@ function TaskWizard({
     // console.log(files)
     const status = await Promise.all(filesInProgress.map(file => uploadFile(file)))
     console.log("Status =>", status)
-    setFilesInProgress([])
+    // setFilesInProgress([])
       
   }
   const handleSubmit = () => {
@@ -641,7 +699,7 @@ function TaskWizard({
   };
   const folders = useMemo(() => {
       if (currentSubTask) {
-        console.log(currentSubTask)
+        // console.log(currentSubTask)
         const folders = getFoldersByString(currentSubTask.fileType);
         // console.log(folders)
         // console.log(folders)
@@ -742,8 +800,6 @@ function TaskWizard({
   }
 
   const handleSubTaskClick = (subTask) => {
-    console.log(subTask)
-
     setCurrentSubTask(subTask)
     const firstWord = subTask.name.split(' ')[0];
     setMode(firstWord)
@@ -1195,6 +1251,7 @@ function TaskWizard({
         {/* <Layout1 /> */}
         <Layout2 />
         {filesInProgress.length && filesStatus == 'uploading' ? (
+        // {/* {filesInProgress.length ? ( */}
           <FilesStatuses
             files={filesInProgress}
             removeFile={file => removeFileFromFilesInProgress(file)}

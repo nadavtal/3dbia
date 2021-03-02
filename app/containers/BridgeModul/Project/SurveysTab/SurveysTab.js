@@ -188,7 +188,7 @@ const SurveyTab = ({
               />
             ) : (
               // </MDBAnimation>
-              // <MDBAnimation type="fadeIn">
+              // <MDBAnimation type="fadeIn"> 
               <SurveyTasksTree
                 data={surveyTasksTree}
                 accordionMode={false}

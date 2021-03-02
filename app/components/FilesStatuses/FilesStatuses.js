@@ -26,14 +26,14 @@ const FilesStatuses = ({
       
   `;
 
-   
   const File = ({ file }) => (
-    <div className="d-flex justify-content-between my-1 p-1">
+    <div className="d-flex justify-content-between my-1 p-2">
       <span>{file.name}</span>
       {file.status == 'Uploading' ? <MDBSpinner yellow small className="" /> 
-      : file.status == 'Uploaded' ? <div>
-      <MDBIcon icon="check-circle" className="ml-2"/>
-      <MDBIcon icon="times" onClick={() => removeFile(file)}/>
+      : file.status == 'Uploaded' || file.status == 'Complete'? 
+      <div>
+        <MDBIcon icon="check-circle" className="ml-2 colorSecondary"/>
+        <MDBIcon icon="times" onClick={() => removeFile(file)}/>
       </div>
       : <div><MDBIcon icon="exclamation-circle"/> </div>}
       
@@ -47,11 +47,11 @@ const FilesStatuses = ({
             <span>{`Uploading (${files.length})`}</span>
             <div className="d-flex">
               <MDBIcon icon={isMinimized ? "window-maximize": "window-minimize"} onClick={() => setIsMinimized(!isMinimized)}/>
-              <MDBIcon icon="times" onClick={close} className="ml-2"/>
+              <MDBIcon icon="times" onClick={close} className="ml-2 color-red"/>
             </div>
           </div>
           {/* {files.map(file => file.status == 'Uploading' && <File file={file} key={file.name}/>)} */}
-          { !isMinimized && files.map(file => <File file={file} key={file.name}/>)}
+          { !isMinimized && files.map((file, index) => <File file={file} key={index}/>)}
         </Wrapper>
       </MDBAnimation>
     );

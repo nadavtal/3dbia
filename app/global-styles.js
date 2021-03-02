@@ -696,7 +696,15 @@ const GlobalStyle = createGlobalStyle`
 
   .color-dark-blue {
 
-    color: ${theme.darkBlue} !important;
+    color: ${theme.primary} !important;
+  }
+  .border-primary {
+    border: 2px solid ${theme.primary}
+    
+  }
+  .border-black {
+    border: 2px solid black
+    
   }
   .border-top-blue {
     border-top: 1px solid ${theme.darkBlue}
@@ -768,6 +776,11 @@ const GlobalStyle = createGlobalStyle`
   .hover-red{
     :hover {
       color: red;
+    }
+  }
+  .hover-white{
+    :hover {
+      color: white;
     }
   }
  

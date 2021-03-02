@@ -1,5 +1,5 @@
 const express = require('express');
-const server = express();
+var app = module.exports = express();
 // const app = (module.exports = express());
 
 
@@ -8,8 +8,8 @@ const useServerSentEventsMiddleware = (req, res, next) => {
     console.log(req)
     res.setHeader('Content-Type', 'text/event-stream');
     res.setHeader('Cache-Control', 'no-cache');
-    res.setHeader('Connection: keep-alive');
-    res.setHeader('X-Accel-Buffering: no');
+    // res.setHeader('Connection: keep-alive');
+    // res.setHeader('X-Accel-Buffering: no');
 
     // only if you want anyone to access this endpoint
     res.setHeader('Access-Control-Allow-Origin', '*');
@@ -36,7 +36,7 @@ const streamRandomNumbers = (req, res) => {
         const data = {
             value: Math.random(),
         };
-        console.log('data', data)
+        // console.log('data', data)
         res.sendEventStreamData(data);
     }, 1000);
 
@@ -47,5 +47,5 @@ const streamRandomNumbers = (req, res) => {
     });
 }
 
-server.get('/stream-random-numbers', useServerSentEventsMiddleware, 
+app.get('/stream-random-numbers', useServerSentEventsMiddleware, 
     streamRandomNumbers)

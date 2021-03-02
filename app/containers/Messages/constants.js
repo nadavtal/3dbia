@@ -9,7 +9,7 @@
  * export const YOUR_ACTION_CONSTANT = 'yourproject/YourContainer/YOUR_ACTION_CONSTANT';
  */
 
-export const CREATE_MESSAGE = 'boilerplate/messages/DELETE_USER';
-export const GET_MESSAGES = 'boilerplate/messages/UPDATE_USER';
+
+
 
 

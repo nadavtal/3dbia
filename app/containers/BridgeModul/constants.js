@@ -32,6 +32,7 @@ export const UPDATE_BRIDGE_DEFAULT_VIEW =
   'bridgeModule/UPDATE_BRIDGE_DEFAULT_VIEW';
 export const DELETE_MODEL = 'bridgeModule/DELETE_MODEL';
 export const MODEL_DELETED = 'bridgeModule/MODEL_DELETED';
+export const LOAD_SURVEY_MESSAGES = 'bridgeModule/LOAD_SURVEY_MESSAGES';
 // export const SET_DISPLAY_FOLDER = 'bridgeModule/SET_DISPLAY_FOLDER';
 
 // export const SAVE_BRIDGEFORM_ELEMENT = 'bridgeModule/SAVE_BRIDGEFORM_ELEMENT';

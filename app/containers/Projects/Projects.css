@@ -23,3 +23,8 @@
   max-height: 35rem;
 
 }
+
+.header .mdb-select .select-dropdown{
+  color: white !important;
+  caret-color: white !important;
+}
