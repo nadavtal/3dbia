@@ -28,10 +28,22 @@
 
 .mouseLocation {
   position: absolute;
-  bottom: 0.8rem;
+  bottom: .8rem;
   right: 0;
   padding: .5rem;
-  width: 30%;
+  /* width: 30%; */
+}
+.cesiumNotifications {
+  position: absolute;
+  bottom: .8rem;
+  right: left;
+  padding: .5rem;
+  /* width: 30%; */
+}
+
+.cesiumNotifications .preloader-wrapper.small {
+  width: 1.25rem !important;
+  height: 1.25rem !important;
 }
 /* .rightClickMenuSubOption :hover{
   background-color: lightgray !important;

@@ -11,7 +11,7 @@ const FolderContent = ({
     selectedFolder, 
     allowDownload
 }) => {
-
+    console.log('files', files)
     const [galleryMode, setGalleryMode] = useState(false)
     const [selectedFiles, setSelectedFiles] = useState([])
 
@@ -53,10 +53,13 @@ const FolderContent = ({
       }
 
     
-    const FolderContentBody = styled.div`
-      max-height: 35rem;
-      overflow-y: auto;
-    `
+    const scrollContainerStyle = {
+        width: "100%", 
+       //  maxHeight: `calc(100vh)-${theme.layout.topBarSize}`, 
+        maxHeight: `calc(60vh)`, 
+        overFlowY: 'auto',
+        overFlowX: 'hidden'
+    }; 
     return (
       <div className="">
         <div className="d-flex p-2 align-items-center folder_content_header">
@@ -84,42 +87,48 @@ const FolderContent = ({
             ''
           )}
         </div>
-        {galleryMode ? (
-          <div className="p-3 px-5">
-            <Gallery
-              images={files}
-              onClick={file => allowDownload ? handleGalleryClick(file) : null}
-              selectedFiles={selectedFiles}
-              checkBoxMode ={allowDownload ? true : false}
-            />
-          </div>
-        ) : (
-          <FolderContentBody>
-            {files.map(file => {
-              if (allowDownload) {
-                return (
-                  <div className="p-2 px-3" key={file.name}>
-                    <MDBInput
-                      id={file.name}
-                      type="checkbox"
-                      checked={selectedFiles.includes(file)}
-                      label={file.fullImageName ? file.fullImageName.split('/')[4] : file.name}
-                      onChange={() => handleGalleryClick(file)}
-                    />
-                  </div>
-                );
+        
+        <div style={scrollContainerStyle}
+            className="scrollbar scrollbar-primary"
+            >
+          {galleryMode ? (
+            <div className="p-3 px-5">
+              <Gallery
+                images={files}
+                onClick={file => allowDownload ? handleGalleryClick(file) : null}
+                selectedFiles={selectedFiles}
+                checkBoxMode ={allowDownload ? true : false}
+              />
+            </div>
+          ) : (
+            <div>
+              {files.map(file => {
+                if (allowDownload) {
+                  return (
+                    <div className="p-2 px-3" key={file.name}>
+                      <MDBInput
+                        id={file.name}
+                        type="checkbox"
+                        checked={selectedFiles.includes(file)}
+                        label={file.fullImageName ? file.fullImageName.split('/')[4] : file.name}
+                        onChange={() => handleGalleryClick(file)}
+                      />
+                    </div>
+                  );
 
-              } else {
-                return (
-                  <div className="p-2 px-3" key={file.name}>
-                   {file.fullImageName ? file.fullImageName.split('/')[4] : file.name}
-                </div>
-                )
-              }
-            })}
-            
-          </FolderContentBody>
-        )}
+                } else {
+                  return (
+                    <div className="p-2 px-3" key={file.name}>
+                    {file.fullImageName ? file.fullImageName.split('/')[4] : file.name}
+                  </div>
+                  )
+                }
+              })}
+              
+            </div>
+          )}
+
+        </div>
         {allowDownload && selectedFiles.length ? (
           <MDBBtn
             color="success"

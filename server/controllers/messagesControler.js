@@ -55,7 +55,7 @@ const createMessage = message =>
     ${message.survey_id},  ${message.bid}, now(), ${
       message.parent_message_id
     }, '${message.location}', ${message.element_id});`;
-    // console.log(q)
+    console.log(q)
     connection.query(q, function(error, results) {
       if (error) reject(error);
 

@@ -24,7 +24,11 @@
 
 }
 
+.header .mdb-select {
+  border-radius: 5px;
+}
 .header .mdb-select .select-dropdown{
-  color: white !important;
+  color: black !important;
   caret-color: white !important;
+  border-radius: 5px;
 }

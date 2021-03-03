@@ -17,18 +17,13 @@ app.get('/logs/:surveyId/:taskId', function(req, res) {
     res.send(results);
   });
 });
-// app.get('/logs/:surveyId/:taskId/:subTaskName', function(req, res) {
-//   console.log('logs');
 
-//   const q = `select * from tbl_logs where survey_id = ${
-//     req.params.surveyId
-//   } 
-//   and task_id = ${req.params.taskId}
-//   and sub_task_name = '${req.params.subTaskName}'`;
-//   connection.query(q, function(error, results) {
-//     if (error) throw error;
-//     // console.log(results)
-//     res.send(results);
-//   });
-// });
-// other routes..
+app.post('/logs', async function(req, res) {
+  console.log('creating log', req.body);  
+  try {
+    const logResult = await logsController.createLog(req.body)
+    res.send(logResult);
+  } catch (err) {
+    res.send(err);
+  }
+});

@@ -1,20 +1,40 @@
 import produce from 'immer';
 import { BRIDGE_SELECTED } from 'containers/App/constants';
+import { LOAD_SURVEY_DATA, SURVEY_FILES_LOADED } from 'containers/BridgeModul/constants'
 import * as actionTypes from './constants';
 export const initialState = {
   mode: '',
   nodes: null,
   zoomElement: null,
   destroy: true,
+  notification: 'Building 3d map',
+  loading: true,
   // boundingSphere: null,
 };
 /* eslint-disable default-case, no-param-reassign */
+const hasTileSet = models => {
+  let hasTile = false;
+  for (let index = 0; index < models.length; index++) {
+    const model = models[index];
+    if (model.type == 'model') {
+      hasTile = true;
+      break;
+    }
+  }
+  return hasTile;
+};
 const resiumReducer = (state = initialState, action) =>
   produce(state, draft => {
     switch (action.type) {
       case actionTypes.UPDATE_RESIUM_MODE:
         // console.log(action)
         draft.mode = state.mode === action.data ? '' : action.data;
+        break;
+      case actionTypes.SET_CESIUM_NOTIFICATION:
+        // console.log(action)
+        draft.notification = action.notification;
+        draft.loading = action.loading;
+
         break;
       case actionTypes.ZOOM_TO_ELEMENT:
         console.log(action);
@@ -23,6 +43,13 @@ const resiumReducer = (state = initialState, action) =>
         break;
       case actionTypes.DESTROY_CESIUM:
         draft.destroy = !state.destroy;
+        break;
+      case LOAD_SURVEY_DATA:
+        draft.notification = 'Loading survey data';
+        break;
+      case SURVEY_FILES_LOADED:
+        console.log('SURVEY_FILES_LOADED', action)
+        draft.notification = hasTileSet(action.data.models) ? 'Building models' : 'Ready';
         break;
       case BRIDGE_SELECTED:
         if (!action.bid) {

@@ -22,11 +22,10 @@ const updateLog = (log) => new Promise((resolve, reject) => {
     // console.log("creating message", req.body);
     // const message = req.body
     const q = `UPDATE tbl_logs 
-        SET finished = '${log.finished}', 
-            status = '${log.status}',  
-            path = '${log.path}'
+        SET finished = ${log.finished && 'now()'}, 
+            status = '${log.status}'  
             where id = ${log.id};`
-    
+    console.log(q)
     connection.query(q, function(error, results) {
       if (error) reject(error);
 

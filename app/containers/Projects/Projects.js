@@ -162,8 +162,8 @@ export function Projects(props) {
           /> */}
           <Select
             value={tableMode}
-            className="color-white"
-            labelClass="color-white"
+            className="background-white color-black px-1"
+            labelClass=""
             options={tableModes}
             onChange={val => setTableMode(val)}
           />

@@ -127,7 +127,6 @@ const bridgePageReducer = (state = initialState, action) =>
         })
         draft.surveyFiledLoaded = true
         draft.selectedSurveyFiles = action.data.files;
-
         draft.bridgeModels = updatedModels
         break
       case MESSAGES_LOADED:

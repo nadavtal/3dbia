@@ -73,6 +73,14 @@ export function destroyCesium() {
     type: actionTypes.DESTROY_CESIUM,
   };
 }
+export function setCesiumNotification(notification, loading) {
+  
+  return {
+    type: actionTypes.SET_CESIUM_NOTIFICATION,
+    notification,
+    loading
+  };
+}
 
 
 

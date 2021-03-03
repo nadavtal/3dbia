@@ -132,6 +132,7 @@ const Chat = ({
         location: '',
         element_id: null
       }
+      console.log(messageObject)
       onCreateMessage(messageObject)
     }
 

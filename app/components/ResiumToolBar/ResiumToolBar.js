@@ -87,7 +87,8 @@ const ResiumToolBar = props => {
     return modelActions;
   };
   const createActionGroups = () => {
-    console.log('createActionGroups', props.calibrationData);
+    // console.log('createActionGroups', props.calibrationData);
+    // console.log('initialCalibrationState', initialCalibrationState);
     const modelActions = createModelsActions();
     let actions;
     if (initialCalibrationState) {
@@ -660,7 +661,7 @@ const ResiumToolBar = props => {
   };
   // console.log('props.selectedSubTask', props.selectedSubTask)
   const actionGroups = useMemo(() => createActionGroups(), [
-    props.calibrationData, props.selectedSubTask
+    props.calibrationData, props.selectedSubTask, props.selectedItem, initialCalibrationState
   ]);
   // console.log(props.mode)
   // actionGroups = useMemo(() => updatedActionsMultipliers(actionGroups), [
@@ -708,6 +709,7 @@ const ResiumToolBar = props => {
   ];
 
   const onActionGroupClick = actionGroupName => {
+    console.log(actionGroupName)
     setActionGroup(actionGroupName);
 
     if (actionGroupName === actionGroup || actionGroup === '' || !open) {
@@ -813,11 +815,11 @@ const ResiumToolBar = props => {
           return (
             <MDBSelect
               key={index}
-          className='toolBar_input'
+              className='toolBar_input background-white w-75 px-2 py-1'
               options={action.elementConfig.options}
           // label={action.label}
               selected={action.value}
-          getValue={(event) => inputChangedHandler(event[0], actionGroup, action)}
+              getValue={(event) => inputChangedHandler(event[0], actionGroup, action)}
         />
           );
         case 'checkbox':
@@ -927,7 +929,7 @@ const ResiumToolBar = props => {
   // console.log(props.selectedSubTask && props.selectedSubTask.name !== 'Calibrate models')
   return (
     <div className={`resiumToolBar_${props.position}`}>
-      <div className="resiumToolBar_corner">
+      <div className="resiumToolBar_corner bgPrimaryFaded1">
         <IconButtonToolTip
           iconName="globe"
           toolTipType="info"
@@ -937,11 +939,11 @@ const ResiumToolBar = props => {
           onClickFunction={(e) => props.onAction('ResetView', 'ResetView', 'ResetView')}
         />
       </div>
-      <div className="resiumToolBar_topBar d-flex">
+      <div className="resiumToolBar_topBar bgPrimaryFaded1 d-flex ">
         {initialCalibrationState && topActionGroups}
       </div>
 
-      <div className="resiumToolBar_sideBar">
+      <div className="resiumToolBar_sideBar bgPrimaryFaded1">
         {sideActionsHtml}
       </div>
 
@@ -986,20 +988,21 @@ const ResiumToolBar = props => {
                 color="primary"
                 size="sm"
                 onClick={() => props.save(actionGroup)}
-                disabled={
-                  !props.selectedSubTask ||
-                  (props.selectedSubTask &&
-                    props.selectedSubTask.name !== 'Calibrate models')}
+                // disabled={
+                //   !props.selectedSubTask ||
+                //   (props.selectedSubTask &&
+                //     props.selectedSubTask.name !== 'Calibrate models')}
                 >Save
                 </MDBBtn>
-              <MDBBtn
+              {console.log(actionGroup)}
+              {actionGroup == 'Calibration' && <MDBBtn
                 color="danger"
                 size="sm"
                 className="saveViewButton"
                 onClick={() => props.saveView()}
               >
                 Save View
-              </MDBBtn>
+              </MDBBtn>}
             </>
 
            )

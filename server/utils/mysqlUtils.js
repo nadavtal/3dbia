@@ -9,7 +9,10 @@ function convertToMySqlDateFormat(date){
     const day = d.getDate();
     const month = d.getMonth()+1;
     const year = d.getFullYear();
-    const dateFormat = year +'-'+ month+ '-'+ day
+    const hour = d.getUTCHours();
+    const min = d.getUTCMinutes();
+    const sec = d.getUTCSeconds();
+    const dateFormat = `${year}-${month}-${day} ${hour}:${min}:${sec}`
     // console.log(day, month, year)
     // console.log(d.getUTCHours()); // Hours
     // console.log(d.getUTCMinutes());

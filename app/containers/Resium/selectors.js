@@ -20,4 +20,14 @@ export const makeSelectDestroy = () =>
     selectResium,
     resium => resium.destroy,
   );
+export const makeSelectNotification = () =>
+  createSelector(
+    selectResium,
+    resium => resium.notification,
+  );
+export const makeSelectLoading = () =>
+  createSelector(
+    selectResium,
+    resium => resium.loading,
+  );
 

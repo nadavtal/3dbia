@@ -44,7 +44,7 @@ const FilesStatuses = ({
       <MDBAnimation type="fadeInRight" className="filesStatuses">
         <Wrapper className={`${isMinimized ? 'filesStatusMinified' : 'filesStatusOpen'}`}>
           <div className="d-flex justify-content-between background-dark-blue p-2 color-white">
-            <span>{`Uploading (${files.length})`}</span>
+            <span>{`Uploads log (${files.length})`}</span>
             <div className="d-flex">
               <MDBIcon icon={isMinimized ? "window-maximize": "window-minimize"} onClick={() => setIsMinimized(!isMinimized)}/>
               <MDBIcon icon="times" onClick={close} className="ml-2 color-red"/>

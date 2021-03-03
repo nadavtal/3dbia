@@ -153,7 +153,7 @@ function* getFolderStructure(action) {
 }
 
 export const getFilesImportantData = files => {
-  console.log(files);
+  console.log('getFilesImportantData', files);
   const images = files.smallImages.map(file => {
     // console.log(file.name)
     const fullImage = files.fullImages.find(fullImagefile =>
@@ -170,6 +170,7 @@ export const getFilesImportantData = files => {
       fullImageLink: fullImage ? fullImage.metadata.mediaLink : null,
     };
   });
+  console.log('images', images)
   const glbModels = files.glbModels.map(model => ({
     name: model.name,
     mediaLink: model.metadata.mediaLink,

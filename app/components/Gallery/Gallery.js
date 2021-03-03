@@ -11,13 +11,6 @@ const LightboxPage = ({
   checkBoxMode
 }) => {
 
-  // useEffect(() => {
-  //   effect
-  //   // return () => {
-  //   //   cleanup
-  //   // }
-  // }, [images])
-  console.log('RENDER', selectedFiles)
   // const { photoIndex, isOpen } = this.state;
   const fullImages = images.map(image => {
     return {src: image.fullImageLink}

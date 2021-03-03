@@ -72,6 +72,7 @@ import MouseLocation from './MouseLocation'
 import ElementsComparisonModul from 'containers/BridgeModul/ElementsComparisonModul/ElementsComparisonModul';
 import GeoJsonMarker from './GeoJsonMarker';
 import ResiumToolBar from 'components/ResiumToolBar/ResiumToolBar';
+import CesiumNotifications from './CesiumNotifications'
 import IconButtonToolTip from 'components/IconButtonToolTip/IconButtonToolTip';
 import Input from 'components/Input/Input';
 import './Resium.css';
@@ -159,12 +160,6 @@ const Resium = props => {
         break;
       }
     }
-    // models.forEach(model => {
-    //   if (model.type == 'model') {
-    //     hasTile = true
-    //     continue
-    //   }
-    // })
     return hasTile;
   };
 
@@ -549,6 +544,7 @@ const Resium = props => {
         let heading;
         let pitch;
         let range;
+        console.log(tileSetBoundingSphere)
         switch (actionName) {
           case 'Top':
             heading = Cesium.Math.toRadians(-90);
@@ -798,10 +794,11 @@ const Resium = props => {
     }
   };
   const handleTileSetReady = (tileset, modelName) => {
-    // console.log(viewerRef.current.cesiumElement)
+    console.log('TILESETREADY', tileset.boundingSphere)
     // console.log(viewerRef.current.cesiumElement.camera)
     // console.log(tileset)
     setTileSetBoundingSphere(tileset.boundingSphere);
+    props.onSetCesiumNotification('Ready', false)
     if (!props.bridge.default_view_data) {
       // if (props.models.length == 1) {
       viewerRef.current.cesiumElement.zoomTo(tileset);
@@ -1214,9 +1211,7 @@ const Resium = props => {
   };
 
   const handleViewerMouseDown = (m, t) => {
-    // const pickedFeature = viewer.scene.pick(m.position);
 
-    console.log(t);
     if (t && t.node && t.node.name == 'LON') {
       viewerRef.current.cesiumElement.scene.screenSpaceCameraController.enableInputs = false;
       setCalibrationMode('lon');
@@ -1921,7 +1916,8 @@ const Resium = props => {
         selectedSubTask={props.selectedSubTask && props.selectedSubTask.name}
       />
     ),
-    [props.models, calibrationState, props.mode, toolBarOpen, resetCameraView, props.selectedSubTask],
+    [props.models, calibrationState, props.mode, toolBarOpen, 
+      resetCameraView, props.selectedSubTask, tileSetBoundingSphere, selectedItem],
   );
 
   const pointsHtml = useMemo(
@@ -1953,7 +1949,7 @@ const Resium = props => {
       }),
     [points],
   );
-  
+
   return (
     <Viewer
       full
@@ -2149,7 +2145,11 @@ const Resium = props => {
       {useMemo(
         () => mousePosition && <MouseLocation position={mousePosition} />,
         [mousePosition],
-      )}
+      )} 
+      {useMemo(
+        () => props.notification && <CesiumNotifications notification={props.notification} loading={props.loading}/>,
+        [props.notification, props.loading],
+      )} 
     </Viewer>
   );
 };
@@ -2191,6 +2191,8 @@ const mapStateToProps = createStructuredSelector({
   boundingSphere: makeSelectBoundingSphere(),
   zoomElement: selectors.makeSelectZoomElement(),
   destroy: selectors.makeSelectDestroy(),
+  notification: selectors.makeSelectNotification(),
+  loading: selectors.makeSelectLoading(),
   // elementsGroups: getElementsGroups(state),
   // elementsTypes: getElementsTypes(state),
 });
@@ -2221,6 +2223,7 @@ export function mapDispatchToProps(dispatch) {
       dispatch(deleteModel(modelId, bucketName, prefix)),
     onToggleAlert: alertData => dispatch(toggleAlert(alertData)),
     onSetSharedState: (key, value) => dispatch(setSharedState(key, value)),
+    onSetCesiumNotification: (notification) => dispatch(actions.setCesiumNotification(notification)),
 
     // save: () => console.log('save')
   };

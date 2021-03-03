@@ -418,6 +418,12 @@ export function addOrganizationUser(data, user) {
     user
   };
 }
+export function createMessage(message) {
+  return {
+    type: actionTypes.CREATE_MESSAGE,
+    message
+  };
+}
 export function createNewProviderUserAndThenAllocateToOrganization(newUser, organization, provider) {
   return {
     type: actionTypes.CREATE_PROV_USER_AND_ALLOCATE_TO_ORGANIZATION_USER,

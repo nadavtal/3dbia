@@ -18,9 +18,10 @@ const { getFileExtension } = require('../utils/files');
 const modelsController = require('../controllers/modelsController');
 const messagesController = require('../controllers/messagesControler');
 const logsController = require('../controllers/logsController');
+const path = require('path');
+
 const uploadPath = './resources/static/assets/tmp';
 const unzipPath = './resources/static/assets/unzipped';
-const path = require('path');
 const imageFileExtensions = ['jpg', 'jpeg', 'pin'];
 // const isFolder = filePath => fs.lstatSync(filePath).isDirectory();
 
@@ -106,16 +107,17 @@ const uploadFileFromLocalDiskToBucket = (
       .bucket(bucketName)
       .upload(`${unzipPath}//${newFile}`, options)
       .then(result => {
-        fs.unlink(`${unzipPath}//${file}`, err => {
-          if (err) {
-            console.error(err);
-            reject(err);
-            return;
-          }
+        //delete file from disk
+        // fs.unlink(`${unzipPath}//${file}`, err => {
+        //   if (err) {
+        //     console.error(err);
+        //     reject(err);
+        //     return;
+        //   }
 
-          resolve('File uploaded and Removed');
-        });
-        resolve('File uploaded and Removed');
+        //   resolve('File uploaded and Removed');
+        // });
+        resolve(result);
       })
       .catch(error => {
         console.log(error);
@@ -247,72 +249,103 @@ app.post('/cloud-upload', upload.single('file'), async (req, res) => {
     res.send(error);
   }
 });
-app.post('/cloud-upload/zip', async (req, res) => {
+app.post('/cloud-upload/zip/:logId/:folderId', async (req, res) => {
+  
   let bucketName;
   let filePath;
   let createdBy;
-  let taskId;
-  let folder_id;
-  let surveyId;
-  let bid;
-  let userId;
   let emails;
   let msg;
+  let folder_id = req.params.folderId;
+  let logId = req.params.logId;
+  let surveyId;
+  let bid;
+  let taskId;
+  let userId;
   let organization_id
   let sub_task_name
   const busboy = new Busboy({ headers: req.headers });
   busboy.on('field', function(fieldname, val, valTruncated, keyTruncated) {
-    console.log(fieldname, val, valTruncated, keyTruncated);
+    
     if (fieldname == 'bucketName') bucketName = val;
     if (fieldname == 'filePath') filePath = val;
     if (fieldname == 'created_by') createdBy = val;
     if (fieldname == 'taskId') taskId = val;
-    if (fieldname == 'folder_id') folder_id = val;
+    // if (fieldname == 'folder_id') folder_id = val;
     if (fieldname == 'surveyId') surveyId = val;
     if (fieldname == 'bid') bid = val;
     if (fieldname == 'userId') userId = val;
     if (fieldname == 'emails') emails = val;
     if (fieldname == 'msg') msg = val;
-    if (fieldname == 'organization_id') organization_id = val;
-    if (fieldname == 'sub_task_name') sub_task_name = val;
+    // if (fieldname == 'organization_id') organization_id = val;
+    // if (fieldname == 'sub_task_name') sub_task_name = val;
   });
-  console.log('folder_id', folder_id);
-  busboy.on('file', function(fieldname, file, filename, encoding, mimetype) {
+  busboy.on('file', async function(fieldname, file, filename, encoding, mimetype) {
+   
+
     // console.log('file', file)
-    const fstream = fs.createWriteStream(path.join(uploadPath, filename));
+
+    // create uploading log      
+    // let log = {
+    //   bid,
+    //   type: 'zip',
+    //   organization_id,
+    //   survey_id: surveyId,
+    //   task_id: taskId,
+    //   sub_task_name,
+    //   user_id: userId,
+    //   status: 'Uploading',
+    //   name: filename,
+    //   path: '', 
+    //   size: null
+    // }
+    // // create initial log
+    // const logResult = await logsController.createLog(log)
+    //return created log
+    // res.send({log, logResult});
+    res.send({status: 200});
+    const tmpDir = uploadPath + "//" + folder_id
+    try {
+      // first check if directory already exists
+        if (!fs.existsSync(tmpDir)) {
+            fs.mkdirSync(tmpDir);
+            console.log("Directory is created.");
+        } else {
+            console.log("Directory already exists.");
+        }
+    } catch (err) {
+        console.log(err);
+    }
+    const fstream = fs.createWriteStream(path.join(tmpDir, filename));
     // Pipe it trough
     file.pipe(fstream);
 
     // On finish of the upload
     fstream.on('close', async () => {
       console.log(`Upload of '${filename}' finished`);
-      // create uploading log
-      const log = {
-        bid,
-        type: 'zip',
-        organization_id,
-        survey_id: surveyId,
-        task_id: taskId,
-        sub_task_name,
-        user_id: userId,
-        status: 'Uploading',
-        name: filename,
-        path: '', 
-        size: null
+     
+      let log = {
+        id: logId,
+        status: 'Unzipping',
+        finished: null
       }
-      const logResult = await logsController.createLog(log)
-      //return created log
-      res.send({log, logResult});
-
-      const zip = new StreamZip.async({ file: `${uploadPath}//${filename}` });
+      await logsController.updateLog(log)
+      // const zip = new StreamZip.async({ file: `${uploadPath}//${filename}` });
       // console.log(zip)
-      await zip.extract(`${uploadPath}//${filename}`, unzipPath);
-      const strzip = fs.createReadStream(`${uploadPath}//${filename}`);
+      // await zip.extract(`${uploadPath}//${filename}`, `${unzipPath}/${folder_id}`);
+      const strzip = fs.createReadStream(`${tmpDir}//${filename}`);
       strzip
-        .pipe(unzipper.Extract({ path: unzipPath }))
+        .pipe(unzipper.Extract({ path: `${unzipPath}/${folder_id}` }))
         .on('close', async () => {
           console.log('zip file unZipped');
-          const filesPaths = getAllFiles(unzipPath);
+
+          log = {
+            id: logId,
+            status: 'Processing',
+            finished: null
+          }
+          await logsController.updateLog(log)
+          const filesPaths = getAllFiles(`${unzipPath}/${folder_id}`);
          
 
           const filesUploaded = await uploadFiles(
@@ -323,24 +356,33 @@ app.post('/cloud-upload/zip', async (req, res) => {
           );
           console.log('filesUploaded', filesUploaded);
           if (filesUploaded) {
-            const updatedLog = {
-              id: logResult.insertId,
-              finished: convertToMySqlDateFormat(Date.now()),
+            log = {
+              id: logId,
+              // finished: convertToMySqlDateFormat(Date.now()),
+              finished: true,
               status: 'Complete',
-              path: ''
             }
-            const updatedLogResult = await logsController.updateLog(updatedLog)
-            fs.unlink(`${uploadPath}//${filename}`, err => {
-              if (err) {
-                console.error(err);
-                return;
-              }
-              console.log('Zip removed');
-            });
+            await logsController.updateLog(log)
+            // fs.unlink(`${tmpDir}//${filename}`, err => {
+            //   if (err) {
+            //     console.error(err);
+            //     return;
+            //   }
+            //   console.log('Zip removed');
+            // });
+            // delete directory recursively
+            try {
+              fs.rmdirSync(`${unzipPath}/${folder_id}`, { recursive: true });
+              fs.rmdirSync(tmpDir, { recursive: true });
 
+              console.log(`${unzipPath}/${folder_id} is deleted!`);
+              console.log(`${tmpDir} is deleted!`);
+            } catch (err) {
+              console.error(`Error while deleting ${unzipPath}/${folder_id} or ${tmpDir}.`);
+            }
             if (msg == 'New Tileset uploaded') {
               const tileSetFiles = await getFiles(bucketName, `${filePath}/${folder_id}`)
-              console.log('tileSetFiles', tileSetFiles)
+              // console.log('tileSetFiles', tileSetFiles)
               try {
                 if (msg == 'New Tileset uploaded') {
                   const firstJsonFile = tileSetFiles.find(

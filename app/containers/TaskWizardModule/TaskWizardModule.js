@@ -143,6 +143,7 @@ function TaskWizard({
   // const useSse = useEventSource()
   useEffect(() => {
     setUpdatingSubTask()
+    setCurrentSubTask()
     setFilesInProgress([])
     task && axios.get(apiUrl + `logs/${task.survey_id}/${task.id}`)
       .then(res => {
@@ -305,6 +306,7 @@ function TaskWizard({
 
   // receives array of files that are done uploading when submit button is clicked
   const uploadFile = file => {
+    console.log(file)
     const fileExtentension = getFileExtension(file.name);
     switch (fileExtentension) {
       case 'zip':
@@ -329,11 +331,12 @@ function TaskWizard({
           formData.append('created_by', `${currentUser.userInfo.first_name  } ${  currentUser.userInfo.last_name}` );
           formData.append('bucketName', `3dbia_organization_${  task.organization_id}`);
           formData.append('filePath', filePath);
-          formData.append('organization_id', task.organization_id);
-          formData.append('sub_task_name', currentSubTask.name);
+          // formData.append('organization_id', task.organization_id);
+          // formData.append('sub_task_name', currentSubTask.name);
           // console.log(currentSubTask.name)
           const folder_id = Date.now()
-          if (currentSubTask.name !== 'Upload images') formData.append('folder_id', folder_id);
+          formData.append('folder_id', folder_id)
+          // if (currentSubTask.name !== 'Upload images') formData.append('folder_id', folder_id);
           switch (currentSubTask.name) {
             case 'Upload images':
               formData.append('msg', 'New images uploaded');
@@ -348,38 +351,62 @@ function TaskWizard({
             default:
               break;
           }
-          // let url = apiUrl + 'cloud-upload/zip'
-          // const data = useSse(url);
-          // console.log(data)
-          axios
-            .post(
-              apiUrl + 'cloud-upload/zip',
-              formData,
-              {
-              timeout: 1000000,
-              },
-            )
-            .then(res => {
-              console.log(res);
-              if (res.status == 200) resolve(res);
-              else reject(res)
 
-              // const updatedFiles = [...filesWithStatuses];
-              // if (res.status == 200) {
-              //   resolve(res);
-              //   updatedFiles.find(
-              //     f => f.name === file.name,
-              //   ).status = 'Uploaded';
-              //   setFilesInProgress(updatedFiles);
-              //   handleUploadedFiles(res.data);
-              // } else {
-              //   updatedFiles.find(
-              //     f => f.name === file.name,
-              //   ).status = 'Error';
-              //   setFilesInProgress(updatedFiles);
-              //   reject(res);
-              // }
-            });
+          // create uploading log      
+          const log = {
+            bid: task.bid,
+            type: 'zip',
+            organization_id: task.organization_id,
+            survey_id: task.survey_id,
+            task_id: task.id,
+            sub_task_name: currentSubTask.name,
+            user_id: currentUser.userInfo.id,
+            status: 'Uploading',
+            name: file.name,
+            path: '', 
+            size: null
+          }
+          axios
+          .post(
+            apiUrl + 'logs',
+            log,
+          )
+          .then(logResult => {
+            console.log(logResult)
+            const logId = logResult.data.insertId
+            if (logId) {
+              axios
+                .post(
+                  apiUrl + `cloud-upload/zip/${logId}/${folder_id}`,
+                  formData,
+                  {
+                  timeout: 1000000,
+                  },
+                )
+                .then(res => {
+                  console.log(res);
+                  if (res.status == 200) resolve(res);
+                  else reject(res)
+    
+                  // const updatedFiles = [...filesWithStatuses];
+                  // if (res.status == 200) {
+                  //   resolve(res);
+                  //   updatedFiles.find(
+                  //     f => f.name === file.name,
+                  //   ).status = 'Uploaded';
+                  //   setFilesInProgress(updatedFiles);
+                  //   handleUploadedFiles(res.data);
+                  // } else {
+                  //   updatedFiles.find(
+                  //     f => f.name === file.name,
+                  //   ).status = 'Error';
+                  //   setFilesInProgress(updatedFiles);
+                  //   reject(res);
+                  // }
+                });
+
+            }
+          })
         });
 
       default:

@@ -8,5 +8,6 @@ export const RECEIVE_ACTION = 'resium/RECEIVE_ACTION';
 export const MODEL_LOADED = 'resium/MODEL_LOADED';
 export const ZOOM_TO_ELEMENT = 'resium/ZOOM_TO_ELEMENT';
 export const DESTROY_CESIUM = 'resium/DESTROY_CESIUM';
+export const SET_CESIUM_NOTIFICATION = 'resium/SET_CESIUM_NOTIFICATION';
 
 

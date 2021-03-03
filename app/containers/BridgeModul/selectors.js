@@ -227,46 +227,46 @@ export const makeSelectSelectedFolderFiles = () =>
       return files
     },
   );
-export const getFilesImportantData = files => {
-    console.log('files', files)
-    const images = files.smallImages.map(file => {
-      // console.log(file.name)
-      const fullImage = files.fullImages.find(
-        fullImagefile => file.name.includes(fullImagefile.name.split(".")[0])
-        )
+// export const getFilesImportantData = files => {
+//     console.log('getFilesImportantData', files)
+//     const images = files.smallImages.map(file => {
+//       // console.log(file.name)
+//       const fullImage = files.fullImages.find(
+//         fullImagefile => file.name.includes(fullImagefile.name.split(".")[0])
+//         )
         
-      // console.log(fullImage)
-      return {
-        name: file.name,
-        mediaLink: file.metadata.mediaLink,
-        size: file.metadata.size,
-        updated: file.metadata.updated,
-        fullImageName: fullImage.name,
-        fullImageLink: fullImage.metadata.mediaLink,
-      };
-    })
-    const glbModels = files.glbModels.map(model => {
-      return {
-        name: model.name,
-        mediaLink: model.metadata.mediaLink,
-        size: model.metadata.size,
-        updated: model.metadata.updated,
-      }
-    })
-    const tiles = files.tiles.map(tile => {
-      return {
-        name: tile.name,
-        mediaLink: tile.metadata.mediaLink,
-        size: tile.metadata.size,
-        updated: tile.metadata.updated,
-      }
-    })
-    return {
-      images,
-      glbModels,
-      tiles
-    }
-  }
+//       // console.log(fullImage)
+//       return {
+//         name: file.name,
+//         mediaLink: file.metadata.mediaLink,
+//         size: file.metadata.size,
+//         updated: file.metadata.updated,
+//         fullImageName: fullImage.name,
+//         fullImageLink: fullImage.metadata.mediaLink,
+//       };
+//     })
+//     const glbModels = files.glbModels.map(model => {
+//       return {
+//         name: model.name,
+//         mediaLink: model.metadata.mediaLink,
+//         size: model.metadata.size,
+//         updated: model.metadata.updated,
+//       }
+//     })
+//     const tiles = files.tiles.map(tile => {
+//       return {
+//         name: tile.name,
+//         mediaLink: tile.metadata.mediaLink,
+//         size: tile.metadata.size,
+//         updated: tile.metadata.updated,
+//       }
+//     })
+//     return {
+//       images,
+//       glbModels,
+//       tiles
+//     }
+//   }
 
     
 // export const getCustomFieldsTemplateTabs = createSelector(
