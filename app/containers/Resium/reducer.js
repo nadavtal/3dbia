@@ -49,7 +49,7 @@ const resiumReducer = (state = initialState, action) =>
         break;
       case SURVEY_FILES_LOADED:
         console.log('SURVEY_FILES_LOADED', action)
-        draft.notification = hasTileSet(action.data.models) ? 'Building models' : 'Ready';
+        draft.notification = hasTileSet(action.data.models) ? 'Building 3d mesh' : 'Ready';
         break;
       case BRIDGE_SELECTED:
         if (!action.bid) {
