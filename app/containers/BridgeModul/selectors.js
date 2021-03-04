@@ -165,10 +165,10 @@ export const makeSelectCustomFieldTabs = () =>
       return uniqueTabs;
     },
   );
-export const makeSelectFolders = () =>
+export const makeSelectImagesFolderStructure = () =>
   createSelector(
     selectBridgeModule,
-    bridgeModule => bridgeModule.folders
+    bridgeModule => bridgeModule.imagesFolderStructure
   );
 export const makeSelectPreviousTask = () =>
 createSelector(

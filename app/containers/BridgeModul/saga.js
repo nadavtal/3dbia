@@ -11,6 +11,7 @@ import {
 } from '../App/actions';
 import { elementUpdated, spanUpdated, spanDeleted } from './actions';
 import { getModalOpen } from '../App/selectors';
+import createFolderTree from 'utils/createTree';
 
 function* getSurvey(action) {
   try {
@@ -31,8 +32,8 @@ function* getBridge(action) {
     const bridgeResponse = yield call(request, `${apiUrl}bridges/${action.id}`);
     console.log('bridgeResponse', bridgeResponse);
     const bridge = bridgeResponse.basicBridgeInfo[0];
-    const folderStructure =
-      bridgeResponse.folderFile && bridgeResponse.folderFile.split(',');
+    // const folderStructure =
+    //   bridgeResponse.folderFile && bridgeResponse.folderFile.split(',');
     const bridgeDetails = yield call(
       request,
       `${apiUrl}bridges/${action.id}/details`,
@@ -72,7 +73,7 @@ function* getBridge(action) {
     );
     const bridgeInfo = {
       bridge,
-      folderStructure,
+      // folderStructure,
       bridgeDetails: bridgeDetails[0],
       model: model ? model[0] : null,
       processes,
@@ -99,22 +100,24 @@ function* loadSurveyData(action) {
     const url = `${apiUrl}surveys/${survey.id}/org/${
       survey.organization_id
     }/bid/${survey.bid}/files`;
+
     const surveyFiles = yield call(request, url);
     console.log('surveyFiles', surveyFiles);
     const surveyMessages = yield call(
       request,
       `${apiUrl}messages/survey/${survey.id}`,
     );
-    const surveyModels = yield call(
+    const surveyModels = yield call( 
       request,
       `${apiUrl}surveys/${survey.id}/models`,
     );
     const surveyFilesShort = getFilesImportantData(surveyFiles);
-
+    
     yield put(
       actions.surveyFilesLoaded({
         files: surveyFilesShort,
         models: surveyModels,
+        imagesFolderStructure: createFolderTree(surveyFiles.imagesFolderStructure)
       }),
     );
     yield put(actions.surveyMessagesLoaded(surveyMessages));

@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { createStructuredSelector } from 'reselect';
 import { getFileExtension, getFileNameByString, sortBy } from 'utils/dataUtils';
+import createFolderTree from 'utils/createTree';
 
 import { 
   makeSelectCurrentUser, 
@@ -12,7 +13,7 @@ import {
   makeSelectFolderStructure,
   makeSelectSelectedFolder,
   makeSelectSurveyFiles,
-  makeSelectFolders
+  makeSelectImagesFolderStructure 
   } from 'containers/BridgeModul/selectors';
 import {
     showInView,
@@ -28,31 +29,14 @@ const DataTab = ({
     onSetSharedState,
     surveyFiles,
     onShowInView,
-    foldersCsv
+    folderStructure,
+    imagesFolderStructure
 }) => { 
-    console.log(foldersCsv)  
-    const createFolderTree = () => {
-      let tree = getParents()
-      console.log(tree)
-    }
 
-    const getParents = () => {
-      let parents = []
-      let elements = []
-      foldersCsv.forEach(element => {
-        element = element.split('/')
-        if (!elements.includes(element[0])) {
-          elements.push(element[0])
-          parents.push({
-            name: element[0],
-            children: []
-          })
-        }
-      });
-      return parents
-    }
-
-    // const folderTree = createFolderTree()
+    const folderStructurePaths = folderStructure.map(folder => folder.path)
+    const folderTree = createFolderTree(folderStructurePaths)
+    folderTree[0].children = imagesFolderStructure
+    // console.log(folderTree)
     const newFolderTree = [
         {
           name: 'Images',
@@ -101,9 +85,9 @@ const DataTab = ({
       }
     return (
         <div>
-          {newFolderTree && (
+          {folderTree && (
             <TreeSimple
-              data={newFolderTree}
+              data={folderTree}
               accordionMode={false}
               onClick={value => handleTreeItemClick(value)}
               // selectedItem={folder.name}
@@ -117,7 +101,7 @@ const mapStateToProps = createStructuredSelector({
     currentUser: makeSelectCurrentUser(),
     currentUserRole: makeSelectCurrentUserRole(),
     folderStructure: makeSelectFolderStructure(),
-    foldersCsv: makeSelectFolders(),
+    imagesFolderStructure: makeSelectImagesFolderStructure(),
     selectedFolder: makeSelectSelectedFolder(),
     surveyFiles: makeSelectSurveyFiles()
   });

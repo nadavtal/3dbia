@@ -14,6 +14,7 @@ import {
   makeSelectBridgeTasks,
   makeSelectDisplayedSurvey,
   makeSelectFolderStructure,
+  makeSelectImagesFolderStructure,
   makeSelectFolders,
   makeSelectSurveyFiles,
   makeSelectSelectedTask,
@@ -29,6 +30,7 @@ import { apiUrl } from 'containers/App/constants';
 import DateField from 'components/DateField/DateField';
 import AnimatedComponent from 'components/AnimatedComponent/AnimatedComponent';
 import { toggleAlert, toggleModal } from 'containers/App/actions';
+import  FolderStructureTree from 'components/tree/FolderStructureTree'
 
 import {
   uploadFile,
@@ -84,7 +86,7 @@ function TaskWizard({
   task,
   onUpdateTask,
   folderStructure,
-  foldersCsv,
+  imagesFolderStructure,
   previousTask,
   onCreateNewBridgeModel,
   onSetSharedState,
@@ -100,7 +102,7 @@ function TaskWizard({
   onUpdateSurveyStatus,
 }) {
   // console.log('folderStructure', folderStructure)
-  // console.log('surveyFiles', surveyFiles)
+  // console.log('imagesFolderStructure', imagesFolderStructure)
   // console.log('foldersCsv', foldersCsv)
   const createSubTasksArray = () => {
     const subTasksNames = splitStringToArray(task.sub_tasks_names, ',');
@@ -185,7 +187,7 @@ function TaskWizard({
     currentSubTask && axios.get(apiUrl + `logs/${task.survey_id}/${task.id}`)
             .then(res => {
               const logs = res.data
-              console.log(logs)
+           
               if (logs.length) {
                 let updatedFilesInProgress = [...filesInProgress]
                 logs.forEach(log => {
@@ -560,11 +562,9 @@ function TaskWizard({
     document.body.removeChild(element);
   }
 
-  const getFoldersByString = (string) => 
-      // console.log(folderStructure)
-       folderStructure.filter(folder => folder.path.includes(string))
-    
+
   const handleFolderClick = (newFolder) => {
+    console.log(newFolder)
     if (selectedFolder !== newFolder) {
       setSelectedFolder(newFolder);
       // setAllowedFileTypes(newFolder.file_types);
@@ -583,6 +583,7 @@ function TaskWizard({
   }
 
   const toggleFolderCheckboxAll = () => {
+    console.log(currentSubTask.fileType)
     const folders = getFoldersByString(currentSubTask.fileType);
     console.log(folders)
     console.log(selectedFolders)
@@ -650,9 +651,10 @@ function TaskWizard({
   };
   const FolderRow = ({folder}) => {
     const path = folder.path.split('/');
+    console.log(path)
     let filesLength 
     let folderName = folder.path.split('/')[folder.path.split('/').length-1]
-    // console.log(folderName)
+    console.log(folderName)
     switch (folderName) {
       case 'Glb':
         filesLength = getFileNameByString(folderName, surveyFiles.glbModels).length
@@ -669,7 +671,7 @@ function TaskWizard({
       <div className="my-1 d-flex justify-content-between">
         <div className="cursor-pointer">
           <div
-            key={folder.path}
+            
             className={ 
               selectedFolder && folder == selectedFolder
                 ? 'bold'
@@ -677,7 +679,7 @@ function TaskWizard({
             }
             onClick={() => handleFolderClick(folder)}
           >
-            {`${path[path.length - 1]} (${filesLength})`}
+            {`${path[path.length - 2]} (${filesLength})`}
             {/* {`${f.name}
               (${
                 f.files
@@ -724,91 +726,12 @@ function TaskWizard({
       </div>
     );
   };
-  const folders = useMemo(() => {
-      if (currentSubTask) {
-        // console.log(currentSubTask)
-        const folders = getFoldersByString(currentSubTask.fileType);
-        // console.log(folders)
-        // console.log(folders)
-        if (folders.length == 1) {
-          // console.log(folders[0])
-          setSelectedFolder(folders[0])
-          return <>
-            <div className="bold text-center">
-              Please upload {currentSubTask.fileType} 
-            </div>
-            <FolderRow folder={folders[0]} />
-          </>;
-        }
-        
-          return (
-            <>
-              <div className="row no-gutters align-items-center">
-                <div className="col-2">
-  
-                </div>
-                <div className="col-8 bold">
-                  Select destination folder
-                </div>
-                <div className="col-1">
-                  {selectedFolders.length && mode == 'Download'? (
-                    // <MDBIcon icon="download" className="ml-2 color-orange" onClick={() => console.log('Download')}/>
-                    <IconButtonToolTip
-                      iconName="download"
-                      toolTipType="info"
-                      toolTipPosition="top"
-                      toolTipEffect="float"
-                      toolTipText="Download selected folders"
-                      className="color-orange"
-                      onClickFunction={() => console.log('Download')}
-                    />
-                  ) : (
-                    ''
-                  )}
-                </div>
-                <div className="col-1 text-center">
-                  {mode == 'Download' && <MDBIcon
-                    icon={
-                      selectedFolders.length == folders.length
-                        ? 'check-square'
-                        : 'square'
-                    }
-                    size={'lg'}
-                    className=" mt-1 cursor-pointer"
-                    onClick={() => toggleFolderCheckboxAll()}
-                    far
-                  />}
-                
-                </div>
-  
-              </div>
-              {folders.map(folder => (
-                <FolderRow key={folder.path} folder={folder} />
-              ))}
-              {/* {selectedFolders.length ? 
-              <div className="text-center mt-2">
-                 <MDBBtn
-                 className=""
-                 color={`primary`}
-                 size="sm"
-                 rounded
-                 // disabled={task.remarks == remarks}
-                 //  disabled={!allSubTasksComplete()}
-                 //  className={`${!allSubTasksComplete() && 'disabled faded'}`}
-                 onClick={() => console.log('Download')}
-               >
-                 Download ({selectedFolders.length})
-                 <MDBIcon icon="download" className="ml-2" />
-               </MDBBtn>
-  
-              </div>
-              : ''} */}
-            </>
-          );
-        
 
-      }
-    }, [currentSubTask, selectedFolder, selectedFolders])
+  const getFoldersByString = (string) => {
+
+    return folderStructure.filter(folder => folder.path.includes(string))
+
+  }
 
 
   const allSubTasksComplete = () => {
@@ -954,8 +877,8 @@ function TaskWizard({
     // taskToUpdate.completed = taskCompletedPercentage()
     const firstInCompletedTask = subTasks.find(subTask => !subTask.completed.length);
     // if (!firstInCompletedTask) taskToUpdate.status = 'Complete'
-    if (firstInCompletedTask && firstInCompletedTask !==subTasks[0]) taskToUpdate.status = 'Open'
-    if (firstInCompletedTask && firstInCompletedTask ==subTasks[0]) taskToUpdate.status = 'Allocated'
+    if (firstInCompletedTask && firstInCompletedTask !== subTasks[0]) taskToUpdate.status = 'Open'
+    if (firstInCompletedTask && firstInCompletedTask == subTasks[0]) taskToUpdate.status = 'Allocated'
     // console.log(taskToUpdate)
 
     const firstWord = firstInCompletedTask ? firstInCompletedTask.name.split(' ')[0] : subTasks[0].name.split(' ')[0];
@@ -963,6 +886,8 @@ function TaskWizard({
     setCurrentSubTask(firstInCompletedTask || subTasks[0])
     setSelectedFiles([]);
     setSelectedFolder();
+    console.log(firstInCompletedTask)
+    console.log(subTasks[0].fileType)
     const folders = getFoldersByString(firstInCompletedTask ? firstInCompletedTask.fileType : subTasks[0].fileType);
     setSelectedFolders(folders)
     // console.log('taskCompletedPercentage', taskCompletedPercentage())
@@ -990,11 +915,124 @@ function TaskWizard({
   const removeFileFromFilesInProgress = (file) => {
     setFilesInProgress(filesInProgress.filter(f => f !== file))
   }
+
+  const scrollContainerStyle = {
+    // width: "100%", 
+   //  maxHeight: `calc(100vh)-${theme.layout.topBarSize}`, 
+    maxHeight: `35vh`, 
+    overFlowY: 'auto',
+    // overFlowX: 'hidden'
+   }; 
   const Layout2 = () => {
     const [remarks, setRemarks] = useState(task.remarks)
     const { getRootProps, getInputProps, isDragActive } = useDropzone({
       onDrop,
     });
+    const folderTree = useMemo(() => <FolderStructureTree
+    className="fontSmall"
+    data={imagesFolderStructure}
+    accordionMode={false}
+    onClick={value => handleFolderClick(value)}                
+    // folderRow={}
+    // selectedItem={selectedFolder && selectedFolder.name ? selectedFolder.name : selectedFolder}
+  />, [imagesFolderStructure])
+    const folders = useMemo(() => {
+      if (currentSubTask) {
+
+        const folders = getFoldersByString(currentSubTask.fileType);
+
+        if (currentSubTask.name == 'Upload images' || currentSubTask.name == 'Download images') {
+          return (
+            <>
+              <div className="text-center bold">
+                Select destination folder
+              </div>
+              {folderTree}
+            </>
+          );
+        }
+        if (folders.length == 1) {
+          // console.log(folders[0])
+          setSelectedFolder(folders[0])
+          return <>
+            <div className="bold text-center">
+              Please upload {currentSubTask.fileType} 
+            </div>
+            <FolderRow folder={folders[0]} />
+          </>;
+        } else {
+          return (
+            <>
+              <div className="row no-gutters align-items-center">
+                <div className="col-2">
+  
+                </div>
+                <div className="col-8 bold">
+                  Select destination folder
+                </div>
+                <div className="col-1">
+                  {selectedFolders.length && mode == 'Download'? (
+                    // <MDBIcon icon="download" className="ml-2 color-orange" onClick={() => console.log('Download')}/>
+                    <IconButtonToolTip
+                      iconName="download"
+                      toolTipType="info"
+                      toolTipPosition="top"
+                      toolTipEffect="float"
+                      toolTipText="Download selected folders"
+                      className="color-orange"
+                      onClickFunction={() => console.log('Download')}
+                    />
+                  ) : (
+                    ''
+                  )}
+                </div>
+                <div className="col-1 text-center">
+                  {mode == 'Download' && <MDBIcon
+                    icon={
+                      selectedFolders.length == folders.length
+                        ? 'check-square'
+                        : 'square'
+                    }
+                    size={'lg'}
+                    className=" mt-1 cursor-pointer"
+                    onClick={() => toggleFolderCheckboxAll()}
+                    far
+                  />}
+                
+                </div>
+  
+              </div>
+              {}
+              {folders.map(folder => (
+                <FolderRow key={folder.path} folder={folder} />
+              ))}
+              {/* {selectedFolders.length ? 
+              <div className="text-center mt-2">
+                 <MDBBtn
+                 className=""
+                 color={`primary`}
+                 size="sm"
+                 rounded
+                 // disabled={task.remarks == remarks}
+                 //  disabled={!allSubTasksComplete()}
+                 //  className={`${!allSubTasksComplete() && 'disabled faded'}`}
+                 onClick={() => console.log('Download')}
+               >
+                 Download ({selectedFolders.length})
+                 <MDBIcon icon="download" className="ml-2" />
+               </MDBBtn>
+  
+              </div>
+              : ''} */}
+            </>
+          );
+        }
+       
+
+      }
+    }, [currentSubTask, selectedFolder, selectedFolders])
+
+
     return (
       <>
         <div className="row no-gutters taskWizardSubTasksSection">
@@ -1062,17 +1100,12 @@ function TaskWizard({
             </div>
           </div>
           <div
-            className={`col-4 p-2 border-right-thick ${!selectedFolder &&
+            style={scrollContainerStyle}
+            className={`col-4 p-2 border-right-thick scrollbar scrollbar-primary fontSmall ${!selectedFolder &&
               currentSubTask &&
               'bgPrimaryFaded2'}`}
           >
             {currentSubTask && folders}
-            {/* <TreeSimple
-                      data={folderTree}
-                      accordionMode={false}
-                      onClick={value => handleFolderClick(value)}
-                      selectedItem={folder.name}
-                    /> */}
           </div>
           <div className="col-4 p-2">
             <div className="">
@@ -1302,7 +1335,7 @@ const mapStateToProps = createStructuredSelector({
   nextTask: makeSelectNextTask(),
   surveyFiles: makeSelectSurveyFiles(),
   folderStructure: makeSelectFolderStructure(),
-  foldersCsv: makeSelectFolders(),
+  imagesFolderStructure: makeSelectImagesFolderStructure(),
   bridge: makeSelectBridge(),
   primaryModel: makeSelectPrimaryBridgeModel(),
   displayedSurvey: makeSelectDisplayedSurvey(),

@@ -42,7 +42,7 @@ export const initialState = {
   boundingSphere: null,
   surveyFiledLoaded: false,
   folderStructure: null,
-  folders: [],
+  imagesFolderStructure: null,
   selectedFolder: null,
   nodes: null,
   messages: []
@@ -77,7 +77,7 @@ const bridgePageReducer = (state = initialState, action) =>
         }
         draft.bridgeLoaded = true;
         draft.bridge = action.data.bridge;
-        draft.folders = action.data.folderStructure
+        
         draft.bridgeDetails = action.data.bridgeDetails;
         draft.bridgeSurveys = action.data.surveys;
         draft.customFieldsTemplate = action.data.customFieldsTemplate;
@@ -125,6 +125,7 @@ const bridgePageReducer = (state = initialState, action) =>
         action.data.models.forEach(model => {
           if (!updatedModelsIds.includes(model.id)) updatedModels.push(model)
         })
+        draft.imagesFolderStructure = action.data.imagesFolderStructure
         draft.surveyFiledLoaded = true
         draft.selectedSurveyFiles = action.data.files;
         draft.bridgeModels = updatedModels

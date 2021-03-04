@@ -6,6 +6,7 @@ const mySqlUtils = require('../utils/mysqlUtils');
 const {convertObjArrayToArray} = mySqlUtils
 const {convertToMySqlDateFormat} = mySqlUtils;
 const {storage} = require("../utils/storage")
+const { readFile } = require('../utils/files');
 // const {google} = require("googleapis");
 // const credentials = require("../credentials.json");
 
@@ -65,6 +66,7 @@ app.get("/surveys/:id/models", function(req, res){
     res.send(results);
   });
 });
+
 app.get("/surveys/:id/org/:org_id/bid/:bid/files", function(req, res){
   console.log('getting survey files', req.params);
   const bucket = storage.bucket(`3dbia_organization_${req.params.org_id}`);
@@ -86,6 +88,15 @@ app.get("/surveys/:id/org/:org_id/bid/:bid/files", function(req, res){
         files = files.filter(
           file => !file.name.includes('base_folder_file.txt'),
         );
+
+        // const folderStructureFile = files.find(file => file.name.includes('folder_structure'))
+        // console.log('folderStructureFile', folderStructureFile)
+        // folderStructureFile.download(function(err, contents) {
+        //   if (err) reject(err);
+        //   console.log(contents.toString().split(/(?:\r\n|\r|\n)/g));
+        // });
+        const imagesFolderStructure = await readFile(`3dbia_organization_${req.params.org_id}`, `bid_${req.params.bid}/survey_${req.params.id}/folder_structure.csv`)
+
         const smallImages = files.filter(
           file =>
             file.name.includes('Images') && file.name.includes('_small_image'),
@@ -111,7 +122,7 @@ app.get("/surveys/:id/org/:org_id/bid/:bid/files", function(req, res){
           fullImages,
           glbModels,
           tiles,
-          folderFiles,
+          imagesFolderStructure,
         });
       },
     );

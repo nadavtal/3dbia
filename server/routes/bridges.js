@@ -148,18 +148,18 @@ app.get('/bridges/:id', async function(req, res) {
     }`;
     const fileName = `bid_${id}/folder_structure.csv`;
     // const fileName = `folder_structure.csv`
-    const folderStructureFile = await getFiles(bucketName, fileName);
-    let folderFile = null;
+    // const folderStructureFile = await getFiles(bucketName, fileName);
+    // let folderFile = null;
     // console.log('folderStructureFile', folderStructureFile)
-    if (folderStructureFile.length) {
-      folderFile = await readFile(bucketName, fileName);
-    }
-    console.log('folderFile', folderFile);
+    // if (folderStructureFile.length) {
+    //   folderFile = await readFile(bucketName, fileName);
+    // } 
+    // console.log('folderFile', folderFile);
     // console.log("basicBridgeInfo", basicBridgeInfo)
     // const bridgeDetails = await getBridgeDetails(id)
     // const model = await getBridgeMainGlbModel(basicBridgeInfo.primary_model_id)
     // console.log("model". model)
-    res.send({ basicBridgeInfo, folderFile });
+    res.send({ basicBridgeInfo });
   } catch (err) {
     res.send(err);
   }
@@ -179,33 +179,7 @@ const getBridgeBasicInfo = bridgeId => new Promise((resolve, reject) => {
     })
   })
 
-const readFile = (bucketName, fileName) => {
 
-  return new Promise((resolve, reject) => {
-    const bucket = storage.bucket(bucketName);
-    const remoteFile = bucket.file(fileName);
-    // console.log('remoteFile', remoteFile)
-    remoteFile.download(function(err, contents) {
-      if (err) reject(err);
-      console.log('contents', contents);
-      // console.log(contents.toString())
-      resolve(contents.toString());
-    });
-    // remoteFile.createReadStream()
-    // .on('error', function(err) {
-    //   console.log('error', error)
-    //   // reject(err)
-    // })
-    // .on('response', function(response) {
-    //   // Server connected and responded with the specified status and headers.
-    //   console.log('response', response)
-    //   // resolve(response)
-    //  })
-    // .on('end', function() {
-    //   // The file is fully downloaded.
-    // })
-  });
-};
 
 app.get('/bridges/:id/model/:modelId', async function(req, res) {
   console.log('getting bridge GLB model');

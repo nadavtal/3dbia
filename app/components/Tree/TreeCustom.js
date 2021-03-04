@@ -236,7 +236,7 @@ const TreeCustom = props => {
       </TreeRowWrapper>
     );
   };
-  console.log('allOpen', allOpen)
+
   const handleAllOpen = (value) => {
     if (allOpen == value) {
       setAllOpen()

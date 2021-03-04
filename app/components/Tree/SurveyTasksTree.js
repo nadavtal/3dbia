@@ -28,14 +28,7 @@ const SurveyTasksTree = ({
   wrapperClassName,
   hoverClassName
 }) => {
-  const [state, setstate] = useState()
-  useEffect(() => {
-    // console.log('USEEFFECTTTT')
-    setstate(data)
-    return () => {
-      
-    }
-  }, [data])
+
   const surveyCompletedPercentage = (survey) => {
     let total = 0
     survey.children.forEach(task => total += task.completed)
@@ -178,9 +171,7 @@ const SurveyTasksTree = ({
   }
 
   const tree = useMemo(() => function createTree() {
-    console.log('TREEEEEEE')
-    console.log(selectedSurvey)
-    // console.log(selectedTask)
+
     return (
       <MDBTreeview
         theme='colorful'
@@ -266,96 +257,94 @@ const SurveyTasksTree = ({
         })}
       </MDBTreeview>
     )
-  }, [state])
+  }, [data, selectedSurvey])
 
-  // return <>
-  //   {tree()}
-  // </>
-  return (
-    <MDBTreeview
-      theme='colorful'
-      // header={props.header}
-      className={`fullWidth ${wrapperClassName}`}
-      // getValue={value => handleClick(value)}
-    >
-      {selectedSurvey && data.map(parent => {
-        // console.log(selectedSurvey)
-        // console.log(parent)
-        return (
-          <MDBTreeviewList
-            key={parent.name}
-            // className="bgPrimaryFaded2"
-            // icon='envelope-open'
-            title={<Parent survey={parent}/>}
-            far
-            // opened={parent.id == selectedSurvey.id} 
-            >
+  return tree()
+  // return (
+  //   <MDBTreeview
+  //     theme='colorful'
+  //     // header={props.header}
+  //     className={`fullWidth ${wrapperClassName}`}
+  //     // getValue={value => handleClick(value)}
+  //   >
+  //     {selectedSurvey && data.map(parent => {
+  //       // console.log(selectedSurvey)
+  //       // console.log(parent)
+  //       return (
+  //         <MDBTreeviewList
+  //           key={parent.name}
+  //           // className="bgPrimaryFaded2"
+  //           // icon='envelope-open'
+  //           title={<Parent survey={parent}/>}
+  //           far
+  //           // opened={parent.id == selectedSurvey.id} 
+  //           >
 
-            {parent.children && parent.children.length && parent.children.map(child => {
-              if (child.children) {
-                return (
-                  <MDBTreeviewList
-                    key={child.name}
-                    title={child.name}
-                    // className="bgPrimaryFaded3"
-                    // icon='plus'
-                    far
-                  >
-                    {child.children &&
-                      child.children.length &&
-                      child.children.map(child2 => {
-                        return (
-                          <MDBTreeviewItem
-                            key={child2.name}
-                            className={child2.name == selectedItem ? 'opened' : ''}
-                            icon="folder"
-                            title={child2.name}
-                            // opened={child2.name == selectedItem}
-                          />
-                        );
-                      })}
-                  </MDBTreeviewList>
-                );
+  //           {parent.children && parent.children.length && parent.children.map(child => {
+  //             if (child.children) {
+  //               return (
+  //                 <MDBTreeviewList
+  //                   key={child.name}
+  //                   title={child.name}
+  //                   // className="bgPrimaryFaded3"
+  //                   // icon='plus'
+  //                   far
+  //                 >
+  //                   {child.children &&
+  //                     child.children.length &&
+  //                     child.children.map(child2 => {
+  //                       return (
+  //                         <MDBTreeviewItem
+  //                           key={child2.name}
+  //                           className={child2.name == selectedItem ? 'opened' : ''}
+  //                           icon="folder"
+  //                           title={child2.name}
+  //                           // opened={child2.name == selectedItem}
+  //                         />
+  //                       );
+  //                     })}
+  //                 </MDBTreeviewList>
+  //               );
 
-              } else {
+  //             } else {
                 
-                return !accordionMode ? 
-                <MDBTreeviewItem
-                    key={child.name}
-                    // className={`${selectedTask && child.id == selectedTask.id ? 'opened' : ''}`}
-                    icon="tasks"
-                    title={<Child task={child}/>}                 
+  //               return !accordionMode ? 
+  //               <MDBTreeviewItem
+  //                   key={child.name}
+  //                   // className={`${selectedTask && child.id == selectedTask.id ? 'opened' : ''}`}
+  //                   icon="tasks"
+  //                   title={<Child task={child}/>}                 
                   
-                  />
-                  :
-                  <Accordion 
-                    header={child.name}
-                    data={[]}
-                    />
-                // return (
-                //   // <MDBTreeviewItem
-                //   //   key={child}
-                //   //   icon="folder"
-                //   //   title={child}
-                //   //   onClick={() =>
-                //   //     handleClick(child)
-                //   //   }
-                //   // />
-                //   <Accordion 
-                //     header={child}
-                //     data={[]}
-                //     />
-                // );
-              }
+  //                 />
+  //                 :
+  //                 <Accordion 
+  //                   header={child.name}
+  //                   data={[]}
+  //                   />
+  //               // return (
+  //               //   // <MDBTreeviewItem
+  //               //   //   key={child}
+  //               //   //   icon="folder"
+  //               //   //   title={child}
+  //               //   //   onClick={() =>
+  //               //   //     handleClick(child)
+  //               //   //   }
+  //               //   // />
+  //               //   <Accordion 
+  //               //     header={child}
+  //               //     data={[]}
+  //               //     />
+  //               // );
+  //             }
 
-              })
-            }
-          </MDBTreeviewList>
+  //             })
+  //           }
+  //         </MDBTreeviewList>
 
-        )
-      })}
-    </MDBTreeview>
-  )
+  //       )
+  //     })}
+  //   </MDBTreeview>
+  // )
 }
 
 export default memo(SurveyTasksTree)
