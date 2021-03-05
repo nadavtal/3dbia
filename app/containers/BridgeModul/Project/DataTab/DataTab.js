@@ -33,7 +33,7 @@ const DataTab = ({
     imagesFolderStructure
 }) => { 
 
-    const folderStructurePaths = folderStructure.map(folder => folder.path)
+    const folderStructurePaths = folderStructure && folderStructure.map(folder => folder.path)
     const folderTree = createFolderTree(folderStructurePaths)
     folderTree[0].children = imagesFolderStructure
     // console.log(folderTree)

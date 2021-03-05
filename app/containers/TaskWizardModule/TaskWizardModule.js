@@ -886,8 +886,7 @@ function TaskWizard({
     setCurrentSubTask(firstInCompletedTask || subTasks[0])
     setSelectedFiles([]);
     setSelectedFolder();
-    console.log(firstInCompletedTask)
-    console.log(subTasks[0].fileType)
+
     const folders = getFoldersByString(firstInCompletedTask ? firstInCompletedTask.fileType : subTasks[0].fileType);
     setSelectedFolders(folders)
     // console.log('taskCompletedPercentage', taskCompletedPercentage())
@@ -916,6 +915,120 @@ function TaskWizard({
     setFilesInProgress(filesInProgress.filter(f => f !== file))
   }
 
+  const folderTree = useMemo(() => <FolderStructureTree
+        className="fontSmall"
+        data={imagesFolderStructure}
+        accordionMode={false}
+        onClick={value => handleFolderClick(value)}                
+        // folderRow={}
+        // selectedItem={selectedFolder && selectedFolder.name ? selectedFolder.name : selectedFolder}
+      />, [imagesFolderStructure])
+  const folders = useMemo(() => {
+    if (currentSubTask) {
+
+  
+      const folders = getFoldersByString(currentSubTask.fileType);
+
+      if (currentSubTask.name == 'Upload images' || currentSubTask.name == 'Download images') {
+        return (
+          <>
+            <div className="text-center bold">
+              Select destination folder
+            </div>
+            {folderTree}
+            {/* <FolderStructureTree
+              className="fontSmall"
+              data={imagesFolderStructure}
+              accordionMode={false}
+              onClick={value => handleFolderClick(value)}
+              // folderRow={}
+              // selectedItem={selectedFolder && selectedFolder.name ? selectedFolder.name : selectedFolder}
+            /> */}
+          </>
+        );
+      }
+      if (folders.length == 1) {
+        // console.log(folders[0])
+        setSelectedFolder(folders[0])
+        return <>
+          <div className="bold text-center">
+            Please upload {currentSubTask.fileType} 
+          </div>
+          <FolderRow folder={folders[0]} />
+        </>;
+      } else {
+        return (
+          <>
+            <div className="row no-gutters align-items-center">
+              <div className="col-2">
+
+              </div>
+              <div className="col-8 bold">
+                Select destination folder
+              </div>
+              <div className="col-1">
+                {selectedFolders.length && mode == 'Download'? (
+                  // <MDBIcon icon="download" className="ml-2 color-orange" onClick={() => console.log('Download')}/>
+                  <IconButtonToolTip
+                    iconName="download"
+                    toolTipType="info"
+                    toolTipPosition="top"
+                    toolTipEffect="float"
+                    toolTipText="Download selected folders"
+                    className="color-orange"
+                    onClickFunction={() => console.log('Download')}
+                  />
+                ) : (
+                  ''
+                )}
+              </div>
+              <div className="col-1 text-center">
+                {mode == 'Download' && <MDBIcon
+                  icon={
+                    selectedFolders.length == folders.length
+                      ? 'check-square'
+                      : 'square'
+                  }
+                  size={'lg'}
+                  className=" mt-1 cursor-pointer"
+                  onClick={() => toggleFolderCheckboxAll()}
+                  far
+                />}
+              
+              </div>
+
+            </div>
+            {}
+            {folders.map(folder => (
+              <FolderRow key={folder.path} folder={folder} />
+            ))}
+            {/* {selectedFolders.length ? 
+            <div className="text-center mt-2">
+               <MDBBtn
+               className=""
+               color={`primary`}
+               size="sm"
+               rounded
+               // disabled={task.remarks == remarks}
+               //  disabled={!allSubTasksComplete()}
+               //  className={`${!allSubTasksComplete() && 'disabled faded'}`}
+               onClick={() => console.log('Download')}
+             >
+               Download ({selectedFolders.length})
+               <MDBIcon icon="download" className="ml-2" />
+             </MDBBtn>
+
+            </div>
+            : ''} */}
+          </>
+        );
+      }
+     
+
+    }
+  }, [currentSubTask, selectedFolder, selectedFolders])
+
+
   const scrollContainerStyle = {
     // width: "100%", 
    //  maxHeight: `calc(100vh)-${theme.layout.topBarSize}`, 
@@ -923,115 +1036,286 @@ function TaskWizard({
     overFlowY: 'auto',
     // overFlowX: 'hidden'
    }; 
+
+  const SubTasks = () => {
+
+    return (
+      <>
+        <div className="text-center">
+          <span className="mr-3 bold">Sub Tasks</span>
+          <MDBSimpleChart
+            strokeColor={taskCompletedPercentage() == 100 ? 'green' : 'red'}
+            strokeWidth={3}
+            width={30}
+            height={30}
+            percent={taskCompletedPercentage()}
+            labelFontWeight="normal"
+            labelFontSize="9"
+            labelColor={taskCompletedPercentage() !== 100 ? 'red' : 'green'}
+
+            // railColor={'blue'}
+          />
+        </div>
+
+        {subTasks.map((subTask, index) => (
+          <SubTask
+            key={subTask.name}
+            task={subTask}
+            index={index}
+            currentSubTask={currentSubTask}
+            handleSubTaskClick={task => handleSubTaskClick(task)}
+            isUpdating={updatingSubTask == subTask.name}
+            prepareUpdateSubTask={(task, index) =>
+              prepareUpdateSubTask(task, index)
+            }
+          />
+        ))}
+        <div className="bottom text-center fullWidth">
+          <MDBBtn
+            className="bgError"
+            size="sm"
+            rounded
+            disabled={
+              !previousTask ||
+              (previousTask && previousTask.status !== 'Complete')
+            }
+            onClick={() => rejectPreviousTask()}
+          >
+            Reject previous
+            <MDBIcon icon="exclamation-triangle" className="ml-2" />
+          </MDBBtn>
+          <MDBBtn
+            // color={`${
+            //   !allSubTasksComplete() ? 'light' : 'success'
+            // }`}
+            className="bgSecondary"
+            size="sm"
+            rounded
+            disabled={!allSubTasksComplete()}
+            //  className={`${!allSubTasksComplete() && 'disabled faded'}`}
+            onClick={() => completeTask()}
+          >
+            complete
+            <MDBIcon icon="check" className="ml-2" />
+          </MDBBtn>
+        </div>
+      </>
+    );
+  }
+
+  const Remarks = () => {
+    const [remarks, setRemarks] = useState(task.remarks)
+    return (
+      <>
+        <div className="text-center">
+          <span className="mr-3 bold">Remarks</span>
+        </div>
+        <textarea
+          className="taskWizardRemarks fullWidth p-1 mt-1"
+          type="textarea"
+          label="Remarks"
+          value={remarks}
+          onChange={e => setRemarks(e.target.value)}
+        />
+        <div className="d-flex justify-content-between align-items-center">
+          {/* <MDBInput
+              id="rejectPreviousTaskCheckbox"
+              className=""
+              containerClass="pl-1"
+              type="checkbox"
+              label="Reject previous task"
+              labelClass="pl-4"
+              onChange={e => setRejectPreviousTaskCheckbox(!rejectPreviousTaskCheckbox)}
+              value={rejectPreviousTaskCheckbox}
+            /> */}
+          <div className="bottom mb-2">
+            {/* {console.log(task)}
+                  {console.log(previousTask)} */}
+
+            <MDBBtn
+              className="bgSecondary"
+              // color={`success`}
+
+              size="sm"
+              rounded
+              disabled={task.remarks == remarks}
+              //  disabled={!allSubTasksComplete()}
+              //  className={`${!allSubTasksComplete() && 'disabled faded'}`}
+              onClick={() => updateTaskRemarks(remarks)}
+            >
+              Save
+              <MDBIcon icon="save" className="ml-2" />
+            </MDBBtn>
+          </div>
+        </div>
+      </>
+    );
+ 
+  }
+
+  const DropZone = () => {
+    const { getRootProps, getInputProps, isDragActive } = useDropzone({
+      onDrop,
+    });
+    return (
+      <div
+        className={`p-1 taskWizardDropZone position-relative ${selectedFolder &&
+          'bgPrimaryFaded2'}`}
+      >
+        {mode == 'Upload' && selectedFolder && (
+          <>
+            <div
+              {...getRootProps()}
+              className={`cursor-pointer hoverBgPrimaryFaded3 p-2 fullHeight position-relative ${
+                isDragActive ? 'bgPrimaryFaded3' : 'bgPrimaryFaded1'
+              }`}
+            >
+              <input {...getInputProps()} />
+              {isDragActive ? (
+                <p>Drop the files here ...</p>
+              ) : (
+                <MDBAnimation
+                  className=""
+                  type="fadeIn"
+                  // infinite={true}
+                  // duration={'2s'}
+                >
+                  <p>
+                    Drag 'n' drop files of type
+                    {` ${selectedFolder.file_types}`}, or click to select
+                    files
+                  </p>
+                </MDBAnimation>
+              )}
+            </div>
+            {selectedFolder && !files.length && (
+              <MDBAnimation
+                className="absCenter"
+                type="bounce"
+                infinite
+                duration="2s"
+              >
+                <div className="text-center">
+                  <MDBIcon icon="upload" />
+                  <div>UPLOAD FILES</div>
+                </div>
+              </MDBAnimation>
+            )}
+            {files.length && mode == 'Upload' ? (
+              <Files
+                files={files}
+                removeFile={selectedFile => removeFile(selectedFile)}
+              />
+            ) : (
+              ''
+            )}
+          </>
+        )}
+        {mode == 'Download' && (
+          <div>
+            {selectedFolder && (
+              <>
+                <MDBSwitch
+                  className="fontSmall"
+                  checked={galleryMode}
+                  onChange={() => setGalleryMode(!galleryMode)}
+                  labelLeft=""
+                  labelRight={`Display as ${
+                    galleryMode ? 'images' : 'table'
+                  }`}
+                />
+                {galleryMode ? (
+                  <Gallery
+                    images={getFileNameByString(
+                      selectedFolder.path.split('/')[
+                        selectedFolder.path.split('/').length - 1
+                      ],
+                      surveyFiles.images,
+                    )}
+                    onClick={file => console.log(file)}
+                    checkBoxMode={false}
+                  />
+                ) : (
+                  getFileNameByString(
+                    selectedFolder.path.split('/')[
+                      selectedFolder.path.split('/').length - 1
+                    ],
+                    [...surveyFiles.images, ...surveyFiles.glbModels],
+                  ).map(file => (
+                    <div className="d-flex" key={file.name}>
+                      <MDBInput
+                        id={file.name}
+                        type="checkbox"
+                        label={file.fullImageName.split('/')[4]}
+                        onChange={() => handleFileCheckbox(file)}
+                      />
+                    </div>
+                  ))
+                )}
+              </>
+            )}
+          </div>
+        )}
+        {/* {mode == 'Update' && (
+        <Form
+          formType="surveyForm"
+          editMode="edit"
+          colWidth={4}
+          // item={item}
+          editFunction={formData => {
+            console.log(formData);
+          }}
+        />
+      )} */}
+      </div>
+    );
+  }
+
+  const Files = () => {
+
+    return (
+      <MDBAnimation
+        className=""
+        type="fadeIn"
+        // infinite={true}
+        // duration={'2s'}
+      >
+        {files.length ? (
+          <MDBBtn
+            color="success"
+            size="lg"
+            rounded
+            className="taskFileUploadButton"
+            onClick={() => handleSubmit()}
+          >
+            Upload ({files.length})
+            <MDBIcon icon="upload" className="ml-2" />
+          </MDBBtn>
+        ) : (
+          ''
+        )}
+        {selectedFiles.length ? (
+          <MDBBtn
+            color="success"
+            size="lg"
+            rounded
+            className="taskFileUploadButton"
+            onClick={() => handleDownload()}
+          >
+            Download ({selectedFiles.length})
+            <MDBIcon icon="download" className="ml-2" />
+          </MDBBtn>
+        ) : (
+          ''
+        )}
+      </MDBAnimation>
+    );
+  }
   const Layout2 = () => {
     const [remarks, setRemarks] = useState(task.remarks)
     const { getRootProps, getInputProps, isDragActive } = useDropzone({
       onDrop,
     });
-    const folderTree = useMemo(() => <FolderStructureTree
-    className="fontSmall"
-    data={imagesFolderStructure}
-    accordionMode={false}
-    onClick={value => handleFolderClick(value)}                
-    // folderRow={}
-    // selectedItem={selectedFolder && selectedFolder.name ? selectedFolder.name : selectedFolder}
-  />, [imagesFolderStructure])
-    const folders = useMemo(() => {
-      if (currentSubTask) {
-
-        const folders = getFoldersByString(currentSubTask.fileType);
-
-        if (currentSubTask.name == 'Upload images' || currentSubTask.name == 'Download images') {
-          return (
-            <>
-              <div className="text-center bold">
-                Select destination folder
-              </div>
-              {folderTree}
-            </>
-          );
-        }
-        if (folders.length == 1) {
-          // console.log(folders[0])
-          setSelectedFolder(folders[0])
-          return <>
-            <div className="bold text-center">
-              Please upload {currentSubTask.fileType} 
-            </div>
-            <FolderRow folder={folders[0]} />
-          </>;
-        } else {
-          return (
-            <>
-              <div className="row no-gutters align-items-center">
-                <div className="col-2">
-  
-                </div>
-                <div className="col-8 bold">
-                  Select destination folder
-                </div>
-                <div className="col-1">
-                  {selectedFolders.length && mode == 'Download'? (
-                    // <MDBIcon icon="download" className="ml-2 color-orange" onClick={() => console.log('Download')}/>
-                    <IconButtonToolTip
-                      iconName="download"
-                      toolTipType="info"
-                      toolTipPosition="top"
-                      toolTipEffect="float"
-                      toolTipText="Download selected folders"
-                      className="color-orange"
-                      onClickFunction={() => console.log('Download')}
-                    />
-                  ) : (
-                    ''
-                  )}
-                </div>
-                <div className="col-1 text-center">
-                  {mode == 'Download' && <MDBIcon
-                    icon={
-                      selectedFolders.length == folders.length
-                        ? 'check-square'
-                        : 'square'
-                    }
-                    size={'lg'}
-                    className=" mt-1 cursor-pointer"
-                    onClick={() => toggleFolderCheckboxAll()}
-                    far
-                  />}
-                
-                </div>
-  
-              </div>
-              {}
-              {folders.map(folder => (
-                <FolderRow key={folder.path} folder={folder} />
-              ))}
-              {/* {selectedFolders.length ? 
-              <div className="text-center mt-2">
-                 <MDBBtn
-                 className=""
-                 color={`primary`}
-                 size="sm"
-                 rounded
-                 // disabled={task.remarks == remarks}
-                 //  disabled={!allSubTasksComplete()}
-                 //  className={`${!allSubTasksComplete() && 'disabled faded'}`}
-                 onClick={() => console.log('Download')}
-               >
-                 Download ({selectedFolders.length})
-                 <MDBIcon icon="download" className="ml-2" />
-               </MDBBtn>
-  
-              </div>
-              : ''} */}
-            </>
-          );
-        }
-       
-
-      }
-    }, [currentSubTask, selectedFolder, selectedFolders])
-
 
     return (
       <>
@@ -1151,7 +1435,7 @@ function TaskWizard({
                 </div>
               </div>
             </div>
-            {/* <hr /> */}
+           
           </div>
         </div>
         <div
@@ -1307,11 +1591,29 @@ function TaskWizard({
     <MDBAnimation type="fadeIn">
       <div className="taskWizard bgPrimaryFaded1">
         <Header task={task} statuses={statuses}/>
-
-        {/* <Layout1 /> */}
-        <Layout2 />
+        {/* <Layout2 /> */}
+        <div className="row no-gutters taskWizardSubTasksSection">
+          <div
+              className={`col-4 p-2 border-right-thick ${!currentSubTask && 'bgPrimaryFaded2'}`}
+            >
+            <SubTasks />
+          </div>
+          <div
+            style={scrollContainerStyle}
+            className={`col-4 p-2 border-right-thick scrollbar scrollbar-primary fontSmall ${!selectedFolder &&
+              currentSubTask &&
+              'bgPrimaryFaded2'}`}
+          >
+            {currentSubTask && folders}
+          </div>
+          <div className="col-4 p-2">
+            <Remarks />
+          </div>
+        </div>
+        <DropZone />
+        <Files />
         {filesInProgress.length && filesStatus == 'uploading' ? (
-        // {/* {filesInProgress.length ? ( */}
+        
           <FilesStatuses
             files={filesInProgress}
             removeFile={file => removeFileFromFilesInProgress(file)}
