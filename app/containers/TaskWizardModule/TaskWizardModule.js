@@ -15,7 +15,7 @@ import {
   makeSelectDisplayedSurvey,
   makeSelectFolderStructure,
   makeSelectImagesFolderStructure,
-  makeSelectFolders,
+  makeSelectImagesPaths,
   makeSelectSurveyFiles,
   makeSelectSelectedTask,
   makeSelectPreviousTask,
@@ -52,6 +52,7 @@ import {
   getFileExtension,
   getFileNameByString,
   splitStringToArray,
+  recursiveSearch
 } from 'utils/dataUtils';
 import {
   MDBBtn,
@@ -100,6 +101,7 @@ function TaskWizard({
   primaryModel,
   displayedSurvey,
   onUpdateSurveyStatus,
+  imagesPaths
 }) {
   // console.log('folderStructure', folderStructure)
   // console.log('imagesFolderStructure', imagesFolderStructure)
@@ -319,7 +321,7 @@ function TaskWizard({
           filesWithStatuses.find(
             f => f.name === file.name,
           ).status = 'Uploading';
-          setFilesInProgress(filesWithStatuses);
+          setFilesInProgress(filesWithStatuses); 
           const filePath = `bid_${task.bid}/survey_${task.survey_id}/${selectedFolder.path}`;
          
 
@@ -565,6 +567,18 @@ function TaskWizard({
 
   const handleFolderClick = (newFolder) => {
     console.log(newFolder)
+    console.log(folderStructure)
+    console.log(currentSubTask)
+    if (currentSubTask.name == 'Upload images') {
+      const folderPath = 'Images/' + imagesPaths.find(path => path.split('/')[path.split('/').length-2] == newFolder)
+      newFolder = {
+        // name: newFolder,
+        path: folderPath,
+        file_types: ['jpg', 'jpeg']
+      }
+
+    }
+    
     if (selectedFolder !== newFolder) {
       setSelectedFolder(newFolder);
       // setAllowedFileTypes(newFolder.file_types);
@@ -922,7 +936,7 @@ function TaskWizard({
         onClick={value => handleFolderClick(value)}                
         // folderRow={}
         // selectedItem={selectedFolder && selectedFolder.name ? selectedFolder.name : selectedFolder}
-      />, [imagesFolderStructure])
+      />, [imagesFolderStructure, currentSubTask])
   const folders = useMemo(() => {
     if (currentSubTask) {
 
@@ -1201,14 +1215,7 @@ function TaskWizard({
                 </div>
               </MDBAnimation>
             )}
-            {files.length && mode == 'Upload' ? (
-              <Files
-                files={files}
-                removeFile={selectedFile => removeFile(selectedFile)}
-              />
-            ) : (
-              ''
-            )}
+
           </>
         )}
         {mode == 'Download' && (
@@ -1311,282 +1318,7 @@ function TaskWizard({
       </MDBAnimation>
     );
   }
-  const Layout2 = () => {
-    const [remarks, setRemarks] = useState(task.remarks)
-    const { getRootProps, getInputProps, isDragActive } = useDropzone({
-      onDrop,
-    });
 
-    return (
-      <>
-        <div className="row no-gutters taskWizardSubTasksSection">
-          <div
-            className={`col-4 p-2 border-right-thick ${!currentSubTask &&
-              'bgPrimaryFaded2'}`}
-          >
-            <div className="text-center">
-              <span className="mr-3 bold">Sub Tasks</span>
-              <MDBSimpleChart
-                strokeColor={taskCompletedPercentage() == 100 ? 'green' : 'red'}
-                strokeWidth={3}
-                width={30}
-                height={30}
-                percent={taskCompletedPercentage()}
-                labelFontWeight="normal"
-                labelFontSize="9"
-                labelColor={taskCompletedPercentage() !== 100 ? 'red' : 'green'}
-
-                // railColor={'blue'}
-              />
-            </div>
-
-            {subTasks.map((subTask, index) => (
-              <SubTask
-                key={subTask.name}
-                task={subTask}
-                index={index}
-                currentSubTask={currentSubTask}
-                handleSubTaskClick={task => handleSubTaskClick(task)}
-                isUpdating={updatingSubTask == subTask.name}
-                prepareUpdateSubTask={(task, index) =>
-                  prepareUpdateSubTask(task, index)
-                }
-              />
-            ))}
-            <div className="bottom text-center fullWidth">
-              <MDBBtn
-                className="bgError"
-                size="sm"
-                rounded
-                disabled={
-                  !previousTask ||
-                  (previousTask && previousTask.status !== 'Complete')
-                }
-                onClick={() => rejectPreviousTask()}
-              >
-                Reject previous
-                <MDBIcon icon="exclamation-triangle" className="ml-2" />
-              </MDBBtn>
-              <MDBBtn
-                // color={`${
-                //   !allSubTasksComplete() ? 'light' : 'success'
-                // }`}
-                className="bgSecondary"
-                size="sm"
-                rounded
-                disabled={!allSubTasksComplete()}
-                //  className={`${!allSubTasksComplete() && 'disabled faded'}`}
-                onClick={() => completeTask()}
-              >
-                complete
-                <MDBIcon icon="check" className="ml-2" />
-              </MDBBtn>
-            </div>
-          </div>
-          <div
-            style={scrollContainerStyle}
-            className={`col-4 p-2 border-right-thick scrollbar scrollbar-primary fontSmall ${!selectedFolder &&
-              currentSubTask &&
-              'bgPrimaryFaded2'}`}
-          >
-            {currentSubTask && folders}
-          </div>
-          <div className="col-4 p-2">
-            <div className="">
-              <div className="text-center">
-                <span className="mr-3 bold">Remarks</span>
-              </div>
-              <textarea
-                className="taskWizardRemarks fullWidth p-1 mt-1"
-                type="textarea"
-                label="Remarks"
-                value={remarks}
-                onChange={e => setRemarks(e.target.value)}
-              />
-              <div className="d-flex justify-content-between align-items-center">
-                {/* <MDBInput
-                        id="rejectPreviousTaskCheckbox"
-                        className=""
-                        containerClass="pl-1"
-                        type="checkbox"
-                        label="Reject previous task"
-                        labelClass="pl-4"
-                        onChange={e => setRejectPreviousTaskCheckbox(!rejectPreviousTaskCheckbox)}
-                        value={rejectPreviousTaskCheckbox}
-                      /> */}
-                <div className="bottom mb-2">
-                  {/* {console.log(task)}
-                            {console.log(previousTask)} */}
-
-                  <MDBBtn
-                    className="bgSecondary"
-                    // color={`success`}
-
-                    size="sm"
-                    rounded
-                    disabled={task.remarks == remarks}
-                    //  disabled={!allSubTasksComplete()}
-                    //  className={`${!allSubTasksComplete() && 'disabled faded'}`}
-                    onClick={() => updateTaskRemarks(remarks)}
-                  >
-                    Save
-                    <MDBIcon icon="save" className="ml-2" />
-                  </MDBBtn>
-                </div>
-              </div>
-            </div>
-           
-          </div>
-        </div>
-        <div
-          className={`p-1 taskWizardDropZone position-relative ${selectedFolder &&
-            'bgPrimaryFaded2'}`}
-        >
-          {mode == 'Upload' && selectedFolder && (
-            <>
-              <div
-                {...getRootProps()}
-                className={`cursor-pointer hoverBgPrimaryFaded3 p-2 fullHeight position-relative ${
-                  isDragActive ? 'bgPrimaryFaded3' : 'bgPrimaryFaded1'
-                }`}
-              >
-                <input {...getInputProps()} />
-                {isDragActive ? (
-                  <p>Drop the files here ...</p>
-                ) : (
-                  <MDBAnimation
-                        className=""
-                    type="fadeIn"
-                    // infinite={true}
-                    // duration={'2s'}
-                  >
-                    <p>
-                      Drag 'n' drop files of type
-                          {` ${  selectedFolder.file_types}`}
-                        , or click to select files
-                        </p>
-                  </MDBAnimation>
-                )}
-              </div>
-              {selectedFolder && !files.length && (
-                <MDBAnimation
-                  className="absCenter"
-                  type="bounce"
-                  infinite
-                  duration="2s"
-                >
-                  <div className="text-center">
-                    <MDBIcon icon="upload" />
-                    <div>UPLOAD FILES</div>
-                  </div>
-                </MDBAnimation>
-              )}
-              {files.length && mode == 'Upload' ? (
-                <Files
-                  files={files}
-                  removeFile={selectedFile => removeFile(selectedFile)}
-                />
-              ) : (
-                ''
-              )}
-            </>
-          )}
-          {mode == 'Download' && (
-            <div>
-              {selectedFolder && (
-                <>
-                  <MDBSwitch
-                    className="fontSmall"
-                    checked={galleryMode}
-                    onChange={() => setGalleryMode(!galleryMode)}
-                    labelLeft=""
-                    labelRight={`Display as ${
-                      galleryMode ? 'images' : 'table'
-                    }`}
-                  />
-                  {galleryMode ? (
-                    <Gallery
-                      images={getFileNameByString(
-                        selectedFolder.path.split('/')[
-                          selectedFolder.path.split('/').length - 1
-                        ],
-                        surveyFiles.images,
-                      )}
-                      onClick={file => console.log(file)}
-                      checkBoxMode={false}
-                    />
-                  ) : (
-                    getFileNameByString(
-                      selectedFolder.path.split('/')[
-                        selectedFolder.path.split('/').length - 1
-                      ],
-                      [...surveyFiles.images, ...surveyFiles.glbModels],
-                    ).map(file => (
-                            <div className="d-flex" key={file.name}>
-                              <MDBInput
-                                id={file.name}
-                                type="checkbox"
-                                label={file.fullImageName.split('/')[4]}
-                                onChange={() => handleFileCheckbox(file)}
-                              />
-                            </div>
-                          ))
-                  )}
-                </>
-              )}
-            </div>
-          )}
-          {/* {mode == 'Update' && (
-              <Form
-                formType="surveyForm"
-                editMode="edit"
-                colWidth={4}
-                // item={item}
-                editFunction={formData => {
-                  console.log(formData);
-                }}
-              />
-            )} */}
-        </div>
-
-        <MDBAnimation
-          className=""
-          type="fadeIn"
-          // infinite={true}
-          // duration={'2s'}
-        >
-          {files.length ? (
-            <MDBBtn
-              color="success"
-              size="lg"
-              rounded
-              className="taskFileUploadButton"
-              onClick={() => handleSubmit()}
-            >
-              Upload ({files.length})
-              <MDBIcon icon="upload" className="ml-2" />
-            </MDBBtn>
-          ) : (
-            ''
-          )}
-          {selectedFiles.length ? (
-            <MDBBtn
-              color="success"
-              size="lg"
-              rounded
-              className="taskFileUploadButton"
-              onClick={() => handleDownload()}
-            >
-              Download ({selectedFiles.length})
-              <MDBIcon icon="download" className="ml-2" />
-            </MDBBtn>
-          ) : (
-            ''
-          )}
-        </MDBAnimation>
-      </>
-    );
-  }
   return (
     <MDBAnimation type="fadeIn">
       <div className="taskWizard bgPrimaryFaded1">
@@ -1638,6 +1370,7 @@ const mapStateToProps = createStructuredSelector({
   surveyFiles: makeSelectSurveyFiles(),
   folderStructure: makeSelectFolderStructure(),
   imagesFolderStructure: makeSelectImagesFolderStructure(),
+  imagesPaths: makeSelectImagesPaths(),
   bridge: makeSelectBridge(),
   primaryModel: makeSelectPrimaryBridgeModel(),
   displayedSurvey: makeSelectDisplayedSurvey(),

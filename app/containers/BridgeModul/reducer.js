@@ -6,6 +6,7 @@ import { ELEMENT_SELECTED, UPDATE_RESIUM_MODE, ON_RIGHT_MENU_OPTION_CLICK, ELEME
   DESTROY_CESIUM, MODEL_LOADED } from 'containers/Resium/constants';
 import { TASK_UPDATED, MESSAGE_CREATED, BRIDGE_UPDATED, BRIDGE_SELECTED, MESSAGES_LOADED } from 'containers/App/constants';
 import { sortBy, getLastCreateditem } from 'utils/dataUtils';
+import createFolderTree from 'utils/createTree';
 import * as actionTypes from './constants';
 // import { initialState } from 'containers/App/reducer'
 export const INITIAL_WIDTH = '25%';
@@ -43,6 +44,7 @@ export const initialState = {
   surveyFiledLoaded: false,
   folderStructure: null,
   imagesFolderStructure: null,
+  imagesPaths: null,
   selectedFolder: null,
   nodes: null,
   messages: []
@@ -125,7 +127,8 @@ const bridgePageReducer = (state = initialState, action) =>
         action.data.models.forEach(model => {
           if (!updatedModelsIds.includes(model.id)) updatedModels.push(model)
         })
-        draft.imagesFolderStructure = action.data.imagesFolderStructure
+        draft.imagesFolderStructure = createFolderTree(action.data.imagePaths)
+        draft.imagesPaths = action.data.imagePaths
         draft.surveyFiledLoaded = true
         draft.selectedSurveyFiles = action.data.files;
         draft.bridgeModels = updatedModels

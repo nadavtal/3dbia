@@ -26,9 +26,9 @@ const imageFileExtensions = ['jpg', 'jpeg', 'pin'];
 // const isFolder = filePath => fs.lstatSync(filePath).isDirectory();
 
 function uploadFiles(files, bucketName, filePath, parentFolderName) {
-  console.log(parentFolderName);
+  // console.log(parentFolderName);
   return new Promise(async (resolve, reject) => {
-    console.log('files.length', files.length);
+    
     let { length } = files;
     for (const file of files) {
       const fileExtentension = getFileExtension(file);
@@ -50,13 +50,12 @@ function uploadFiles(files, bucketName, filePath, parentFolderName) {
             let smallFileName = `${file.split('.')[0]}_small_image.${
               file.split('.')[1]
             }`;
-            smallFileName = smallFileName.split('\\').join('/');
-            if (parentFolderName)
-              smallFileName = `${parentFolderName}/${smallFileName}`;
+            smallFileName = smallFileName.split('\\').splice(1).join('/');
+            // if (parentFolderName) smallFileName = `${parentFolderName}/${smallFileName}`;
             await uploadFile(
               smallFile,
               bucketName,
-              `${filePath}/${smallFileName}`,
+              `${filePath}${smallFileName}`,
             );
           });
       }
@@ -92,17 +91,18 @@ const uploadFileFromLocalDiskToBucket = (
 ) => {
   // console.log(file)
   // const newFile = file.replace('\\', '/')
+  const fileExtentension = getFileExtension(file);
   const newFile = file.split('\\').join('/');
-  // if (parentFolderName) newFile = parentFolderName + '/' + newFile
-  // console.log(newFile)
+  const finalPath = imageFileExtensions.includes(fileExtentension.toLowerCase()) 
+  ? `${filePath}${newFile.split('/').splice(1).join('/')}`
+  : `${filePath}${newFile}`
+
   return new Promise((resolve, reject) => {
     const options = {
-      destination: parentFolderName
-        ? `${filePath}/${parentFolderName}/${newFile}`
-        : `${filePath}/${newFile}`,
+      destination: finalPath,
       resumable: false,
     };
-    console.log(`Uploading '${newFile}' to bucket`);
+    console.log(`Uploading '${finalPath}' to bucket`);
     storage
       .bucket(bucketName)
       .upload(`${unzipPath}//${newFile}`, options)
@@ -281,28 +281,7 @@ app.post('/cloud-upload/zip/:logId/:folderId', async (req, res) => {
     // if (fieldname == 'sub_task_name') sub_task_name = val;
   });
   busboy.on('file', async function(fieldname, file, filename, encoding, mimetype) {
-   
 
-    // console.log('file', file)
-
-    // create uploading log      
-    // let log = {
-    //   bid,
-    //   type: 'zip',
-    //   organization_id,
-    //   survey_id: surveyId,
-    //   task_id: taskId,
-    //   sub_task_name,
-    //   user_id: userId,
-    //   status: 'Uploading',
-    //   name: filename,
-    //   path: '', 
-    //   size: null
-    // }
-    // // create initial log
-    // const logResult = await logsController.createLog(log)
-    //return created log
-    // res.send({log, logResult});
     res.send({status: 200});
     const tmpDir = uploadPath + "//" + folder_id
     try {
@@ -347,7 +326,8 @@ app.post('/cloud-upload/zip/:logId/:folderId', async (req, res) => {
           await logsController.updateLog(log)
           const filesPaths = getAllFiles(`${unzipPath}/${folder_id}`);
          
-
+          console.log(filesPaths)
+          console.log(filePath)
           const filesUploaded = await uploadFiles(
             filesPaths,
             bucketName,

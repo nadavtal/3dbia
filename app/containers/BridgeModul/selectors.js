@@ -170,6 +170,11 @@ export const makeSelectImagesFolderStructure = () =>
     selectBridgeModule,
     bridgeModule => bridgeModule.imagesFolderStructure
   );
+export const makeSelectImagesPaths = () =>
+  createSelector(
+    selectBridgeModule,
+    bridgeModule => bridgeModule.imagesPaths
+  );
 export const makeSelectPreviousTask = () =>
 createSelector(
   selectBridgeModule, makeSelectSelectedTask,

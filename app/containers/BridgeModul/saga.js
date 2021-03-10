@@ -11,7 +11,7 @@ import {
 } from '../App/actions';
 import { elementUpdated, spanUpdated, spanDeleted } from './actions';
 import { getModalOpen } from '../App/selectors';
-import createFolderTree from 'utils/createTree';
+
 
 function* getSurvey(action) {
   try {
@@ -117,7 +117,8 @@ function* loadSurveyData(action) {
       actions.surveyFilesLoaded({
         files: surveyFilesShort,
         models: surveyModels,
-        imagesFolderStructure: createFolderTree(surveyFiles.imagesFolderStructure)
+        imagePaths: surveyFiles.imagesFolderStructure,
+        // imagesFolderStructure: createFolderTree(surveyFiles.imagesFolderStructure)
       }),
     );
     yield put(actions.surveyMessagesLoaded(surveyMessages));
