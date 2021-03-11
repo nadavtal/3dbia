@@ -127,7 +127,9 @@ const bridgePageReducer = (state = initialState, action) =>
         action.data.models.forEach(model => {
           if (!updatedModelsIds.includes(model.id)) updatedModels.push(model)
         })
-        draft.imagesFolderStructure = createFolderTree(action.data.imagePaths)
+        if (action.data.imagePaths) {
+          draft.imagesFolderStructure = createFolderTree(action.data.imagePaths)
+        }
         draft.imagesPaths = action.data.imagePaths
         draft.surveyFiledLoaded = true
         draft.selectedSurveyFiles = action.data.files;

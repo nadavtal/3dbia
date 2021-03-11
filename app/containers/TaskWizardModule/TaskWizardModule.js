@@ -103,9 +103,9 @@ function TaskWizard({
   onUpdateSurveyStatus,
   imagesPaths
 }) {
-  // console.log('folderStructure', folderStructure)
+  // console.log('task', task)
   // console.log('imagesFolderStructure', imagesFolderStructure)
-  // console.log('foldersCsv', foldersCsv)
+
   const createSubTasksArray = () => {
     const subTasksNames = splitStringToArray(task.sub_tasks_names, ',');
     const subTasksFileTypes = task.sub_tasks_file_types
@@ -152,7 +152,6 @@ function TaskWizard({
     task && axios.get(apiUrl + `logs/${task.survey_id}/${task.id}`)
       .then(res => {
         const logs = res.data
-        console.log(logs)
         
         if (logs.length) {
           let updatedFilesInProgress = [...filesInProgress]
@@ -312,16 +311,17 @@ function TaskWizard({
   const uploadFile = file => {
     console.log(file)
     const fileExtentension = getFileExtension(file.name);
+    const filesWithStatuses = [
+      ...filesInProgress,
+    ];
+    filesWithStatuses.find(
+      f => f.name === file.name,
+    ).status = 'Uploading';
+    setFilesInProgress(filesWithStatuses); 
     switch (fileExtentension) {
       case 'zip':
         return new Promise(async (resolve, reject) => {
-          const filesWithStatuses = [
-            ...filesInProgress,
-          ];
-          filesWithStatuses.find(
-            f => f.name === file.name,
-          ).status = 'Uploading';
-          setFilesInProgress(filesWithStatuses); 
+
           const filePath = `bid_${task.bid}/survey_${task.survey_id}/${selectedFolder.path}`;
          
 
@@ -412,25 +412,51 @@ function TaskWizard({
             }
           })
         });
+      // case 'csv':
+      //   return new Promise(async (resolve, reject) => {
+      //     const fileName = `bid_${task.bid}/survey_${
+      //       task.survey_id
+      //     }/${file.name}`;
+      //     const formData = new FormData();
+      //     formData.append('file', file);
+      //     formData.append('bucketName', `3dbia_organization_${task.organization_id}`,
+      //     );
+      //     formData.append('fileName', fileName);
+      //     formData.append('surveyId', task.survey_id);
+      //     formData.append('taskId', task.id);
+      //     formData.append('bid', task.bid);
+      //     formData.append('userId', currentUser.userInfo.id);   
+      //     const log = {
+      //       bid: task.bid,
+      //       type: 'csv',
+      //       organization_id: task.organization_id,
+      //       survey_id: task.survey_id,
+      //       task_id: task.id,
+      //       sub_task_name: currentSubTask.name,
+      //       user_id: currentUser.userInfo.id,
+      //       status: 'Uploading',
+      //       name: file.name,
+      //       path: '', 
+      //       size: null
+      //     }
+      //     axios
+      //     .post(
+      //       apiUrl + 'logs',
+      //       log,
+      //     )
+      //     .then(logResult => {
+      //       console.log(logResult)
+  
+      //     })
 
+      //   })
       default:
         return new Promise(async (resolve, reject) => {
-          // console.log(selectedFolder)
-          // console.log(currentSubTask)
-          // console.log(surveyFiles)
-          const filesWithStatuses = [
-            ...filesInProgress,
-          ];
-          filesWithStatuses.find(
-            f => f.name === file.name,
-          ).status = 'Uploading';
-          setFilesInProgress(filesWithStatuses);
-
-          // const parentFolder = getParent(selectedFolder.name);
-
-          const fileName = `bid_${task.bid}/survey_${
-            task.survey_id
-          }/${selectedFolder.path}/${file.name}`;
+          console.log(file.name)
+          let fileName
+          if (file.name == 'folder_structure.csv') fileName = `bid_${task.bid}/survey_${task.survey_id}/${file.name}`; 
+          else fileName = `bid_${task.bid}/survey_${task.survey_id}/${selectedFolder.path}/${file.name}`;
+           
           // console.log(fileName)
           const smallFileName = `${fileName.split('.')[0]  }_small_image.${  fileName.split('.')[1]}`;
           // const smallFileName = 'small_image_' + fileName
@@ -764,6 +790,7 @@ function TaskWizard({
   }
 
   const handleSubTaskClick = (subTask) => {
+    console.log(subTask)
     setCurrentSubTask(subTask)
     const firstWord = subTask.name.split(' ')[0];
     setMode(firstWord)
@@ -775,6 +802,15 @@ function TaskWizard({
     switch (subTask.name) {
       case 'Update elements':
         setLeftViewTab('Spans')
+        break;
+      case 'Create folder_structure.csv file':
+        // setLeftViewTab('Spans')
+        break;
+      case 'Upload folder_structure.csv file':
+        setSelectedFolder({
+          path: null,
+          file_types: ['csv']
+        })
         break;
       case 'Calibrate models':
         onShowInView('leftView', 'calibration')
@@ -929,7 +965,7 @@ function TaskWizard({
     setFilesInProgress(filesInProgress.filter(f => f !== file))
   }
 
-  const folderTree = useMemo(() => <FolderStructureTree
+  const folderTree = useMemo(() => imagesFolderStructure && <FolderStructureTree
         className="fontSmall"
         data={imagesFolderStructure}
         accordionMode={false}
@@ -942,7 +978,7 @@ function TaskWizard({
 
   
       const folders = getFoldersByString(currentSubTask.fileType);
-
+      console.log('folders', folders)
       if (currentSubTask.name == 'Upload images' || currentSubTask.name == 'Download images') {
         return (
           <>
@@ -950,14 +986,6 @@ function TaskWizard({
               Select destination folder
             </div>
             {folderTree}
-            {/* <FolderStructureTree
-              className="fontSmall"
-              data={imagesFolderStructure}
-              accordionMode={false}
-              onClick={value => handleFolderClick(value)}
-              // folderRow={}
-              // selectedItem={selectedFolder && selectedFolder.name ? selectedFolder.name : selectedFolder}
-            /> */}
           </>
         );
       }
@@ -1056,7 +1084,7 @@ function TaskWizard({
     return (
       <>
         <div className="text-center">
-          <span className="mr-3 bold">Sub Tasks</span>
+          <span className="mr-3 bold">Tasks</span>
           <MDBSimpleChart
             strokeColor={taskCompletedPercentage() == 100 ? 'green' : 'red'}
             strokeWidth={3}
@@ -1278,7 +1306,7 @@ function TaskWizard({
     );
   }
 
-  const Files = () => {
+  const FilesSection = () => {
 
     return (
       <MDBAnimation
@@ -1287,6 +1315,14 @@ function TaskWizard({
         // infinite={true}
         // duration={'2s'}
       >
+        {files.length && mode == 'Upload' ? (
+          <Files
+            files={files}
+            removeFile={selectedFile => removeFile(selectedFile)}
+          />
+        ) : (
+          ''
+        )}
         {files.length ? (
           <MDBBtn
             color="success"
@@ -1343,7 +1379,7 @@ function TaskWizard({
           </div>
         </div>
         <DropZone />
-        <Files />
+        <FilesSection />
         {filesInProgress.length && filesStatus == 'uploading' ? (
         
           <FilesStatuses

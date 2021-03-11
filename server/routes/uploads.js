@@ -182,8 +182,8 @@ app.get('/profile_images/:type/:id', function(req, res) {
 
 app.post('/cloud-upload', upload.single('file'), async (req, res) => {
   // const imageUrls = await createFileWithCopy(req.file, req.body)
-  // console.log(req.file.mimetype);
-  // console.log(req.body);
+  console.log(req.file);
+  console.log(req.body);
   let smallImageUrl;
 
   if (req.file.size > 1024000 && req.file.mimetype == 'image/jpeg') {
@@ -218,6 +218,13 @@ app.post('/cloud-upload', upload.single('file'), async (req, res) => {
       req.body.bucketName,
       req.body.fileName,
     );
+    if (req.file.originalname == 'folder_structure.csv') {
+      await uploadFile(
+        req.file,
+        req.body.bucketName,
+        `bid_${req.body.bid}/${req.file.originalname}`,
+      );
+    }
     // console.log('fileUrl', fileUrl);
     const fileExtentension = getFileExtension(req.body.fileName);
     console.log(fileExtentension)
@@ -227,6 +234,24 @@ app.post('/cloud-upload', upload.single('file'), async (req, res) => {
         receiver_user_id: null,
         subject: '',
         message: 'New Glb model uploaded',
+        createdAt: Date.now(),
+        type: 'System',
+        status: 'Sent',
+        task_id: req.body.taskId,
+        survey_id: req.body.surveyId,
+        bid: req.body.bid,
+        parent_message_id: null,
+        location: '',
+        element_id: null,
+      };
+      messagesController.createMessage(message);
+    }
+    if (fileExtentension === 'csv') {
+      const message = {
+        sender_user_id: req.body.userId,
+        receiver_user_id: null,
+        subject: '',
+        message: 'New folder structure csv uploaded',
         createdAt: Date.now(),
         type: 'System',
         status: 'Sent',

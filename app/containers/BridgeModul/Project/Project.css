@@ -179,83 +179,88 @@
 
 }
 
+.projectTabs .nodeRowId  {
+  font-size: .8rem;
+  overflow: hidden;
+}
 .bridgePageDataTable .dataTables_filter{
   display: block !important;
   margin-top: 0 !important;
 }
 
-.projectTabs .treeview-colorful-list .treeview-colorful-element .far{
+.treeview-colorful-list .treeview-colorful-element .far{
   display: none !important;
 }
-.projectTabs .treeview-colorful-list .treeview-colorful-element .fa{
+.treeview-colorful-list .treeview-colorful-element .fa{
   margin-right: .3rem;
 }
 
-.projectTabs .nodeRowId  {
-  font-size: .8rem;
-  overflow: hidden;
-}
-.projectTabs .treeview-colorful ul .nested .active{
+
+.treeview-colorful ul .nested .active{
 
   padding-bottom: .5rem;
 
 }
-.projectTabs .treeview-colorful{
+.treeview-colorful{
   /* background-color: hsla(30, 100%, 48%, 0.143) */
 }
 
-.projectTabs .treeview-colorful .treeview-colorful-element:hover {
+.treeview-colorful .treeview-colorful-element:hover {
   background-color: rgba(28, 50, 69, 0.2) !important
 }
 
-.projectTabs .treeview-colorful .treeview-colorful-element {
+.treeview-colorful .treeview-colorful-element {
   display: flex !important;
   align-items: center;
 }
-.projectTabs .treeview-colorful .treeview-colorful-element > span{
+.treeview-colorful .treeview-colorful-element > span{
   width: 100%;
 }
 
-.projectTabs .treeview-colorful .treeview-colorful-list ul {
+.treeview-colorful .treeview-colorful-list ul {
 
   background-color: rgba(28, 50, 69, 0.1) !important
 }
 
-.projectTabs .treeview-colorful .treeview-colorful-element.opened {
+.treeview-colorful .treeview-colorful-element.opened {
   background-color: rgba(28, 50, 69, 0.2) !important;
   border: none;
   color : black
 }
 
-.projectTabs .treeview-colorful ul .nested .active{
+.treeview-colorful ul .nested .active{
   
   padding-bottom: .5rem;
 
 }
-.projectTabs .treeview-colorful{
+.treeview-colorful{
   /* background-color: hsla(30, 100%, 48%, 0.143) */
 }
 
-.projectTabs .treeview-colorful .treeview-colorful-element:hover {
+.treeview-colorful .treeview-colorful-element:hover {
   background-color: rgba(28, 50, 69, 0.2) !important
 }
 
-.projectTabs .treeview-colorful .treeview-colorful-element {
+.treeview-colorful .treeview-colorful-element {
   display: flex !important;
   align-items: center;
 }
-.projectTabs .treeview-colorful .treeview-colorful-element > span{
+.treeview-colorful .treeview-colorful-element > span{
   width: 100%;
 }
 
-.projectTabs .treeview-colorful .treeview-colorful-list ul {
+.treeview-colorful .treeview-colorful-list ul {
   margin-top: 0;
   /* background-color: rgba(28, 50, 69, 0.1) */
 }
 
-.projectTabs .treeview-colorful .treeview-colorful-element.opened {
+.treeview-colorful .treeview-colorful-element.opened {
   background-color: rgba(28, 50, 69, 0.2) !important;
   border: none;
   color : black
+}
+
+.treeview-colorful .treeview-colorful-element.opened:hover {
+  color: black
 }
 

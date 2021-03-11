@@ -33,9 +33,9 @@ const DataTab = ({
     imagesFolderStructure
 }) => { 
 
-    // const folderStructurePaths = folderStructure && folderStructure.map(folder => folder.path)
-    // const folderTree = createFolderTree(folderStructurePaths)
-    // folderTree[0].children = imagesFolderStructure
+    const folderStructurePaths = folderStructure && folderStructure.map(folder => folder.path)
+    const folderTree = createFolderTree(folderStructurePaths)
+    folderTree[0].children = imagesFolderStructure
     // console.log(folderTree)
     const newFolderTree = [
         {
@@ -85,9 +85,9 @@ const DataTab = ({
       }
     return (
         <div>
-          {imagesFolderStructure && (
+          {folderTree && (
             <TreeSimple
-              data={imagesFolderStructure}
+              data={folderTree}
               accordionMode={false}
               onClick={value => handleTreeItemClick(value)}
               // selectedItem={folder.name}

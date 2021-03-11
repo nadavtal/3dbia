@@ -994,7 +994,7 @@ const ResiumToolBar = props => {
                 //     props.selectedSubTask.name !== 'Calibrate models')}
                 >Save
                 </MDBBtn>
-              {console.log(actionGroup)}
+ 
               {actionGroup == 'Calibration' && <MDBBtn
                 color="danger"
                 size="sm"

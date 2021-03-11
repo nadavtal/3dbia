@@ -69,7 +69,8 @@ app.get("/surveys/:id/models", function(req, res){
 
 app.get("/surveys/:id/org/:org_id/bid/:bid/files", function(req, res){
   console.log('getting survey files', req.params);
-  const bucket = storage.bucket(`3dbia_organization_${req.params.org_id}`);
+  const bucketName = `3dbia_organization_${req.params.org_id}`
+  const bucket = storage.bucket(bucketName);
   try {
     bucket.getFiles(
       {
@@ -81,21 +82,20 @@ app.get("/surveys/:id/org/:org_id/bid/:bid/files", function(req, res){
           // res.send(err)
           // files is an array of File objects.
         }
-        const folderFiles = files.filter(file =>
-          file.name.includes('base_folder_file.txt'),
-        );
         // remove basic text files
         files = files.filter(
           file => !file.name.includes('base_folder_file.txt'),
         );
 
-        // const folderStructureFile = files.find(file => file.name.includes('folder_structure'))
-        // console.log('folderStructureFile', folderStructureFile)
-        // folderStructureFile.download(function(err, contents) {
-        //   if (err) reject(err);
-        //   console.log(contents.toString().split(/(?:\r\n|\r|\n)/g));
-        // });
-        const imagesFolderStructure = await readFile(`3dbia_organization_${req.params.org_id}`, `bid_${req.params.bid}/survey_${req.params.id}/folder_structure.csv`)
+        const folderStructureFile = files.find(file => file.name.includes('folder_structure'))
+        console.log('folderStructureFile', folderStructureFile)
+        let imagesFolderStructure
+        if (folderStructureFile) {
+          imagesFolderStructure = await readFile(`3dbia_organization_${req.params.org_id}`, `bid_${req.params.bid}/survey_${req.params.id}/folder_structure.csv`)
+
+        } else {
+          imagesFolderStructure = null
+        }
 
         const smallImages = files.filter(
           file =>
