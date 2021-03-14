@@ -41,7 +41,7 @@ export const initialState = {
   viewData: null,
   mode: null,
   boundingSphere: null,
-  surveyFiledLoaded: false,
+  surveyFilesLoaded: false,
   folderStructure: null,
   imagesFolderStructure: null,
   imagesPaths: null,
@@ -118,7 +118,7 @@ const bridgePageReducer = (state = initialState, action) =>
           glbModels: [],
           tiles: [],
         }
-        draft.surveyFiledLoaded = false
+        draft.surveyFilesLoaded = false
         break
       case actionTypes.SURVEY_FILES_LOADED:
         console.log('SURVEY_FILES_LOADED', action)
@@ -127,7 +127,7 @@ const bridgePageReducer = (state = initialState, action) =>
           draft.imagesFolderStructure = createFolderTree(action.data.imagePaths, action.data.files.images)
         }
         draft.imagesPaths = action.data.imagePaths
-        draft.surveyFiledLoaded = true
+        draft.surveyFilesLoaded = true
         draft.selectedSurveyFiles = action.data.files;
         
         break
@@ -169,7 +169,7 @@ const bridgePageReducer = (state = initialState, action) =>
           draft.viewData = null,
           draft.mode = null,
           draft.boundingSphere = null,
-          draft.surveyFiledLoaded = false,
+          draft.surveyFilesLoaded = false,
           draft.folderStructure = null,
           draft.selectedFolder = null,
           draft.nodes = null, 
@@ -206,7 +206,7 @@ const bridgePageReducer = (state = initialState, action) =>
         draft.viewData = null,
         draft.mode = null,
         draft.boundingSphere = null,
-        draft.surveyFiledLoaded = false,
+        draft.surveyFilesLoaded = false,
         draft.folderStructure = null,
         draft.selectedFolder = null,
         draft.nodes = null,

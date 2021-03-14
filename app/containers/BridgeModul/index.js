@@ -53,7 +53,24 @@ const BridgeModule = ({
         {bridgeLoaded ? (
           <ResizableLayOut />
         ) : (
-          <MDBSpinner yellow large className="absCenter" />
+          <div className="fullWidth text-center">
+            <br/>
+            <br/>
+            <br/>
+            <br/>
+            <br/>
+            <br/>
+            <br/>
+            <br/>
+            <br/>
+            <br/>
+            <br/>
+            <br/>
+            <br/>
+            <h6 className="mb-2">Loading Bridge</h6>
+            <MDBSpinner yellow large className="" />
+
+          </div>
         )}
       </div>
 

@@ -129,6 +129,7 @@ const SurveyTab = ({
   const scrollContainerStyle = {
     width: "100%", 
    //  maxHeight: `calc(100vh)-${theme.layout.topBarSize}`, 
+    minHeight: `calc(15vh)`, 
     maxHeight: `calc(61vh)`, 
     overFlowY: 'auto',
     overFlowX: 'hidden'

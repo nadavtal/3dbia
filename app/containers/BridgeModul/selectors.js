@@ -137,7 +137,7 @@ createSelector(
 export const makeSelectSurveyFilesLoaded = () =>
 createSelector(
   selectBridgeModule,
-  bridgeModule => bridgeModule.surveyFiledLoaded
+  bridgeModule => bridgeModule.surveyFilesLoaded
   );
 export const makeSelectSurveyFiles = () =>
 createSelector(

@@ -4,14 +4,14 @@ import { compose } from 'redux';
 import { createStructuredSelector } from 'reselect';
 import { getFileExtension, getFileNameByString, sortBy } from 'utils/dataUtils';
 import createFolderTree from 'utils/createTree';
-
+import { MDBSpinner } from 'mdbreact'
 import { 
   makeSelectCurrentUser, 
   makeSelectCurrentUserRole } 
   from 'containers/App/selectors';
 import {
   makeSelectFolderStructure,
-  makeSelectSelectedFolder,
+  makeSelectSurveyFilesLoaded,
   makeSelectSurveyFiles,
   makeSelectImagesFolderStructure 
   } from 'containers/BridgeModul/selectors';
@@ -30,10 +30,11 @@ const DataTab = ({
     surveyFiles,
     onShowInView,
     folderStructure,
-    imagesFolderStructure
+    imagesFolderStructure,
+    surveyFiledLoaded
 }) => { 
     console.log('surveyFiles', surveyFiles)
-    console.log('imagesFolderStructure', imagesFolderStructure)
+    console.log('surveyFiledLoaded', surveyFiledLoaded)
     const folderStructurePaths = folderStructure && folderStructure.map(folder => folder.path)
     console.log('mainfolderStructurePaths', folderStructurePaths)
     let allFilesArray = []
@@ -46,20 +47,33 @@ const DataTab = ({
     }
       
     const handleTreeItemClick = (folder) => {
-        console.log(folder)
+        
         onSetSharedState('selectedFolder', {name: folder.name ? folder.name : folder, fileTypes: folder.fileTypes ? folder.fileTypes : ['jpg', 'jpeg']})
         onShowInView('main', 'folder')
       }
     return (
         <div>
-          {folderTree && (
-            <TreeSimple
-              data={folderTree}
-              accordionMode={false}
-              onClick={value => handleTreeItemClick(value)}
-              // selectedItem={folder.name}
-            />
-          )}
+          {!surveyFiledLoaded
+          ? <div className="position-relative">
+              <div className="text-center mb-3">
+                Loading Survey Files
+              </div>
+              <div className="text-center">
+                <MDBSpinner yellow large className="" />
+
+              </div>
+          </div>
+          : <div>
+              {folderTree && (
+                <TreeSimple
+                  data={folderTree}
+                  accordionMode={false}
+                  onClick={value => handleTreeItemClick(value)}
+                  // selectedItem={folder.name}
+                />
+              )}
+            
+            </div>}
         </div>
       ); 
 }
@@ -70,7 +84,8 @@ const mapStateToProps = createStructuredSelector({
     folderStructure: makeSelectFolderStructure(),
     imagesFolderStructure: makeSelectImagesFolderStructure(),
     // selectedFolder: makeSelectSelectedFolder(),
-    surveyFiles: makeSelectSurveyFiles()
+    surveyFiles: makeSelectSurveyFiles(),
+    surveyFiledLoaded: makeSelectSurveyFilesLoaded(),
   });
   
   
