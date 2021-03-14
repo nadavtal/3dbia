@@ -12,7 +12,7 @@ const TreeSimple = ({
   onClick,
   selectedItem
 }) => {
-  // console.log(data);
+  console.log(data);
 
   const handleClick = (value) => {
     // console.log(value)
@@ -26,7 +26,7 @@ const TreeSimple = ({
           return <MDBTreeviewList
             key={parent.name}
             // icon='envelope-open'
-            title={parent.name}
+            title={`${parent.name} ${parent.files ? `(${parent.files.length})` : ''}`}
             far
             open
           >
@@ -39,7 +39,7 @@ const TreeSimple = ({
               key={parent.name}
               className={parent.name == selectedItem ? 'opened' : ''}
               icon="folder"
-              title={parent.name}
+              title={`${parent.name} ${parent.files ? `(${parent.files.length})` : ''}`}
               opened={parent.name == selectedItem}
               onClick={() => handleClick(parent.name)}
             />

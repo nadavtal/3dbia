@@ -83,7 +83,7 @@ const bridgePageReducer = (state = initialState, action) =>
         draft.bridgeDetails = action.data.bridgeDetails;
         draft.bridgeSurveys = action.data.surveys;
         draft.customFieldsTemplate = action.data.customFieldsTemplate;
-        draft.bridgeProcesses = action.data.processes;
+
         draft.bridgeTasks = action.data.tasks;
         draft.bridgeModels = action.data.model ? [action.data.model] : [];
         draft.bridgeSpans = sortBy('span_order', action.data.spans);
@@ -122,21 +122,22 @@ const bridgePageReducer = (state = initialState, action) =>
         break
       case actionTypes.SURVEY_FILES_LOADED:
         console.log('SURVEY_FILES_LOADED', action)
-        let updatedModels = [...state.bridgeModels]
-        let updatedModelsIds = state.bridgeModels.map(model => model.id)
-        action.data.models.forEach(model => {
-          if (!updatedModelsIds.includes(model.id)) updatedModels.push(model)
-        })
+        
         if (action.data.imagePaths) {
-          draft.imagesFolderStructure = createFolderTree(action.data.imagePaths)
+          draft.imagesFolderStructure = createFolderTree(action.data.imagePaths, action.data.files.images)
         }
         draft.imagesPaths = action.data.imagePaths
         draft.surveyFiledLoaded = true
         draft.selectedSurveyFiles = action.data.files;
-        draft.bridgeModels = updatedModels
+        
         break
-      case MESSAGES_LOADED:
-
+      case actionTypes.SURVEY_MODELS_LOADED:
+        let updatedModels = [...state.bridgeModels]
+        let updatedModelsIds = state.bridgeModels.map(model => model.id)
+        action.models.forEach(model => {
+          if (!updatedModelsIds.includes(model.id)) updatedModels.push(model)
+        })
+        draft.bridgeModels = updatedModels
         break
       case BRIDGE_SELECTED:
         if (!action.bid) {

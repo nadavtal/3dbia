@@ -4,12 +4,13 @@ const connection = require('../db.js');
 const logsController = require('../controllers/logsController');
 // MESSAGES ROUTES
 
-app.get('/logs/:surveyId/:taskId', function(req, res) {
+app.get('/logs/:surveyId/:taskId/:status', function(req, res) {
   console.log('logs');
 
-  const q = `select * from tbl_logs where survey_id = ${
-    req.params.surveyId
-  }  and task_id = ${req.params.taskId}`;
+  const q = `select * from tbl_logs where survey_id = ${req.params.surveyId} 
+             and task_id = ${req.params.taskId}
+             and status = '${req.params.status}'
+             `;
   console.log(q)
   connection.query(q, function(error, results) {
     if (error) throw error;

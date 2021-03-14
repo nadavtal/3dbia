@@ -1,6 +1,6 @@
 import produce from 'immer';
 import { BRIDGE_SELECTED } from 'containers/App/constants';
-import { LOAD_SURVEY_DATA, SURVEY_FILES_LOADED } from 'containers/BridgeModul/constants'
+import { LOAD_SURVEY_DATA, SURVEY_FILES_LOADED, SURVEY_MODELS_LOADED } from 'containers/BridgeModul/constants'
 import * as actionTypes from './constants';
 export const initialState = {
   mode: '',
@@ -47,9 +47,20 @@ const resiumReducer = (state = initialState, action) =>
       case LOAD_SURVEY_DATA:
         draft.notification = 'Loading survey data';
         break;
+      case SURVEY_MODELS_LOADED:
+        console.log('SURVEY_MODELS_LOADED', action)
+        // if (hasTileSet(action.models)) {
+        //   draft.notification = 'Building 3d mesh'
+        // } else {
+        //   draft.notification = 'Ready'
+        // }
+        draft.notification = 'Loading images'
+        // draft.notification = hasTileSet(action.data.models) ? 'Building 3d mesh' : 'Ready';
+        break;
       case SURVEY_FILES_LOADED:
         console.log('SURVEY_FILES_LOADED', action)
-        draft.notification = hasTileSet(action.data.models) ? 'Building 3d mesh' : 'Ready';
+        draft.notification = 'Ready'
+        draft.loading = false
         break;
       case BRIDGE_SELECTED:
         if (!action.bid) {

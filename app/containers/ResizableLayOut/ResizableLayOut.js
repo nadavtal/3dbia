@@ -24,7 +24,7 @@ const ResizableLayOut = ({
 }) => {
     
   useInjectReducer({ key, reducer });
-  
+  console.log('RESIZABLEEEEE')
   return leftViewSize ? (
     <div className="d-flex justify-content-between">
       <Resizable

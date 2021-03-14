@@ -71,7 +71,6 @@ const MainViewComponent = ({
 
 const mapStateToProps = createStructuredSelector({
   componentName: makeSelectMainViewComponent(),
-  models: makeSelectBridgeModels(),
 });
 
 

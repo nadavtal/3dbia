@@ -1,4 +1,4 @@
-import React, {memo} from 'react';
+import React, {memo, useMemo} from 'react';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { createStructuredSelector } from 'reselect';
@@ -32,55 +32,22 @@ const DataTab = ({
     folderStructure,
     imagesFolderStructure
 }) => { 
-
+    console.log('surveyFiles', surveyFiles)
+    console.log('imagesFolderStructure', imagesFolderStructure)
     const folderStructurePaths = folderStructure && folderStructure.map(folder => folder.path)
-    const folderTree = createFolderTree(folderStructurePaths)
-    folderTree[0].children = imagesFolderStructure
-    // console.log(folderTree)
-    const newFolderTree = [
-        {
-          name: 'Images',
-          children: [
-            {name: 'Circles', fileTypes: imageFiles, files: getFileNameByString('Circles', surveyFiles.images)},
-            {name: 'Facades', fileTypes: imageFiles, files: getFileNameByString('Facades', surveyFiles.images)},
-            {name: 'Bearings', fileTypes: imageFiles, files: getFileNameByString('Bearings', surveyFiles.images)},
-            {name: 'Below', fileTypes: imageFiles, files: getFileNameByString('Below', surveyFiles.images)},
-            {name: 'Columns', fileTypes: imageFiles, files: getFileNameByString('Columns', surveyFiles.images)},
-            {name: 'Parallel', fileTypes: imageFiles, files: getFileNameByString('Parallel', surveyFiles.images)},
-            {name: '360', fileTypes: imageFiles, files: getFileNameByString('360', surveyFiles.images)},
-            {name: 'General', fileTypes: imageFiles, files: getFileNameByString('General', surveyFiles.images)},
-            {name: 'Metadata', fileTypes: imageFiles, files: getFileNameByString('Metadata', surveyFiles.images)},
-          ]
-        },
-        {
-          name: 'Lidar', 
-          children: [
-            {name:  'E57', fileTypes: imageFiles},
-            {name: 'Las/ply', fileTypes: imageFiles},
-          ]
-        },
-        {
-          name: 'Models',
-          children: [
-            {name: 'Osgb', fileTypes: imageFiles},
-            {name: '3d tiles', fileTypes: ['json', 'JSON'], files: surveyFiles.tiles},
-            {name: 'Skp', fileTypes: imageFiles},
-            {name: 'Osg', fileTypes: imageFiles},
-            {name: 'Glb', fileTypes: ['glb', 'GLB'], files: surveyFiles.glbModels},
-      
-          ]
-        },
-        {
-          name: 'Other',
-          children: [
-            {name: 'General', fileTypes: []},
-          ]
-        },
-      ]
+    console.log('mainfolderStructurePaths', folderStructurePaths)
+    let allFilesArray = []
+    Object.keys(surveyFiles).forEach(key => surveyFiles[key].forEach(file => allFilesArray.push(file)))
+    // console.log('allFilesArray', allFilesArray)
+    const folderTree = useMemo(() => folderStructurePaths && createFolderTree(folderStructurePaths, allFilesArray), [folderStructurePaths, allFilesArray]) 
+    if (folderTree && imagesFolderStructure) {
+      folderTree[0].children = imagesFolderStructure
+
+    }
       
     const handleTreeItemClick = (folder) => {
-        // console.log(folder)
-        onSetSharedState('selectedFolder', {name: folder.name, fileTypes: folder.fileTypes})
+        console.log(folder)
+        onSetSharedState('selectedFolder', {name: folder.name ? folder.name : folder, fileTypes: folder.fileTypes ? folder.fileTypes : ['jpg', 'jpeg']})
         onShowInView('main', 'folder')
       }
     return (
@@ -102,7 +69,7 @@ const mapStateToProps = createStructuredSelector({
     currentUserRole: makeSelectCurrentUserRole(),
     folderStructure: makeSelectFolderStructure(),
     imagesFolderStructure: makeSelectImagesFolderStructure(),
-    selectedFolder: makeSelectSelectedFolder(),
+    // selectedFolder: makeSelectSelectedFolder(),
     surveyFiles: makeSelectSurveyFiles()
   });
   

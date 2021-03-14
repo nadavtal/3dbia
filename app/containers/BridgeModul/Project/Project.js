@@ -135,21 +135,24 @@ const ProjectData = ({
 
   return (
     <div className="projectTabs">
-      <MyTabs 
-        tabs={tabs}
-        tabContentWrapperStyle={{}}
-        headerWrapperClassName="card z-index-1"
-        // tabBackgroundColor="orange"
-        header={<TabsHeader />}
-        selectedTab={selectedTab}
-        navItemClassName="fullWidth"
-        navWrapperClassName="bgPrimary bridgePageheaderHight justify-content-between"
-        onTabClick={tabName => setLeftViewTab(tabName)}
-        >
-        <InfoTab />
-        <SurveysTab />
-        <SpansTab /> 
-      </MyTabs>
+      {bridge && (
+        <MyTabs 
+          tabs={tabs}
+          tabContentWrapperStyle={{}}
+          headerWrapperClassName="card z-index-1"
+          // tabBackgroundColor="orange"
+          header={<TabsHeader />}
+          selectedTab={selectedTab}
+          navItemClassName="fullWidth"
+          navWrapperClassName="bgPrimary bridgePageheaderHight justify-content-between"
+          onTabClick={tabName => setLeftViewTab(tabName)}
+          >
+          <InfoTab />
+          <SurveysTab />
+          <SpansTab /> 
+        </MyTabs>
+      )}
+
      
     </div>
   );

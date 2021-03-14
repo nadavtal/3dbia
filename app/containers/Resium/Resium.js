@@ -137,7 +137,7 @@ const Resium = props => {
   const [overLayPosition, setOverLayPosition] = useState({});
   const [toolBarOpen, settoolBarOpen] = useState(false);
   const [mousePosition, setMousePosition] = useState();
-  const [entityTitle, setEntityTitle] = useState(props.bridge.name);
+  // const [entityTitle, setEntityTitle] = useState(props.bridge.name);
   const [entitySubTitle, setEntitySubTitle] = useState('');
   const [entityDescription, setEntityDescription] = useState('');
   const [calibrationMode, setCalibrationMode] = useState();
@@ -798,7 +798,7 @@ const Resium = props => {
     // console.log(viewerRef.current.cesiumElement.camera)
     // console.log(tileset)
     setTileSetBoundingSphere(tileset.boundingSphere);
-    props.onSetCesiumNotification('Ready', false)
+    // props.onSetCesiumNotification('Ready', false)
     if (!props.bridge.default_view_data) {
       // if (props.models.length == 1) {
       viewerRef.current.cesiumElement.zoomTo(tileset);

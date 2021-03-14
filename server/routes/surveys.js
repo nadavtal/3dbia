@@ -38,7 +38,7 @@ app.put('/surveys/:id/status/:status', function(req, res) {
   // console.log(req.body)
   let q = `UPDATE tbl_survey
   SET status = "${req.params.status}" WHERE id = ${req.params.id};`;
-  console.log(q);
+  // console.log(q);
   connection.query(q, function(error, results) {
     if (error) res.send(error);
 
@@ -66,7 +66,7 @@ app.get("/surveys/:id/models", function(req, res){
     res.send(results);
   });
 });
-
+ 
 app.get("/surveys/:id/org/:org_id/bid/:bid/files", function(req, res){
   console.log('getting survey files', req.params);
   const bucketName = `3dbia_organization_${req.params.org_id}`
@@ -88,7 +88,7 @@ app.get("/surveys/:id/org/:org_id/bid/:bid/files", function(req, res){
         );
 
         const folderStructureFile = files.find(file => file.name.includes('folder_structure'))
-        console.log('folderStructureFile', folderStructureFile)
+        // console.log('folderStructureFile', folderStructureFile)
         let imagesFolderStructure
         if (folderStructureFile) {
           imagesFolderStructure = await readFile(`3dbia_organization_${req.params.org_id}`, `bid_${req.params.bid}/survey_${req.params.id}/folder_structure.csv`)

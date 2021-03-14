@@ -3,18 +3,24 @@ import {
   MDBTreeview,
   MDBTreeviewList,
   MDBTreeviewItem,
+  MDBIcon
 } from 'mdbreact';
 
 import Accordion from 'components/Accordion/Accordion'
 import IconButtonToolTip from '../IconButtonToolTip/IconButtonToolTip';
-const TreeSimple = ({
+const FolderStructureTree = ({
   data,
   accordionMode,
   onClick,
   // selectedItem,
-  className
+  className,
+  handleFolderClick,
+  showFolderContent,
+  handleFolderCheckbox,
+  selectedFolders,
+  mode
 }) => {
-  // console.log(data);
+  console.log(data);
   const [allOpen, setAllOpen] = useState(false)
   const [selectedItem, setSelected] = useState()
 
@@ -32,6 +38,41 @@ const TreeSimple = ({
 
     }
   }
+
+  const FolderRow = ({folder}) => {
+    return <div className="my-1 d-flex justify-content-between">
+    <div className="cursor-pointer">
+      <div
+        onClick={() => handleFolderClick(folder)}
+      >
+        {`${folder.name} ${folder.files ? `(${folder.files.length})` : ''}`}
+      </div>
+    </div>
+    <div className="d-flex mr-2">
+      {folder.files && folder.files.length > 0 && <MDBIcon
+        icon="eye"
+        size="sm"
+        className="mr-2 cursor-pointer"
+        onClick={() => showFolderContent(folder)}
+        far
+      />
+      }
+      {mode == 'Download' && (
+        <MDBIcon
+          icon={
+            selectedFolders.includes(folder)
+              ? 'check-square'
+              : 'square'
+          }
+          size="sm"
+          className="cursor-pointer"
+          onClick={() => handleFolderCheckbox(folder)}
+          far
+        />
+      )}
+    </div>
+  </div>
+  }
   const ParentsAndChilds = ({parents}) => {
     return parents.map(parent => {
         if (parent.children && parent.children.length) {
@@ -39,7 +80,8 @@ const TreeSimple = ({
             key={parent.name}
             className={className}
             // icon='envelope-open'
-            title={parent.name}
+            // title={`${parent.name} ${parent.files ? `(${parent.files.length})` : ''}`}
+            title={<FolderRow folder={parent}/>}
             far
             // opened={allOpen !== undefined ? allOpen : selectedSpans.includes(span.span_id)}
             opened={allOpen}
@@ -53,7 +95,8 @@ const TreeSimple = ({
               key={parent.name}
               className={`${className} ${parent.name == selectedItem ? 'opened' : ''}` }
               icon="folder"
-              title={parent.name}
+              // title={`${parent.name} ${parent.files ? `(${parent.files.length})` : ''}`}
+              title={<FolderRow folder={parent}/>}
               // opened={parent.name == selectedItem}
               onClick={() => handleClick(parent.name)}
             />
@@ -99,5 +142,5 @@ const TreeSimple = ({
   </>
 }
 
-export default memo(TreeSimple)
+export default memo(FolderStructureTree)
 

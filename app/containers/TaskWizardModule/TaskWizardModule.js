@@ -149,7 +149,7 @@ function TaskWizard({
     setUpdatingSubTask()
     setCurrentSubTask()
     setFilesInProgress([])
-    task && axios.get(apiUrl + `logs/${task.survey_id}/${task.id}`)
+    task && axios.get(apiUrl + `logs/${task.survey_id}/${task.id}/Uploading`)
       .then(res => {
         const logs = res.data
         
@@ -185,7 +185,7 @@ function TaskWizard({
 
   useEffect(() => {
     // currentSubTask && axios.get(apiUrl + `logs/${task.survey_id}/${task.id}/${currentSubTask.name}`)
-    currentSubTask && axios.get(apiUrl + `logs/${task.survey_id}/${task.id}`)
+    currentSubTask && axios.get(apiUrl + `logs/${task.survey_id}/${task.id}/Uploading`)
             .then(res => {
               const logs = res.data
            
@@ -219,36 +219,37 @@ function TaskWizard({
       // console.log(fileExtension)
       const isAllowed = selectedFolder.file_types.includes(fileExtension.toLowerCase()) || fileExtension == 'zip' 
       // console.log(isAllowed)
-      const allreadySelected = filesInProgress.find(f => f.name == file.name);
+      // const allreadySelected = filesInProgress.find(f => f.name == file.name);
+      const allreadySelected = false;
       // console.log(allreadySelected)
 
-      if (allreadySelected) {
-        allreadySelectedFiles.push(file)
-      }
+      // if (allreadySelected) {
+      //   allreadySelectedFiles.push(file)
+      // }
       if (!allreadySelected) {
         if (isAllowed) allowedFiles.push(file)
         else rejectedFiled.push(file)
 
       }
     })
-    if (allreadySelectedFiles.length) {
-      const text = allreadySelectedFiles.length == 1 
-          ? `${allreadySelectedFiles.map(
-              file => file.name,
-            )} is allready selected`
-          : `${allreadySelectedFiles.map(
-              file => file.name,
-            )} are allready selected`;
+    // if (allreadySelectedFiles.length) {
+    //   const text = allreadySelectedFiles.length == 1 
+    //       ? `${allreadySelectedFiles.map(
+    //           file => file.name,
+    //         )} is allready selected`
+    //       : `${allreadySelectedFiles.map(
+    //           file => file.name,
+    //         )} are allready selected`;
 
-      onToggleAlert({
-        title: `Oops...`,
-        text: text,
-        confirmButton: 'Got it',
-        // cancelButton: 'Cancel',
-        alertType: 'danger',
-        // confirmFunction: () => onToggleAlert()
-      });
-    }
+    //   onToggleAlert({
+    //     title: `Oops...`,
+    //     text: text,
+    //     confirmButton: 'Got it',
+    //     // cancelButton: 'Cancel',
+    //     alertType: 'danger',
+    //     // confirmFunction: () => onToggleAlert()
+    //   });
+    // }
     if (rejectedFiled.length) {
       const text = rejectedFiled.length == 1 ?
         `${rejectedFiled.map(file => file.name)} file is from the wrong type, only ${selectedFolder.file_types} are accepted`
@@ -300,7 +301,7 @@ function TaskWizard({
     else{
       const newFiles = [...files, ...allowedFiles]
       // console.log(newFiles)
-      setFilesInProgress([...filesInProgress, ...newFiles])
+      // setFilesInProgress([...filesInProgress, ...newFiles])
       setFiles(newFiles)
 
     }
@@ -311,13 +312,13 @@ function TaskWizard({
   const uploadFile = file => {
     console.log(file)
     const fileExtentension = getFileExtension(file.name);
-    const filesWithStatuses = [
-      ...filesInProgress,
-    ];
-    filesWithStatuses.find(
-      f => f.name === file.name,
-    ).status = 'Uploading';
-    setFilesInProgress(filesWithStatuses); 
+    // const filesWithStatuses = [
+    //   ...filesInProgress,
+    // ];
+    // filesWithStatuses.find(
+    //   f => f.name === file.name,
+    // ).status = 'Uploading';
+    // setFilesInProgress(filesWithStatuses); 
     switch (fileExtentension) {
       case 'zip':
         return new Promise(async (resolve, reject) => {
@@ -336,7 +337,7 @@ function TaskWizard({
           formData.append('bucketName', `3dbia_organization_${  task.organization_id}`);
           formData.append('filePath', filePath);
           // formData.append('organization_id', task.organization_id);
-          // formData.append('sub_task_name', currentSubTask.name);
+          formData.append('sub_task_name', currentSubTask.name);
           // console.log(currentSubTask.name)
           const folder_id = Date.now()
           formData.append('folder_id', folder_id)
@@ -367,7 +368,7 @@ function TaskWizard({
             user_id: currentUser.userInfo.id,
             status: 'Uploading',
             name: file.name,
-            path: '', 
+            path: filePath, 
             size: null
           }
           axios
@@ -500,6 +501,24 @@ function TaskWizard({
     }
   };
 
+
+  const uploadFiles = async () => {
+    // console.log(filesInProgress)
+    // console.log(files)
+    const status = await Promise.all(files.map(file => uploadFile(file)))
+    console.log("Status =>", status)
+    
+    setFiles([])
+    // setFilesInProgress([])
+      
+  }
+  const handleSubmit = () => {
+    setFilesStatus('uploading');
+
+
+    // console.log(files)
+    uploadFiles()
+  }
   const handleUploadedFiles = (uploadedFile) => {
     // console.log(uploadedFile)
     // console.log(currentSubTask)
@@ -539,23 +558,6 @@ function TaskWizard({
     return newBridgeModel
       
   }
-  const uploadFiles = async () => {
-    // console.log(filesInProgress)
-    // console.log(files)
-    const status = await Promise.all(filesInProgress.map(file => uploadFile(file)))
-    console.log("Status =>", status)
-    // setFilesInProgress([])
-      
-  }
-  const handleSubmit = () => {
-    setFilesStatus('uploading');
-
-    setFiles([])
-
-    // console.log(files)
-    uploadFiles()
-  }
-
   const handleFileCheckbox = (file) => {
     if (selectedFiles.includes(file)) {
       setSelectedFiles(selectedFiles.filter(f => f !==file)) 
@@ -632,61 +634,47 @@ function TaskWizard({
       : setSelectedFolders(folders)
   };
   const showFolderContent = (folder) => {
-    let folderName = folder.path.split('/')[folder.path.split('/').length-1]
-    console.log(folderName)
+    console.log(folder)
+    // let folderName = folder.path.split('/')[folder.path.split('/').length-1]
+    // console.log(folderName)
     let body
-    switch (folderName) {
+    switch (folder.name) {
       case 'Glb':
-        const glbModels = getFileNameByString(folderName, surveyFiles.glbModels);
+        const glbModels = getFileNameByString(folder.name, surveyFiles.glbModels);
         body = <FolderContent
             files={glbModels}
             isImages={false}
-            selectedFolder={folderName}
+            selectedFolder={folder.name}
             allowDownload={false}
         />
         
         break;
       case 'Scene':
-        const tiles = getFileNameByString(folderName, surveyFiles.tiles);
+        const tiles = getFileNameByString(folder.name, surveyFiles.tiles);
         body = <FolderContent
           files={tiles}
             isImages={false}
-            selectedFolder={folderName}
+            selectedFolder={folder.name}
             allowDownload={false}
         />
         
         break;
 
       default:
-        const images = getFileNameByString(folderName, surveyFiles.images)
+        const images = getFileNameByString(folder.name, surveyFiles.images)
         body = <FolderContent
           files={images}
           isImages
-          selectedFolder={folderName}
+          selectedFolder={folder.name}
           allowDownload={false}
         />
     }
-    console.log(folder)
+ 
     onToggleModal({
       title: folder.path,
       text:``,
-      // confirmButton: 'Create',
       cancelButton: 'Close',
       body: body
-      // formType: 'taskRejectionForm',
-      // data: {
-      //   editMode: 'Yes',
-      //   colWidth: 6,
-      // },
-
-      // confirmFunction: (data) => {
-      //   const updatedPreviousTask = {
-      //     ...previousTask,
-      //   };
-      //   updatedPreviousTask.status = 'Open';
-      //   onUpdateTask(updatedPreviousTask);
-      //   onUpdateTask(taskToUpdate);
-      // }
     });
   };
   const FolderRow = ({folder}) => {
@@ -720,13 +708,6 @@ function TaskWizard({
             onClick={() => handleFolderClick(folder)}
           >
             {`${path[path.length - 2]} (${filesLength})`}
-            {/* {`${f.name}
-              (${
-                f.files
-                  ? f.files.length
-                  : '0'
-              })
-              `} */}
           </div>
         </div>
         <div className="d-flex mr-2">
@@ -751,17 +732,6 @@ function TaskWizard({
               far
             />
           )}
-
-          {/* <MDBInput
-              label={' '}
-              className=""
-              filled
-              type="checkbox"
-              id={`checkbox${path}`}
-              containerClass="taskWizardFolderCheckbox"
-              // checked={checked}
-              onChange={() => handleFolderCheckbox(folder)}
-            /> */}
         </div>
       </div>
     );
@@ -969,9 +939,12 @@ function TaskWizard({
         className="fontSmall"
         data={imagesFolderStructure}
         accordionMode={false}
-        onClick={value => handleFolderClick(value)}                
-        // folderRow={}
-        // selectedItem={selectedFolder && selectedFolder.name ? selectedFolder.name : selectedFolder}
+        onClick={value => handleFolderClick(value)} 
+        handleFolderClick={value => handleFolderClick(value)}
+        showFolderContent={(folder) => showFolderContent(folder)}
+        handleFolderCheckbox={(folder) => handleFolderCheckbox(folder)}   
+        selectedFolders={selectedFolders} 
+        mode={mode}          
       />, [imagesFolderStructure, currentSubTask])
   const folders = useMemo(() => {
     if (currentSubTask) {

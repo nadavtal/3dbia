@@ -303,7 +303,7 @@ app.post('/cloud-upload/zip/:logId/:folderId', async (req, res) => {
     if (fieldname == 'emails') emails = val;
     if (fieldname == 'msg') msg = val;
     // if (fieldname == 'organization_id') organization_id = val;
-    // if (fieldname == 'sub_task_name') sub_task_name = val;
+    if (fieldname == 'sub_task_name') sub_task_name = val;
   });
   busboy.on('file', async function(fieldname, file, filename, encoding, mimetype) {
 
@@ -350,9 +350,6 @@ app.post('/cloud-upload/zip/:logId/:folderId', async (req, res) => {
           }
           await logsController.updateLog(log)
           const filesPaths = getAllFiles(`${unzipPath}/${folder_id}`);
-         
-          console.log(filesPaths)
-          console.log(filePath)
           const filesUploaded = await uploadFiles(
             filesPaths,
             bucketName,
@@ -433,7 +430,11 @@ app.post('/cloud-upload/zip/:logId/:folderId', async (req, res) => {
                 emails,
                 msg,
                 'Upload successfull',
-                `<h3>HEADER</h3>
+                `<div><p>Folder Id: ${folder_id}</p></div>
+                 <div><p>File name: ${filename}</p></div>
+                <div><p>Path: ${filePath}</p></div>
+                <div><p>Task: ${sub_task_name}</p></div>
+                <div><p>Finished: ${convertToMySqlDateFormat(Date.now())}</p></div>
               `,
               );
               if (msg !== 'Upload images') {

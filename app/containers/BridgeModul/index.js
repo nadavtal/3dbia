@@ -5,6 +5,7 @@ import { compose } from 'redux';
 import { createStructuredSelector } from 'reselect';
 import { useInjectReducer } from 'utils/injectReducer';
 import { useInjectSaga } from 'utils/injectSaga';
+import { MDBSpinner } from 'mdbreact'
 import reducer from './reducer';
 import saga from './saga';
 import { makeSelectLoading, makeSelectError, makeSelectCurrentUser,
@@ -52,7 +53,7 @@ const BridgeModule = ({
         {bridgeLoaded ? (
           <ResizableLayOut />
         ) : (
-          <div>Loading bridge assets...</div>
+          <MDBSpinner yellow large className="absCenter" />
         )}
       </div>
 

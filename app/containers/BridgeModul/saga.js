@@ -34,10 +34,7 @@ function* getBridge(action) {
     const bridge = bridgeResponse.basicBridgeInfo[0];
     // const folderStructure =
     //   bridgeResponse.folderFile && bridgeResponse.folderFile.split(',');
-    const bridgeDetails = yield call(
-      request,
-      `${apiUrl}bridges/${action.id}/details`,
-    );
+    const bridgeDetails = yield call(request, `${apiUrl}bridges/${action.id}/details`);
 
     const model = bridge.primary_model_id
       ? yield call(
@@ -45,38 +42,21 @@ function* getBridge(action) {
         `${apiUrl}bridges/${action.id}/model/${bridge.primary_model_id}`,
       )
       : null;
-    // console.log(models)
-    const processes = yield call(
-      request,
-      `${apiUrl}bridges/${action.id}/processes`,
-    );
-    // console.log(processes)
+
     const tasks = yield call(request, `${apiUrl}bridges/${action.id}/tasks`);
     // console.log(tasks)
     const spans = yield call(request, `${apiUrl}bridges/${action.id}/spans`);
     // console.log(spans)
-    const elements = yield call(
-      request,
-      `${apiUrl}bridges/${action.id}/elements`,
-    );
+    const elements = yield call(request, `${apiUrl}bridges/${action.id}/elements`);
     // console.log(elements)
-    const surveys = yield call(
-      request,
-      `${apiUrl}bridges/${action.id}/surveys`,
-    );
+    const surveys = yield call(request, `${apiUrl}bridges/${action.id}/surveys`);
     // console.log(surveys)
-    const customFieldsTemplate = yield call(
-      request,
-      `${apiUrl}organizations/${
-        bridge.organization_id
-      }/custom-fields-templates/tbl_bridge_list`,
-    );
+    const customFieldsTemplate = yield call(request, `${apiUrl}organizations/${bridge.organization_id}/custom-fields-templates/tbl_bridge_list`);
     const bridgeInfo = {
       bridge,
       // folderStructure,
       bridgeDetails: bridgeDetails[0],
       model: model ? model[0] : null,
-      processes,
       tasks,
       spans,
       elements,
@@ -97,31 +77,30 @@ function* loadSurveyData(action) {
     // console.log(action)
     // Call our request helper (see 'utils/request')
     // const url = apiUrl + 'surveys/' + action.surveyId + '/bid/' + action.bid + '/files'
-    const url = `${apiUrl}surveys/${survey.id}/org/${
-      survey.organization_id
-    }/bid/${survey.bid}/files`;
+    
+    const surveyMessages = yield call(request,`${apiUrl}messages/survey/${survey.id}` );
+    const surveyModels = yield call(request, `${apiUrl}surveys/${survey.id}/models`);
+    
+    
+    yield put(actions.surveyModelsLoaded(surveyModels));
+    yield put(actions.surveyMessagesLoaded(surveyMessages));
 
+    const url = `${apiUrl}surveys/${survey.id}/org/${survey.organization_id}/bid/${survey.bid}/files`;
     const surveyFiles = yield call(request, url);
     console.log('surveyFiles', surveyFiles);
-    const surveyMessages = yield call(
-      request,
-      `${apiUrl}messages/survey/${survey.id}`,
-    );
-    const surveyModels = yield call( 
-      request,
-      `${apiUrl}surveys/${survey.id}/models`,
-    );
     const surveyFilesShort = getFilesImportantData(surveyFiles);
     
     yield put(
       actions.surveyFilesLoaded({
         files: surveyFilesShort,
-        models: surveyModels,
         imagePaths: surveyFiles.imagesFolderStructure,
         // imagesFolderStructure: createFolderTree(surveyFiles.imagesFolderStructure)
       }),
     );
-    yield put(actions.surveyMessagesLoaded(surveyMessages));
+    
+
+
+    
   } catch (err) {
     yield put(loadError(err));
   }

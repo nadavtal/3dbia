@@ -74,6 +74,12 @@ export function loadSurveyData(survey) {
   };
 }
 
+export function surveyModelsLoaded(models) {
+  return {
+    type: actionTypes.SURVEY_MODELS_LOADED,
+    models,
+  };
+}
 export function surveyFilesLoaded(data) {
   return {
     type: actionTypes.SURVEY_FILES_LOADED,
@@ -220,6 +226,12 @@ export function getSurvey(id) {
 export function bridgeLoaded(data) {
   return {
     type: actionTypes.BRIDGE_LOADED,
+    data,
+  };
+}
+export function bridgeDataLoaded(data) {
+  return {
+    type: actionTypes.BRIDGE_DATA_LOADED,
     data,
   };
 }

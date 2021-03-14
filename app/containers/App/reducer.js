@@ -13,7 +13,7 @@ import { GET_ORGANIZATION_BY_ID, UPDATE_TASKS, ADD_PROVIDER, ADD_ORGANIZATION } 
 import { GET_PROVIDER_BY_ID, LOGIN, LOGOUT } from '../AppData/constants'
 import { ORGANIZATION_LOADED } from '../Organizations/Organization/constants'
 import { PROVIDER_LOADED } from '../Providers/Provider/constants';
-import { SURVEY_FILES_LOADED } from 'containers/BridgeModul/constants'
+import { SURVEY_FILES_LOADED, GET_BRIDGE, BRIDGE_LOADED } from 'containers/BridgeModul/constants'
 import { updateProcessTasks } from '../Processes/actions';
 // The initial state of the App
 export const initialState = {
@@ -290,6 +290,14 @@ const appReducer = (state = initialState, action) =>
         draft.loading = true;
         draft.loadingMessage = 'Getting Provider data'
         break;
+      // case GET_BRIDGE:
+      //   draft.loading = true;
+      //   draft.loadingMessage = 'Getting Bridge data'
+      //   break;
+      // case BRIDGE_LOADED:
+      //   draft.loading = false;
+      
+      //   break;
       case PROVIDER_LOADED:
         draft.loading = false
         break;
