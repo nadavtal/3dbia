@@ -481,19 +481,19 @@ function TaskWizard({
             )
             .then(res => {
               console.log(res);
-              let updatedFiles = [...filesWithStatuses];
+              // let updatedFiles = [...filesWithStatuses];
               if (res.status == 200) {
                 resolve(res);
-                updatedFiles.find(
-                  f => f.name === file.name,
-                ).status = 'Uploaded';
-                setFilesInProgress(updatedFiles);
+                // updatedFiles.find(
+                //   f => f.name === file.name,
+                // ).status = 'Uploaded';
+                // setFilesInProgress(updatedFiles);
                 handleUploadedFiles(res.data);
               } else {
-                updatedFiles.find(
-                  f => f.name === file.name,
-                ).status = 'Error';
-                setFilesInProgress(updatedFiles);
+                // updatedFiles.find(
+                //   f => f.name === file.name,
+                // ).status = 'Error';
+                // setFilesInProgress(updatedFiles);
                 reject(res);
               }
             });
@@ -507,7 +507,9 @@ function TaskWizard({
     // console.log(files)
     const status = await Promise.all(files.map(file => uploadFile(file)))
     console.log("Status =>", status)
-    
+    if (currentSubTask.name == 'Upload folder_structure.csv file') {
+      prepareUpdateSubTask(currentSubTask, 1)
+    }
     setFiles([])
     // setFilesInProgress([])
       

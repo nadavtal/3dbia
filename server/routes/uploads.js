@@ -14,7 +14,7 @@ const { storage } = require('../utils/storage');
 const { uploadFile, deleteFile, getFiles } = require('../utils/storage');
 const convertToMySqlDateFormat = require('../utils/mysqlUtils').convertToMySqlDateFormat;
 // const { resize } = require('../utils/files');
-const { getFileExtension } = require('../utils/files');
+const { getFileExtension, moveFile } = require('../utils/files');
 const modelsController = require('../controllers/modelsController');
 const messagesController = require('../controllers/messagesControler');
 const logsController = require('../controllers/logsController');
@@ -219,11 +219,32 @@ app.post('/cloud-upload', upload.single('file'), async (req, res) => {
       req.body.fileName,
     );
     if (req.file.originalname == 'folder_structure.csv') {
+      const bucket = storage.bucket(req.body.bucketName);
+      const file = bucket.file(`bid_${req.body.bid}/${req.file.originalname}`);
       await uploadFile(
         req.file,
         req.body.bucketName,
         `bid_${req.body.bid}/${req.file.originalname}`,
       );
+      // file.exists(async function(err, exists) {
+      //   console.log('exists', exists)
+      //   if (exists) {
+      //     // const movedFile = await moveFile(req.body.bucketName, `bid_${req.body.bid}/${req.file.originalname}`, `bid_${req.body.bid}/general_files/${req.file.originalname}`)
+      //     // console.log('movedFile', movedFile)
+      //     // const deletedFile = await deleteFile(
+      //     //   req.body.bucketName,
+      //     //   `bid_${req.body.bid}/${req.file.originalname}`,
+      //     // );
+      //     // console.log('deletedFile', deletedFile)
+      //   }
+        
+      //   await uploadFile(
+      //     req.file,
+      //     req.body.bucketName,
+      //     `bid_${req.body.bid}/${req.file.originalname}`,
+      //   );
+      // });
+
     }
     // console.log('fileUrl', fileUrl);
     const fileExtentension = getFileExtension(req.body.fileName);

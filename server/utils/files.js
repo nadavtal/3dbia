@@ -61,9 +61,26 @@ const readFile = (bucketName, fileName) => {
   });
 };
 
+async function moveFile(bucketName, srcFilename, destFilename) {
+  // Moves the file within the bucket
+  await storage.bucket(bucketName).file(srcFilename).move(destFilename);
 
+  return `gs://${bucketName}/${srcFilename} moved to gs://${bucketName}/${destFilename}.`;
+}
+
+async function copyFile(srcBucketName, srcFilename, destBucketName, destFilename) {
+  // Copies the file to the other bucket
+  await storage
+    .bucket(srcBucketName)
+    .file(srcFilename)
+    .copy(storage.bucket(destBucketName).file(destFilename));
+
+  return `gs://${srcBucketName}/${srcFilename} copied to gs://${destBucketName}/${destFilename}.`;
+}
 module.exports = {
   resize,
   getFileExtension,
-  readFile
+  readFile,
+  moveFile,
+  copyFile
 }  
