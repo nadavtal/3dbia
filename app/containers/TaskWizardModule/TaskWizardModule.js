@@ -507,7 +507,7 @@ function TaskWizard({
     // console.log(files)
     const status = await Promise.all(files.map(file => uploadFile(file)))
     console.log("Status =>", status)
-    if (currentSubTask.name == 'Upload folder_structure.csv file') {
+    if (currentSubTask.name == 'Upload folder_structure.csv file' && status[0].status == 200) {
       prepareUpdateSubTask(currentSubTask, 1)
     }
     setFiles([])
